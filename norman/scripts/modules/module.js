@@ -1,3 +1,10 @@
+ /*
+ * module.js
+ * version: dev
+ *
+ * Copyright 2012 Norman Pellet - norman.pellet@epfl.ch
+ * Dual licensed under the MIT or GPL Version 2 licenses.
+ */
 
 
 CI.Module = function(definition) {
@@ -84,3 +91,32 @@ CI.Module.prototype = {
 		return;
 	}
 };
+
+/*
+ * Static functions
+ */
+CI.Module.prototype._impl = {
+	
+	model: {
+		
+		init: function(module, model) {
+			
+			var sourceName, sourceData;
+			
+			/**
+			 * Set up the model for a module
+			 */
+			model.module = module;
+			model.data = [];
+			model.dataValue = [];
+			
+			for(var i = 0; i < model.definition.dataSource.length; i++) {
+				sourceName = model.definition.dataSource[i].name;
+				sourceData = model.definition.dataSource[i].data;
+				
+				model.data.push(new DataSource(model.module, sourceName, sourceData));
+				model.dataValue[sourceName] = null;
+			}
+		}
+	}
+}

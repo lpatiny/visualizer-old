@@ -1,3 +1,11 @@
+ /*
+ * ci.api.js
+ * version: dev
+ *
+ * Copyright 2012 Norman Pellet - norman.pellet@epfl.ch
+ * Dual licensed under the MIT or GPL Version 2 licenses.
+ */
+
 
 CI.API = {};
 

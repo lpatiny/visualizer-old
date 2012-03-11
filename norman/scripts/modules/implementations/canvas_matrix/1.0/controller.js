@@ -1,3 +1,10 @@
+ /*
+ * controller.js
+ * version: dev
+ *
+ * Copyright 2012 Norman Pellet - norman.pellet@epfl.ch
+ * Dual licensed under the MIT or GPL Version 2 licenses.
+ */
 
 if(typeof CI.Module.prototype._types.canvas_matrix == 'undefined')
 	CI.Module.prototype._types.canvas_matrix = {};
@@ -15,7 +22,7 @@ CI.Module.prototype._types.canvas_matrix.Controller.prototype = {
 		if(!(actions = this.module.definition.dataActions))	
 			return;
 			
-		if(actions.onPixelHover)
+		if(typeof actions.onPixelHover !== "undefined")
 			this.module.getDomView().on('mousemove', 'canvas', function() {
 				
 				var cellX = 1;
