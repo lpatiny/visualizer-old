@@ -34,7 +34,8 @@ CI.Grid = {
 			}
 			
 		}).draggable({
-			grid: [CI.Grid.definition.xWidth, CI.Grid.definition.yHeight]
+			grid: [CI.Grid.definition.xWidth, CI.Grid.definition.yHeight],
+			containment: "parent"
 		}).trigger('resize');
 		
 		CI.Grid.moduleResize(module);
