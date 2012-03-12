@@ -69,3 +69,8 @@ div.ci-module-wrapper .ci-module-header .ci-module-header-title {
 div.ci-module-wrapper .ci-module-content {
 	width: 100%;
 }
+
+
+.ci-label {
+	font-weight: bold;
+}

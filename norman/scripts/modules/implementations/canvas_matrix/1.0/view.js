@@ -53,6 +53,7 @@ CI.Module.prototype._types.canvas_matrix.View.prototype = {
 		var newWidth = this.cellWidth * this.colNumber;
 		var newHeight = this.cellHeight * this.rowNumber;
 		
+		
 		if(newWidth != this.lastCanvasWidth || newHeight != this.lastCanvasHeight) {
 			
 			this.lastCanvasWidth = this.canvas.width;
@@ -73,8 +74,9 @@ CI.Module.prototype._types.canvas_matrix.View.prototype = {
 		
 		var moduleValue = this.module.getValue();
 		for(var i in moduleValue) {
-			this.colNumber = moduleValue[i].cols;
-			this.rowNumber = moduleValue[i].rows;
+			
+			this.colNumber = moduleValue[i].nbCols;
+			this.rowNumber = moduleValue[i].nbRows;
 			break;
 		}
 		

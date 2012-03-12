@@ -26,7 +26,7 @@ CI.Module.prototype._types.canvas_matrix.Model.prototype = {
 	
 	// Usually you don't really to init a model. But who knows. Please leave it.
 	init: function() {	
-		
+		CI.Module.prototype._impl.model.afterInit(this.module);
 	},
 	
 	
@@ -37,10 +37,10 @@ CI.Module.prototype._types.canvas_matrix.Model.prototype = {
 	 * To finally refresh the view, simply call this.module.updateView();
 	 * or don't if for any reason it's not necessary to update the module
 	 */
-	onDataChange: function(dataName, dataVal) {
+	onDataChange: function(dataName) {
 		/* Here you can transform the data coming from the DAO */
-		this.dataValue[dataName] = dataVal;
-		console.log(dataName);
+		this.dataValue[dataName] = this.data[dataName].getData();
+		
 		/* Triggers a module update */
 		this.module.updateView();
 	},

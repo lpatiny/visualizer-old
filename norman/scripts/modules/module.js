@@ -27,11 +27,9 @@ CI.Module = function(definition) {
 		this.domHeader = this.dom.children().children('.ci-module-header');
 		this.domWrapper = this.dom;
 		
-		
-		
 		this.view.init();
-		this.model.init();
 		this.controller.init();
+		this.model.init();
 	}
 	
 	this.buildDom = buildDom;
@@ -161,10 +159,21 @@ CI.Module.prototype._impl = {
 				if(typeof module.definition.dataSource[i].data !== "undefined")
 					sourceData = module.definition.dataSource[i].data;
 				
-				
-				model.data.push(new CI.DataSource(model.module, sourceName, sourceData));
+				model.data[sourceName] = new CI.DataSource(model.module, sourceName, sourceData);
 				model.dataValue[sourceName] = null;
 			}
+		},
+		
+		afterInit: function(module) {
+			
+			module.getDomWrapper().bind('sharedDataChanged', function(event, dataName, dataVal) {
+				event.stopPropagation();
+				event.preventDefault();
+				
+				module.model.data[dataName].setData(dataVal);
+				module.onDataChange(dataName);
+			});
+			
 		}
 	},
 	
@@ -174,19 +183,6 @@ CI.Module.prototype._impl = {
 			
 			controller.module = module;
 			
-		},
-		
-		doBindDataChange: function() {
-			
-			var controller = this;
-			this.module.getDomContent().bind('sharedDataChanged', function(event, dataName, dataVal) {
-				
-				event.stopPropagation();
-				event.preventDefault();
-				
-				controller.module.onDataChange(dataName, dataVal);
-				
-			});
 		}
 	}
 	

@@ -19,11 +19,6 @@ CI.Module.prototype._types.canvas_matrix.Controller.prototype = {
 	init: function() {
 		
 		var module = this.module;
-		/*
-		 * Binds sharedDataChanged event that triggers a view update.
-		 * Don't call it you want to manually controll the view update
-		 */
-		CI.Module.prototype._impl.controller.doBindDataChange.call(this);
 		
 		var actions;
 		if(!(actions = this.module.definition.dataActions))	
@@ -34,6 +29,21 @@ CI.Module.prototype._types.canvas_matrix.Controller.prototype = {
 			
 		if(typeof actions.onPixelHover !== "undefined")
 			$(this.module.getDomView()).on('mousemove', 'canvas', function(e) {
+				
+				
+				function getDataToSend(hashmap, toselect) {
+					var dataToSendType = typeof toselect, dataToSend;
+					if(dataToSendType == 'string')
+						dataToSend = hashmap[toselect]
+					else if(dataToSendType == 'object') {
+						dataToSend = {};
+						for(var i in toselect)
+							dataToSend[toselect[i]] = hashmap[toselect[i]];
+					} else
+						dataToSend = hashmap;
+					return dataToSend;
+				}
+				
 				
 				var cellX = 1;
 				var cellY = 1;
@@ -47,26 +57,41 @@ CI.Module.prototype._types.canvas_matrix.Controller.prototype = {
 				var xpx = e.pageX - $(e.target).offset().left;
 				var ypx = e.pageY - $(e.target).offset().top;
 				
-				var x = Math.floor(xpx * gridData.rows / e.target.width);
-				var y = Math.floor(ypx * gridData.cols / e.target.height);
+				var x = Math.floor(xpx * gridData.nbRows / e.target.width);
+				var y = Math.floor(ypx * gridData.nbCols / e.target.height);
 				
-				var valKeyed = gridData.dataMatrix[x][y];
-				var dataKeyed = gridData.data[x][y];
-			
-				//var dataKeyed = data[cellY][cellX];
-				var dataToSendType = typeof actions.onPixelHover.keys;
 				
-				var dataToSend;
-				if(dataToSendType == 'string')
-					dataToSend = dataKeyed[actions.onPixelHover.keys]
-				else if(dataToSendType == 'object') {
-					dataToSend = {};
-					for(var i in actions.onPixelHover.keys)
-						dataToSend[actions.onPixelHover.keys[i]] = dataKeyed[actions.onPixelHover.keys[i]];
-				} else
-					dataToSend = dataKeyed;
+				var dataKeyed = gridData.dataMatrix[x][y];
 				
-				CI.API.setSharedVar(actions.onPixelHover.sharedVar, dataToSend);
+				for(var i in actions.onPixelHover) {
+					
+					var hashmap = false;
+					switch(i) {
+						case 'row':
+							hashmap = gridData.rows[y];	
+						break;
+						
+						case 'col':
+							hashmap = gridData.cols[x];
+						break;
+						
+						case 'intersect':
+							hashmap = dataKeyed;
+						break;
+					}
+					
+					if(!!hashmap) {
+						var data = getDataToSend(hashmap, actions.onPixelHover[i].keys);
+						console.log(data);
+						console.log(hashmap);
+						console.log(actions.onPixelHover[i].keys);
+						CI.API.setSharedVar(actions.onPixelHover[i].sharedVar, data);
+						
+					}
+				}
+				
+				
+				
 			});
 		
 		if(actions.onPixelClick) {}

@@ -24,30 +24,67 @@ CI = new Object();
 
 
 
-/*
+var chems = [
+	"Ammonia gas",
+	"Ammonium formate",
+	"Bromobenzene",
+	"Carbonyldiimidazole",
+	"Cyclohexanone",
+	"1,1-Dichloro-1-fluoroethane",
+	"Diethylamine",,
+	"2,5-Dimethoxyphenethylamine",
+	"Formamide",
+	"Formic acid",
+	"Lithium metal",
+	"Lithium aluminum hydride",
+	"Magnesium metal",
+	"Mercuric chloride",
+	"N-Methylformamide"
+];
+
+var chemCAS = [
+	2475628734,
+	2343645656,
+	3464677657,
+	5767567467,
+	5674526456,
+	4764563454,
+	4656456546,
+	4746756756,
+	4564564565,
+	4646767675,
+	5677887878,
+	9897867457,
+	1231231232,
+	4534534534,
+	3564564564
+];
+
 var json = {};
 
-json.rows = 100;
-json.cols = 100;
+json.nbRows = 15;
+json.nbCols = 15;
 
 json.dataMatrix = [];
-json.data = [];
+json.rows = [];
+json.cols = [];
 
-for(var i = 0; i < 100; i++) {
+for(var i = 0; i < 15; i++) {
+	
+	json.rows[i] = {};
+	json.cols[i] = {};
+	json.rows[i].cas = chemCAS[i];
+	json.cols[i].cas = chemCAS[i];
+	json.rows[i].name = chems[i];
+	json.cols[i].name = chems[i];
+	
 	json.dataMatrix[i] = [];
-	for(var j = 0; j < 100; j++) {
-		json.dataMatrix[i][j] = Math.random();
+	for(var j = 0; j < 15; j++) {
+		json.dataMatrix[i][j] = {};
+		json.dataMatrix[i][j].val = Math.random();
+		json.dataMatrix[i][j].url = "http://google.com";
 	}
 }
-
-
-for(var i = 0; i < 100; i++) {
-	json.data[i] = [];
-	for(var j = 0; j < 100; j++) {
-		json.data[i][j] = { url_ir: 'http://google.com/' + j + " " + i };
-	}
-}*/
-
 
 	
 //console.log(JSON.stringify(json));

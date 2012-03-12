@@ -30,8 +30,21 @@
 
     "dataActions": {
 	"onPixelHover": {
-		"sharedVar": "matrix_hovered",
-		"keys": ["url_ir"]
+	
+		"row": {
+			"sharedVar": "row_hovered",
+			"keys": ["name", "cas"]	
+		},
+		
+		"col": {
+			"sharedVar": "col_hovered",
+			"keys": ["name"]	
+		},
+	
+		"intersect": {
+			"sharedVar": "intersect_hovered",
+			"keys": ["val"]
+		}
 	}
     },
     
@@ -49,7 +62,7 @@
 
 {
     "id": "12346",	
-    "type": "hashmap_displayer",
+    "type": "datamatrix_intersect",
     "title": "Details",
 
     "position": {
@@ -64,12 +77,34 @@
 
     "dataModule": {
     	
+    	"labels": {
+    	
+    		"name": "Nom du composé",
+    		"cas": "Numéro CAS",
+    		"url": "Adresse URL",
+    		"row": "Ligne",
+    		"col": "Colonne",
+    		"intersect": "Différence"
+    	}
+    	
     },
 
     "dataSource": [{
-    	"name": "matrix_hovered"
+    	"name": "row_hovered",
+    	"data": {
+    		"rel": "row"
+    		}
+    }, {
+    	"name": "col_hovered",
+    	"data": {
+    		"rel": "col"
+    		}
+    }, {
+    	"name": "intersect_hovered",
+    	"data": {
+    		"rel": "intersect"
+    		}
     }]
-}
-]
+}]
 
 }

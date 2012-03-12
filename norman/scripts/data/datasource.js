@@ -11,10 +11,9 @@ CI.DataSource = function(module, sourceName, sourceData) {
 	if(this.sourceData == null)
 		return;
 	
-	if(typeof this.sourceData.type == "undefined") {
-		throw "Error. No source type has been defined";
+	if(typeof this.sourceData.type == "undefined")
 		return;
-	}
+	
 	
 	// What is the required action ?
 	switch(this.sourceData.type) {
@@ -32,8 +31,16 @@ CI.DataSource = function(module, sourceName, sourceData) {
 
 CI.DataSource.prototype = {
 	
+	setData: function(data) {
+		this.data = data;
+	},
+	
 	getData: function() {
 		return this.data;
+	},
+	
+	getSourceData: function() {
+		return this.sourceData;
 	},
 	
 	eraseAjaxData: function() {

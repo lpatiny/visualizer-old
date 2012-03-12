@@ -19,11 +19,6 @@ CI.Module.prototype._types.hashmap_displayer.Controller.prototype = {
 	init: function() {
 		
 		var module = this.module;
-		/*
-		 * Binds sharedDataChanged event that triggers a view update.
-		 * Don't call it you want to manually controll the view update
-		 */
-		CI.Module.prototype._impl.controller.doBindDataChange.call(this);
-		
+	
 	}
 }

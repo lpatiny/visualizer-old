@@ -11,7 +11,7 @@ function generateGrid(gridData, gridImage, cols, rows, cellWidth, cellHeight) {
 		while (y<rows) {
 			
 			
-			color = Math.round(gridData[x][y] * 255);
+			color = Math.round(gridData[x][y].val * 255);
 			
 		//	color = Math.floor( Math.random() * 255 );
 		//	gridData[x/cellWidth][y/cellHeight] = color;
