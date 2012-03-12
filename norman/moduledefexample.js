@@ -32,14 +32,16 @@ var dataModule = {
     // Source of the data. A module can certainly have multiple sources
     dataSource: [{
     	name: 'matrix1',
-    	source: {
+    	data: {
     		type: 'url',
+    		dataType: 'json',
     		url: 'jsonURL'
     	}
     }, {
     	name: 'maxtrix2',
-    	source: {
+    	data: {
     		type: 'url',
+    		dataType: 'json',
     		url: 'jsonURL'
     	}
     }]

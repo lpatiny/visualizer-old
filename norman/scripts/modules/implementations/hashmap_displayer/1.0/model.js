@@ -7,10 +7,10 @@
  */
 
 
-if(typeof CI.Module.prototype._types.canvas_matrix == 'undefined')
-	CI.Module.prototype._types.canvas_matrix = {};
+if(typeof CI.Module.prototype._types.hashmap_displayer == 'undefined')
+	CI.Module.prototype._types.hashmap_displayer = {};
 
-CI.Module.prototype._types.canvas_matrix.Model = function(module) {
+CI.Module.prototype._types.hashmap_displayer.Model = function(module) {
 	
 	/*
 	 * Sets
@@ -22,7 +22,7 @@ CI.Module.prototype._types.canvas_matrix.Model = function(module) {
 	// Call anything else if you want. The prototyped init() function can also be used.
 }
 
-CI.Module.prototype._types.canvas_matrix.Model.prototype = {
+CI.Module.prototype._types.hashmap_displayer.Model.prototype = {
 	
 	// Usually you don't really to init a model. But who knows. Please leave it.
 	init: function() {	
@@ -40,7 +40,7 @@ CI.Module.prototype._types.canvas_matrix.Model.prototype = {
 	onDataChange: function(dataName, dataVal) {
 		/* Here you can transform the data coming from the DAO */
 		this.dataValue[dataName] = dataVal;
-		console.log(dataName);
+		
 		/* Triggers a module update */
 		this.module.updateView();
 	},

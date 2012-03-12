@@ -6,28 +6,35 @@
  * Dual licensed under the MIT or GPL Version 2 licenses.
  */
 
+// HashMap moduleId => Module (See init.js)
+CI.modules = {};
 
 CI.Module = function(definition) {
 
-	this.definition = $.extend({}, CI.Module.prototype.defaults, definition);
+	this.definition = $.extend(true, {}, CI.Module.prototype.defaults, definition);
 	
+	this.init = init;
 	function init() {
-		var moduleType = this.def.type;
 		
-		this.model = new CI.Module._types[moduleType].model(this);
-		this.view = new CI.Module._types[moduleType].view(this);
-		this.controller = new CI.Module._types[moduleType].controller(this);
+		var moduleType = this.definition.type;
 		
-		this.dom = $(buildDom());
+		this.model = new CI.Module.prototype._types[moduleType].Model(this);
+		this.view = new CI.Module.prototype._types[moduleType].View(this);
+		this.controller = new CI.Module.prototype._types[moduleType].Controller(this);
+		
+		this.dom = $(this.buildDom());
 		this.domContent = this.dom.children().children('.ci-module-content');
+		this.domHeader = this.dom.children().children('.ci-module-header');
 		this.domWrapper = this.dom;
+		
+		
 		
 		this.view.init();
 		this.model.init();
 		this.controller.init();
 	}
 	
-	
+	this.buildDom = buildDom;
 	function buildDom() {
 		
 		var html = [];
@@ -45,16 +52,38 @@ CI.Module = function(definition) {
 		return html.join('');
 	}
 	
-	init();
+	this.init();
 };
 
 CI.Module.prototype = {
 	
 	defaults: {
 		id: -1,
-		type: 'default'
+		type: 'default',
+		
+		size: {
+			width: 10,
+			height: 15
+		},
+		
+		position: {
+			top: 0,
+			left: 0
+		}
 	},
 
+	// All modules implementations will come into this object
+	_types: {},
+	
+	
+	onDataChange: function(dataName, dataVal) {
+		
+		if(typeof this.model.onDataChange == 'function')
+			return this.model.onDataChange(dataName, dataVal);
+		
+		throw "The model does not implement any dataChange function";
+	},
+	
 	
 	updateView: function() {
 		if(typeof this.view.update == 'function')
@@ -82,13 +111,28 @@ CI.Module.prototype = {
 			return this.view.getDom();
 			
 		throw "The module's view doest not implement the getDom function";
-	}
+	},
+	
+	getDomHeader: function() {
+		if(typeof this.domHeader !== 'undefined')
+			return this.domHeader;
+			
+		throw "The module has not been loaded yet";
+	},
 	
 	getValue: function() {
 		if(typeof this.model.getValue == 'function')
 			return this.model.getValue();
 		
 		return;
+	},
+	
+	getPosition: function() {
+		return this.definition.position;
+	},
+	
+	getSize: function() {
+		return this.definition.size;
 	}
 };
 
@@ -110,13 +154,41 @@ CI.Module.prototype._impl = {
 			model.data = [];
 			model.dataValue = [];
 			
-			for(var i = 0; i < model.definition.dataSource.length; i++) {
-				sourceName = model.definition.dataSource[i].name;
-				sourceData = model.definition.dataSource[i].data;
+			for(var i = 0; i < module.definition.dataSource.length; i++) {
+				sourceName = module.definition.dataSource[i].name;
 				
-				model.data.push(new DataSource(model.module, sourceName, sourceData));
+				sourceData = null;
+				if(typeof module.definition.dataSource[i].data !== "undefined")
+					sourceData = module.definition.dataSource[i].data;
+				
+				
+				model.data.push(new CI.DataSource(model.module, sourceName, sourceData));
 				model.dataValue[sourceName] = null;
 			}
 		}
+	},
+	
+	controller: {
+		
+		init: function(module, controller) {
+			
+			controller.module = module;
+			
+		},
+		
+		doBindDataChange: function() {
+			
+			var controller = this;
+			this.module.getDomContent().bind('sharedDataChanged', function(event, dataName, dataVal) {
+				
+				event.stopPropagation();
+				event.preventDefault();
+				
+				controller.module.onDataChange(dataName, dataVal);
+				
+			});
+		}
 	}
+	
+	
 }

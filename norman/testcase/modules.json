@@ -1,0 +1,75 @@
+{
+
+"grid": {
+	"xWidth": 10,
+	"yHeight": 10
+},
+
+"modules": [
+{
+    "id": "12345",	
+    "type": "canvas_matrix",
+    "title": "My Awesome Matrix",
+
+    "position": {
+    	"left": 1,
+    	"top": 1
+    },
+    
+
+    "size": {
+    	"width": 40,
+    	"hight": 40
+    },
+
+
+    "dataModule": {
+    	
+    },
+    
+
+    "dataActions": {
+	"onPixelHover": {
+		"sharedVar": "matrix_hovered",
+		"keys": ["url_ir"]
+	}
+    },
+    
+
+    "dataSource": [{
+    	"name": "matrix1",
+    	"data": {
+    		"type": "url",
+    		"dataType": "json",
+    		"url": "./testcase/randommatrix.json"
+    	}
+    }]
+}, 
+
+
+{
+    "id": "12346",	
+    "type": "hashmap_displayer",
+    "title": "Details",
+
+    "position": {
+    	"left": 50,
+    	"top": 1
+    },
+
+    "size": {
+    	"width": 40,
+    	"hight": 40
+    },
+
+    "dataModule": {
+    	
+    },
+
+    "dataSource": [{
+    	"name": "matrix_hovered"
+    }]
+}
+]
+
+}

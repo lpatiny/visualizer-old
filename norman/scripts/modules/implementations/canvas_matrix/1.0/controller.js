@@ -10,27 +10,50 @@ if(typeof CI.Module.prototype._types.canvas_matrix == 'undefined')
 	CI.Module.prototype._types.canvas_matrix = {};
 
 CI.Module.prototype._types.canvas_matrix.Controller = function(module) {
-	this.module = module;
 	
+	CI.Module.prototype._impl.controller.init(module, this);
 }
 
 CI.Module.prototype._types.canvas_matrix.Controller.prototype = {
 	
 	init: function() {
 		
+		var module = this.module;
+		/*
+		 * Binds sharedDataChanged event that triggers a view update.
+		 * Don't call it you want to manually controll the view update
+		 */
+		CI.Module.prototype._impl.controller.doBindDataChange.call(this);
+		
 		var actions;
 		if(!(actions = this.module.definition.dataActions))	
 			return;
 			
+		
+		//getDomView
+			
 		if(typeof actions.onPixelHover !== "undefined")
-			this.module.getDomView().on('mousemove', 'canvas', function() {
+			$(this.module.getDomView()).on('mousemove', 'canvas', function(e) {
 				
 				var cellX = 1;
 				var cellY = 1;
 				
-				var data = this.module.module.getData();
+				var gridData = module.model.getValue();
+				for(var i in gridData) {
+					gridData = gridData[i];
+					break;
+				}
 				
-				var dataKeyed = data[cellY][cellX];
+				var xpx = e.pageX - $(e.target).offset().left;
+				var ypx = e.pageY - $(e.target).offset().top;
+				
+				var x = Math.floor(xpx * gridData.rows / e.target.width);
+				var y = Math.floor(ypx * gridData.cols / e.target.height);
+				
+				var valKeyed = gridData.dataMatrix[x][y];
+				var dataKeyed = gridData.data[x][y];
+			
+				//var dataKeyed = data[cellY][cellX];
 				var dataToSendType = typeof actions.onPixelHover.keys;
 				
 				var dataToSend;
@@ -38,8 +61,8 @@ CI.Module.prototype._types.canvas_matrix.Controller.prototype = {
 					dataToSend = dataKeyed[actions.onPixelHover.keys]
 				else if(dataToSendType == 'object') {
 					dataToSend = {};
-					for(var i in actions.onPixelHover.key)
-						dataToSend[actions.onPixelHover.key[i]] = dataKeyed[actions.onPixelHover.key[i]];
+					for(var i in actions.onPixelHover.keys)
+						dataToSend[actions.onPixelHover.keys[i]] = dataKeyed[actions.onPixelHover.keys[i]];
 				} else
 					dataToSend = dataKeyed;
 				
