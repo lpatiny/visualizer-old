@@ -84,7 +84,8 @@
     		"url": "Adresse URL",
     		"row": "Ligne",
     		"col": "Colonne",
-    		"intersect": "Différence"
+    		"intersect": "Différence",
+    		"val": "Valeur de la différence"
     	}
     	
     },

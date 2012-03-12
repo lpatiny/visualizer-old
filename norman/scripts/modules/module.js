@@ -36,10 +36,10 @@ CI.Module = function(definition) {
 	function buildDom() {
 		
 		var html = [];
-		html.push('<div class="ci-module-wrapper" data-module-id="');
-		html.push(this.definition.id);
-		html.push('" class="ci-module-');
+		html.push('<div class="ci-module-wrapper ci-module-');
 		html.push(this.definition.type);
+		html.push('" data-module-id="');
+		html.push(this.definition.id);
 		html.push('"><div class="ci-module"><div class="ci-module-header"><div class="ci-module-header-title">');
 		html.push(this.definition.title);
 		html.push('</div>');

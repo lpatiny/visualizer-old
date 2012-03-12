@@ -31,7 +31,7 @@ CI.Module.prototype._types.datamatrix_intersect.View.prototype = {
 		console.log(moduleValue);
 		for(var i in moduleValue) {
 			
-			html.push('<table class="ci-intersect ci-intersect-' + i + '>');
+			html.push('<table class="ci-intersect ci-intersect-' + i + '">');
 			
 			html.push('<tr><th colspan="2">');
 			html.push(this.getLabel(i));
