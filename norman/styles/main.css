@@ -79,6 +79,22 @@ div.ci-module-wrapper .ci-module-content {
 	overflow: hidden;
 }
 
+.ci-module-expand {
+	position: relative;
+	top: -20px;
+	height: 19px;
+	line-height: 14px;
+	background: #ececec;
+	letter-spacing: 4px;
+	font-size: 14px;
+	border-top: 1px solid #c0c0c0;
+	text-align: center;
+	cursor: pointer;
+}
+
+.ci-module-expand {
+	
+}
 
 .ci-label {
 	font-weight: bold;

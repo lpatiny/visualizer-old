@@ -52,7 +52,7 @@ CI.Module.prototype._types.canvas_matrix.View.prototype = {
 	
 	onResize: function() {
 		
-		var height = this.module.getDomContent().height() - this.module.getDomContent().find('h3').outerHeight(true);
+		var height = this.module.getDomContent().parent().height() - this.module.getDomContent().find('h3').outerHeight(true);
 		
 		var table = this.module.getDomContent().find('table').height(height);
 		// Set the canvas to full width and height

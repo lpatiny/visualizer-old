@@ -1,6 +1,6 @@
 
-.ci-module-datamatrix_intersect .ci-module-content > div {
-	margin: 5px;
+.ci-module-datamatrix_intersect .ci-module-content > div > div {
+	padding: 5px;
 }
 
 .ci-module-datamatrix_intersect table {

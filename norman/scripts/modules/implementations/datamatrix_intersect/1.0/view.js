@@ -49,6 +49,8 @@ CI.Module.prototype._types.datamatrix_intersect.View.prototype = {
 		}
 		
 		this.getDom().html(html.join(''));
+		
+		CI.Grid.checkModuleSize(this.module);
 	},
 	
 	getDom: function() {
