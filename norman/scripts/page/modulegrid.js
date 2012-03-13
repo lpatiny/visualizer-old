@@ -1,17 +1,34 @@
-
+/**
+ * @namespace
+ * Represents a grid to which modules can be added, removed, moved and resized.
+ */
 CI.Grid = {
-	
+
+	/**
+	 * Initialise the module grid in the div with id="ci-modules-grid"
+	 * @param {object} definition An object containing options for the grid (is merged into {@link defaults})
+	 * @param {integer} [definition.xWidth] The width of the grid cells
+	 * @param {integer} [definition.xHeight] The height of the grid cells
+	 */
 	init: function(definition) {
 		CI.Grid.definition = $.extend(true, CI.Grid.defaults, definition);
 		
 		CI.Grid._el = $("#ci-modules-grid");
 	},
 	
+	/**
+	 * Used to define the grid-cell sizes. On initialisation, the object passed is merged with this object 
+	 * @hide
+	 */
 	defaults: {
 		xWidth: 20,
 		xHeight: 20
 	},
 	
+	/**
+	 * Add a module to the grid 
+	 * @param module {Module} The module to add.
+	 */
 	addModule: function(module) {
 		
 		var modulePos = module.getPosition();
@@ -41,7 +58,10 @@ CI.Grid = {
 		CI.Grid.moduleResize(module);
 		
 	},
-	
+	/**
+	 * Is called by jQuery UI when a module is resized, to resize the module and allow the module view's contents to update accordingly.
+	 * @param module The module to resize.
+	 */
 	moduleResize: function(module) {
 		
 		var wrapper = module.getDomWrapper();

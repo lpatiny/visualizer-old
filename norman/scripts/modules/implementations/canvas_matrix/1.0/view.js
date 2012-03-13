@@ -23,13 +23,7 @@ CI.Module.prototype._types.canvas_matrix.View.prototype = {
 		this.lastCanvasWidth = 0;
 		this.lastCanvasHeight = 0;
 
-		this.dom = document.createElement("table");
-		var tr = document.createElement("tr");
-		var td = document.createElement("td");
-		this.dom.appendChild(tr);
-		tr.appendChild(td);
-		
-		td.appendChild(this.canvas);
+		this.dom = (this.canvas);
 
 		this.module.getDomContent().html(this.dom);
 		
@@ -39,6 +33,8 @@ CI.Module.prototype._types.canvas_matrix.View.prototype = {
 		this.worker.addEventListener('message', function(event) {
 			view.canvasContext.putImageData(event.data, 0, 0);
 		});
+		this.gridImage = this.canvasContext.createImageData(this.canvas.width, this.canvas.height);
+		this.updateCanvas();
 	},
 	
 	onResize: function() {
