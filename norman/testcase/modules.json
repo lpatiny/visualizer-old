@@ -38,12 +38,12 @@
 		
 		"col": {
 			"sharedVar": "col_hovered",
-			"keys": ["name"]	
+			"keys": ["name", "image"]	
 		},
 	
 		"intersect": {
 			"sharedVar": "intersect_hovered",
-			"keys": ["val"]
+			"keys": ["value", "url"]
 		}
 	}
     },

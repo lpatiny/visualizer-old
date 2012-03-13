@@ -1,15 +1,15 @@
-.ci-module-canvas_matrix .ci-module-content > table {
-	
+
+.ci-module-canvas_matrix .ci-module-content table {
 	width: 100%;
 	height: 100%;
 }
 
-.ci-module-canvas_matrix .ci-module-content  td {
-	vertical-align: middle;
+.ci-module-canvas_matrix .ci-module-content h3 {
 	text-align: center;
+	margin-bottom: 3px;
 }
 
-
-.ci-module-canvas_matrix .ci-module-content > div > div > canvas {
-	
+.ci-module-canvas_matrix .ci-module-content td {
+	vertical-align: middle;
+	text-align: center;
 }

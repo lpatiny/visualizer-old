@@ -23,10 +23,19 @@ CI.Module.prototype._types.canvas_matrix.View.prototype = {
 		this.lastCanvasWidth = 0;
 		this.lastCanvasHeight = 0;
 
-		this.dom = document.createElement("table");
+		this.dom = document.createElement("div");
+		var title = document.createElement("h3");
+		
+		this._domTitle = title;
+		
+		var table = document.createElement("table");
 		var tr = document.createElement("tr");
 		var td = document.createElement("td");
-		this.dom.appendChild(tr);
+		
+		this.dom.appendChild(title);
+		this.dom.appendChild(table);
+		
+		table.appendChild(tr);
 		tr.appendChild(td);
 		
 		td.appendChild(this.canvas);
@@ -43,9 +52,12 @@ CI.Module.prototype._types.canvas_matrix.View.prototype = {
 	
 	onResize: function() {
 		
+		var height = this.module.getDomContent().height() - this.module.getDomContent().find('h3').outerHeight(true);
+		
+		var table = this.module.getDomContent().find('table').height(height);
 		// Set the canvas to full width and height
-		var moduleWidth = this.module.getDomContent().width();
-		var moduleHeight = this.module.getDomContent().height();
+		var moduleWidth = table.width();
+		var moduleHeight = table.height();
 		
 		var size = Math.min(moduleWidth, moduleHeight);
 		
@@ -82,8 +94,13 @@ CI.Module.prototype._types.canvas_matrix.View.prototype = {
 			
 			this.colNumber = moduleValue[i].nbCols;
 			this.rowNumber = moduleValue[i].nbRows;
+			
+			this._domTitle.innerHTML = moduleValue[i].data.title;
+			
 			break;
 		}
+		
+		
 		
 		this.onResize()
 	},
@@ -114,5 +131,8 @@ CI.Module.prototype._types.canvas_matrix.View.prototype = {
 	
 	getDom: function() {
 		return this.dom;
-	}
+	},
+	
+	// No additional type transform needed
+	typeToScreen: {}
 }
