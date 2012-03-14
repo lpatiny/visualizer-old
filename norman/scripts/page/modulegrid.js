@@ -48,12 +48,21 @@ CI.Grid = {
 			grid: [CI.Grid.definition.xWidth, CI.Grid.definition.yHeight],
 			resize: function() {
 				CI.Grid.moduleResize(module);
-			}
+			},
+			
+			containment: "parent"
 			
 		}).draggable({
 			grid: [CI.Grid.definition.xWidth, CI.Grid.definition.yHeight],
 			containment: "parent"
 		}).trigger('resize');
+		
+		
+		module.getDomWrapper().on('click', '.ci-module-expand', function() {
+			module.getDomWrapper().height((module.getDomContent().outerHeight() + module.getDomHeader().outerHeight()));
+			CI.Grid.moduleResize(module);
+		});
+		
 		
 		CI.Grid.moduleResize(module);
 		
@@ -68,10 +77,22 @@ CI.Grid = {
 		module.getPosition().width = wrapper.width() / CI.Grid.definition.xWidth;
 		module.getPosition().height = wrapper.height() / CI.Grid.definition.yHeight;
 		
-		module.getDomContent().css({
+		module.getDomContent().parent().css({
 			height: wrapper.height() - module.getDomHeader().outerHeight(true)
 		});
 		
 		module.view.onResize();
+		
+		CI.Grid.checkModuleSize(module);
+		
+		
+	},
+	
+	checkModuleSize: function(module) {
+		
+		if(module.getDomContent().height() > module.getDomContent().parent().outerHeight(true))
+			module.getDomContent().parent().after(module.viewExpander);
+		else
+			module.viewExpander.remove();
 	}
 }

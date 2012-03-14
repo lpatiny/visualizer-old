@@ -7,11 +7,8 @@ CI = new Object();
 	$(document).ready(function() {
 		
 		$.getJSON('testcase/modules.json', {}, function(pagedef) {
-		
 			// Initiates the grid
 			CI.Grid.init(pagedef.grid);
-				
-				
 			for(var i = 0; i < pagedef.modules.length; i++) {
 				var Module = new CI.Module(pagedef.modules[i]); 
 				CI.modules[pagedef.modules[i].id] = Module;
@@ -66,25 +63,35 @@ json.nbRows = 15;
 json.nbCols = 15;
 
 json.dataMatrix = [];
-json.rows = [];
-json.cols = [];
+json.dataRows = [];
+json.dataCols = [];
+
+json.types = {
+	cas: "string",
+	name: "string"
+}
+
+json.data = {
+	title: 'Comparison between toxic compounds'
+}
 
 for(var i = 0; i < 15; i++) {
 	
-	json.rows[i] = {};
-	json.cols[i] = {};
-	json.rows[i].cas = chemCAS[i];
-	json.cols[i].cas = chemCAS[i];
-	json.rows[i].name = chems[i];
-	json.cols[i].name = chems[i];
+	json.dataRows[i] = {};
+	json.dataCols[i] = {};
+	json.dataRows[i].cas = chemCAS[i];
+	json.dataCols[i].cas = chemCAS[i];
+	json.dataRows[i].name = chems[i];
+	json.dataCols[i].name = chems[i];
+	json.dataCols[i].image = {type: "image", val: "http://webbook.nist.gov/cgi/cbook.cgi?Struct=C122510"};
 	
 	json.dataMatrix[i] = [];
 	for(var j = 0; j < 15; j++) {
 		json.dataMatrix[i][j] = {};
-		json.dataMatrix[i][j].val = Math.random();
-		json.dataMatrix[i][j].url = "http://google.com";
+		json.dataMatrix[i][j].value = Math.random();
+		json.dataMatrix[i][j].url = {type: "url", val: {url: "http://google.com", label: "View google"}};
 	}
 }
 
 	
-//console.log(JSON.stringify(json));
+console.log(JSON.stringify(json));

@@ -16,6 +16,7 @@ CI.Module = function(definition) {
 	this.init = init;
 	function init() {
 		
+		var module = this;
 		var moduleType = this.definition.type;
 		
 		this.model = new CI.Module.prototype._types[moduleType].Model(this);
@@ -23,9 +24,11 @@ CI.Module = function(definition) {
 		this.controller = new CI.Module.prototype._types[moduleType].Controller(this);
 		
 		this.dom = $(this.buildDom());
-		this.domContent = this.dom.children().children('.ci-module-content');
+		this.domContent = this.dom.children().children('.ci-module-content').children('.ci-module-content-overflow');
 		this.domHeader = this.dom.children().children('.ci-module-header');
 		this.domWrapper = this.dom;
+		this.viewExpander = $('<div class="ci-module-expand">...</div>');
+		
 		
 		this.view.init();
 		this.controller.init();
@@ -43,9 +46,9 @@ CI.Module = function(definition) {
 		html.push('"><div class="ci-module"><div class="ci-module-header"><div class="ci-module-header-title">');
 		html.push(this.definition.title);
 		html.push('</div>');
-		html.push('</div><div class="ci-module-content">');
+		html.push('</div><div class="ci-module-content"><div class="ci-module-content-overflow">');
 		
-		html.push('</div>');
+		html.push('</div></div>');
 		html.push('</div>');
 		return html.join('');
 	}

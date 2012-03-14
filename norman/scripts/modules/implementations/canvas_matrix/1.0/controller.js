@@ -60,7 +60,6 @@ CI.Module.prototype._types.canvas_matrix.Controller.prototype = {
 				var x = Math.floor(xpx * gridData.nbRows / e.target.width);
 				var y = Math.floor(ypx * gridData.nbCols / e.target.height);
 				
-				
 				var dataKeyed = gridData.dataMatrix[x][y];
 				
 				for(var i in actions.onPixelHover) {
@@ -68,11 +67,11 @@ CI.Module.prototype._types.canvas_matrix.Controller.prototype = {
 					var hashmap = false;
 					switch(i) {
 						case 'row':
-							hashmap = gridData.rows[y];	
+							hashmap = gridData.dataRows[y];	
 						break;
 						
 						case 'col':
-							hashmap = gridData.cols[x];
+							hashmap = gridData.dataCols[x];
 						break;
 						
 						case 'intersect':
@@ -82,11 +81,7 @@ CI.Module.prototype._types.canvas_matrix.Controller.prototype = {
 					
 					if(!!hashmap) {
 						var data = getDataToSend(hashmap, actions.onPixelHover[i].keys);
-						console.log(data);
-						console.log(hashmap);
-						console.log(actions.onPixelHover[i].keys);
 						CI.API.setSharedVar(actions.onPixelHover[i].sharedVar, data);
-						
 					}
 				}
 				

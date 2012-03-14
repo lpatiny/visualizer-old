@@ -28,7 +28,7 @@ CI.Module.prototype._types.datamatrix_intersect.View.prototype = {
 		
 		html = [];
 		var moduleValue = this.module.getValue();
-		console.log(moduleValue);
+		
 		for(var i in moduleValue) {
 			
 			html.push('<table class="ci-intersect ci-intersect-' + i + '">');
@@ -41,7 +41,7 @@ CI.Module.prototype._types.datamatrix_intersect.View.prototype = {
 				html.push('<tr><td class="ci-label">');
 				html.push(this.getLabel(j));
 				html.push('</td><td>');
-				html.push(moduleValue[i][j]);
+				html.push(CI.toScreen(moduleValue[i][j], j, this));
 				html.push('</td></tr>');
 			}
 			
@@ -49,6 +49,8 @@ CI.Module.prototype._types.datamatrix_intersect.View.prototype = {
 		}
 		
 		this.getDom().html(html.join(''));
+		
+		CI.Grid.checkModuleSize(this.module);
 	},
 	
 	getDom: function() {

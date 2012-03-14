@@ -56,6 +56,14 @@ div.ci-module-wrapper .ci-module-header {
 	background: linear-gradient(top, #eaeaea 8%,#f7f7f7 75%); /* W3C */
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#eaeaea', endColorstr='#f7f7f7',GradientType=0 ); /* IE6-9 */
 
+	-moz-background-clip: padding; 
+	-webkit-background-clip: padding-box; 
+	background-clip: padding-box;
+	
+	border-top-left-radius: 3px;
+	border-top-right-radius: 3px;
+	border-top: 1px solid #fefefe;
+	
 	border-bottom: 1px solid #c0c0c0;
 }
 
@@ -71,6 +79,22 @@ div.ci-module-wrapper .ci-module-content {
 	overflow: hidden;
 }
 
+.ci-module-expand {
+	position: relative;
+	top: -20px;
+	height: 19px;
+	line-height: 14px;
+	background: #ececec;
+	letter-spacing: 4px;
+	font-size: 14px;
+	border-top: 1px solid #c0c0c0;
+	text-align: center;
+	cursor: pointer;
+}
+
+.ci-module-expand {
+	
+}
 
 .ci-label {
 	font-weight: bold;
