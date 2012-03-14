@@ -7,6 +7,10 @@
  */
 
 
+/**
+ * Represents the source of any type of data (i.e. is updatable through e.g. ajax)
+ * @namespace 
+ */
 CI.API = {};
 
 CI.API.setSharedVar = function(varName, varData) {

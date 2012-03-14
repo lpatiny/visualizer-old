@@ -6,7 +6,7 @@ CI.Grid = {
 
 	/**
 	 * Initialise the module grid in the div with id="ci-modules-grid"
-	 * @param {object} definition An object containing options for the grid (is merged into {@link defaults})
+	 * @param {object} definition An object containing options for the grid (is merged into {@link CI.Grid.defaults})
 	 * @param {integer} [definition.xWidth] The width of the grid cells
 	 * @param {integer} [definition.xHeight] The height of the grid cells
 	 */
@@ -18,6 +18,7 @@ CI.Grid = {
 	
 	/**
 	 * Used to define the grid-cell sizes. On initialisation, the object passed is merged with this object 
+	 * @type object
 	 * @hide
 	 */
 	defaults: {

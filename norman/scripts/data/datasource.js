@@ -1,5 +1,12 @@
 
-
+/**
+ * Represents the source of any type of data (i.e. is updatable through e.g. ajax)
+ * @Class
+ * @namespace 
+ * @param {Module} module the module to which this data is bound
+ * @param {string} sourceName the name of this data object
+ * @param {object} sourceData The actual data object (requires at least type to be set)
+ */
 CI.DataSource = function(module, sourceName, sourceData) {
 	
 	this.module = module;
@@ -61,6 +68,9 @@ CI.DataSource.prototype = {
 		throw "Impossible to get the data. DataSource does not support it"
 	},
 	
+	/**
+	 * If necessary, set up the DataSource to be updateable via Ajax (url), then run the AJAX update through jQuery
+	 */
 	sourceUrl: function() {
 		
 		if(typeof this.sourceData.url == 'undefined')

@@ -1,4 +1,6 @@
-/* We must first of all initialize the namespace */
+/**
+ * @namespace Holds all the functionality for the visualizer
+ */
 CI = new Object();
 
 
