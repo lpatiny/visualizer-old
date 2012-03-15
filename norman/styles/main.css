@@ -37,6 +37,8 @@ body, th, td {
 	border-radius: 3px;
 	
 	box-shadow: 0px 0px 5px rgba(40, 40, 40, 0.4);
+	 
+	z-index: 0; /* needs to be specified for the resize handle to appear in the right layer */
 }
 
 div.ci-module-wrapper .ci-module {
