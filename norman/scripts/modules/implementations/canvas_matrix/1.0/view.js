@@ -45,6 +45,9 @@ CI.Module.prototype._types.canvas_matrix.View.prototype = {
 			view.canvasContext.putImageData(event.data, 0, 0);
 		});
 		this.gridImage = this.canvasContext.createImageData(this.canvas.width, this.canvas.height);
+		
+		this.fitFillMode = "fill";
+		
 		this.updateCanvas();
 	},
 	
@@ -58,7 +61,11 @@ CI.Module.prototype._types.canvas_matrix.View.prototype = {
 		
 		container.height(moduleHeight);
 		
-		var size = Math.max(moduleWidth, moduleHeight);
+		if (this.fitFillMode == "fit")
+			var size = Math.min(moduleWidth, moduleHeight);
+		else if (this.fitFillMode == "fill")
+			var size = Math.max(moduleWidth, moduleHeight);
+		else return;
 		
 		if(this.rowNumber == undefined || this.colNumber == undefined)
 			return;
