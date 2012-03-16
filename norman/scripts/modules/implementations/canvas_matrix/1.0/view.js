@@ -28,17 +28,13 @@ CI.Module.prototype._types.canvas_matrix.View.prototype = {
 		
 		this._domTitle = title;
 		
-		var table = document.createElement("table");
-		var tr = document.createElement("tr");
-		var td = document.createElement("td");
+		var canvasContainer = document.createElement("div");
+		canvasContainer.className = "canvas-container";
 		
 		this.dom.appendChild(title);
-		this.dom.appendChild(table);
-		
-		table.appendChild(tr);
-		tr.appendChild(td);
-		
-		td.appendChild(this.canvas);
+		this.dom.appendChild(canvasContainer);
+				
+		canvasContainer.appendChild(this.canvas);
 
 		this.module.getDomContent().html(this.dom);
 		
@@ -54,20 +50,21 @@ CI.Module.prototype._types.canvas_matrix.View.prototype = {
 	
 	onResize: function() {
 		
-		var height = this.module.getDomContent().parent().height() - this.module.getDomContent().find('h3').outerHeight(true);
+		var container = this.module.getDomContent().find('.canvas-container');
 		
-		var table = this.module.getDomContent().find('table').height(height);
 		// Set the canvas to full width and height
-		var moduleWidth = table.width();
-		var moduleHeight = table.height();
+		var moduleWidth = container.width();
+		var moduleHeight = this.module.getDomContent().parent().height() - this.module.getDomContent().find("h3").outerHeight(true);
 		
-		var size = Math.min(moduleWidth, moduleHeight);
+		container.height(moduleHeight);
+		
+		var size = Math.max(moduleWidth, moduleHeight);
 		
 		if(this.rowNumber == undefined || this.colNumber == undefined)
 			return;
 		
-		this.cellHeight = Math.floor(size / this.rowNumber);
-		this.cellWidth = Math.floor(size / this.colNumber); 
+		this.cellHeight = Math.ceil(size / this.rowNumber);
+		this.cellWidth = Math.ceil(size / this.colNumber); 
 		
 		var newWidth = this.cellWidth * this.colNumber;
 		var newHeight = this.cellHeight * this.rowNumber;
