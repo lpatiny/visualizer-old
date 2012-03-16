@@ -1,6 +1,7 @@
      
 function generateGrid(gridData, gridImage, cols, rows, cellWidth, cellHeight) {
 	
+	var dataColumns = gridData.length;
 	var gridImageData = gridImage.data;
 	
 	//var ctx = document.getElementsByTagName("canvas")[0].getContext('2d');
@@ -17,7 +18,7 @@ function generateGrid(gridData, gridImage, cols, rows, cellWidth, cellHeight) {
 		//	gridData[x/cellWidth][y/cellHeight] = color;
 			while (i<cellWidth) {
 				while (j<cellHeight) {
-					pixelNum = 4 * (x * cellWidth + i + (y * cellHeight + j) * cols * cellWidth);
+					pixelNum = 4 * (x * cellWidth + i + (y * cellHeight + j) * dataColumns * cellHeight);
 					gridImageData[pixelNum+0] = color; // Red value
 					gridImageData[pixelNum+1] = color; // Green value
 					gridImageData[pixelNum+2] = color; // Blue value
