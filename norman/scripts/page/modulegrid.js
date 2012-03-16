@@ -55,7 +55,18 @@ CI.Grid = {
 			
 		}).draggable({
 			grid: [CI.Grid.definition.xWidth, CI.Grid.definition.yHeight],
-			containment: "parent"
+			containment: "parent",
+			start: function() {
+				var myZIndex  = $(this).css("zIndex");
+				var count = 0;
+				for (var i in CI.modules) {
+					if (CI.modules[i].dom.css("zIndex")>myZIndex) {
+						CI.modules[i].dom.css("zIndex","-=1")
+					}
+					count++;
+				}
+				$(this).css("zIndex",count);
+			}
 		}).trigger('resize');
 		
 		
