@@ -37,11 +37,24 @@ CI.Module.prototype._types.datamatrix_intersect.View.prototype = {
 			html.push(this.getLabel(i));
 			html.push('</th></tr>');
 			
-			for(var j in moduleValue[i]) {
+			if(typeof moduleValue[i] == 'object')
+				for(var j in moduleValue[i]) {
+					html.push('<tr><td class="ci-label">');
+					html.push(this.getLabel(j));
+					html.push('</td><td>');
+					html.push(CI.dataType.toScreen(moduleValue[i][j], j, this));
+					html.push('</td></tr>');
+				}
+				
+			/*
+			 * Maybe this needs to be thought better
+			 */
+			else if(i == 'intersect') {
 				html.push('<tr><td class="ci-label">');
-				html.push(this.getLabel(j));
+				html.push(this.getLabel('diff'));
 				html.push('</td><td>');
-				html.push(CI.toScreen(moduleValue[i][j], j, this));
+				html.push('</td><td>');
+				html.push(CI.dataType.toScreen(moduleValue[i], 'intersect', this));
 				html.push('</td></tr>');
 			}
 			

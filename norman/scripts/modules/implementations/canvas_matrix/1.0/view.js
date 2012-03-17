@@ -133,25 +133,20 @@ CI.Module.prototype._types.canvas_matrix.View.prototype = {
 	},
 	
 	update: function() {
+		var moduleValue;
 		
-		var moduleValue = this.module.getValue();
-		for(var i in moduleValue) {
-			
-			this.colNumber = moduleValue[i].nbCols;
-			this.rowNumber = moduleValue[i].nbRows;
-			
-			this._domTitle.innerHTML = moduleValue[i].data.title;
-			
-			break;
-		}
+		if(!(moduleValue = this.module.getDataFromRel('matrix').getData()))
+			return;
 		
+		this.colNumber = moduleValue.xLabel.length;
+		this.rowNumber = moduleValue.yLabel.length;
+		this.dataMatrix = moduleValue.value;
 		
-		
-		this.onResize();
+		this._domTitle.innerHTML = "Luc tell me where you want to put the title";//moduleValue.data.title;
+		this.onResize()
 	},
 	
 	updateCanvas: function() {
-		
 		this.canvasContext.clearRect(0,0,this.canvas.width, this.canvas.height);
 		var moduleValue = this.module.getValue();
 		
@@ -188,9 +183,6 @@ CI.Module.prototype._types.canvas_matrix.View.prototype = {
 		} else {
 			this.canvasContext.putImageData(this.lastImageData, this.canvas.width*0.5 - (this.lastImageData.width)*this.moduleCenterX,  this.canvas.height*0.5 - (this.lastImageData.height)*this.moduleCenterY);
 		}
-		
-		
-		
 	},
 	
 	getDom: function() {

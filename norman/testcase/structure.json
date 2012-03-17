@@ -1,0 +1,112 @@
+{
+
+"entryPoint": {
+	"type": "url",
+	"dataType": "json",
+	"url": "./testcase/randommatrix.json"
+},
+
+"grid": {
+	"xWidth": 10,
+	"yHeight": 10
+},
+
+"modules": [
+{
+    "id": "12345",	
+    "type": "canvas_matrix",
+    "title": "My Awesome Matrix",
+
+    "position": {
+    	"left": 1,
+    	"top": 1
+    },
+    
+
+    "size": {
+    	"width": 40,
+    	"hight": 40
+    },
+
+
+    "dataModule": {
+    	
+    },
+    
+
+
+
+
+    "dataSend": {
+	
+	"onPixelHover": [
+		{
+			"varname": "row_hovered",
+			"rel": "row",
+			"keys": ["id", "pill"]	
+		},
+		
+		{
+			"varname": "col_hovered",
+			"rel": "col",
+			"keys": ["id", "pill"]	
+		},
+	
+		{
+			"rel": "intersect",
+			"varname": "intersect_hovered"
+		}
+	]
+    },
+
+    "dataSource": [{
+    	"name": "distanceMatrix",
+    	"rel": "matrix"
+    }]
+},
+
+
+{
+    "id": "12346",	
+    "type": "datamatrix_intersect",
+    "title": "Details",
+
+    "position": {
+    	"left": 50,
+    	"top": 1
+    },
+
+    "size": {
+    	"width": 40,
+    	"hight": 40
+    },
+
+    "dataModule": {
+    	
+    	"labels": {
+    	
+    		"name": "Nom du composé",
+    		"cas": "Numéro CAS",
+    		"url": "Adresse URL",
+    		"row": "Ligne",
+    		"col": "Colonne",
+    		"intersect": "Différence",
+    		"val": "Valeur de la différence",
+    		"diff": "Valeur de la différence" 
+    	}
+    	
+    },
+
+    "dataSource": [{
+    	"name": "row_hovered",
+    	"rel": "row"
+    }, {
+    	"name": "col_hovered",
+    	"rel": "col"
+    }, {
+    	"name": "intersect_hovered",
+    	"rel": "intersect"
+    }]
+}]
+
+}

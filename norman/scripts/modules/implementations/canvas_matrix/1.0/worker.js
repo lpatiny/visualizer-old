@@ -10,9 +10,7 @@ function generateGrid(gridData, gridImage, cols, rows, cellWidth, cellHeight) {
 	while (x<cols) {
 	
 		while (y<rows) {
-		
-			//color = Math.floor( Math.random() * 255 );
-			color = Math.round(gridData[x][y].value * 255);
+			color = Math.round(gridData[x][y] * 255);
 			
 			// The Math.min ensures that we don't try to draw beyond the right edge of the canvas
 			drawCell(x*cellWidth, y*cellHeight, Math.min(cellWidth,gridWidth - x*cellWidth), cellHeight, gridWidth, color, gridImageData);
@@ -78,6 +76,7 @@ function drawCell(startX, startY, cellWidth, cellHeight, gridWidth, color, gridI
 }	
 
 onmessage = function(event) {
+	
 	postMessage(generateGrid(event.data.gridData, event.data.gridImageData, event.data.cols, event.data.rows, event.data.cellWidth, event.data.cellHeight));
 	//postMessage(generateGridArea(event.data.gridData, event.data.gridImageData, 0,0,15,15, 20, 20));
 }

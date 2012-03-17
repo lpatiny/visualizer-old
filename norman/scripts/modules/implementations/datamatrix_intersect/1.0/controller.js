@@ -16,6 +16,7 @@ CI.Module.prototype._types.datamatrix_intersect.Controller = function(module) {
 
 CI.Module.prototype._types.datamatrix_intersect.Controller.prototype = {
 	
+
 	init: function() {
 		
 		var module = this.module;

@@ -18,9 +18,17 @@ CI.Module.prototype._types.datamatrix_intersect.Model = function(module) {
 
 CI.Module.prototype._types.datamatrix_intersect.Model.prototype = {
 	
+	_accepts: [
+		{rel: 'row', type: ["string", "integer", "image"], asObject: true},
+		{rel: 'col', type: [], asObject: true},
+		{rel: 'intersect', type: ["number", "string"], asObject: true}
+	],
+	
+	
+	
 	// Usually you don't really to init a model. But who knows. Please leave it.
 	init: function() {	
-		CI.Module.prototype._impl.model.afterInit(this.module);
+//		CI.Module.prototype._impl.model.afterInit(this.module);
 	},
 	
 	
@@ -29,7 +37,9 @@ CI.Module.prototype._types.datamatrix_intersect.Model.prototype = {
 		// This part of the code could be simplified, but this is to show the proof of concept
 		// of data manipulation from the model
 		
-		switch(this.data[dataName].getSourceData().rel) {
+		var dataRel = this.module.getDataRelFromName(dataName);
+		
+		switch(dataRel) {
 			
 			case 'row':
 				this.treatedDataValue['row'] = this.data[dataName].getData();
