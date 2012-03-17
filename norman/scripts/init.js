@@ -8,23 +8,14 @@ CI = new Object();
 	
 	$(document).ready(function() {
 		
-		$.getJSON('testcase/modules.json', {}, function(pagedef) {
-			// Initiates the grid
-			
-			var Entry = new CI.EntryPoint(pagedef.entryPoint, function() {
+		var dom = $("body");
+		$(dom).mask('Data is loading. Please wait...');
+		
 				
-				// Do something after loading the data
+		var Entry = new CI.EntryPoint('testcase/structure.json', 'testcase/data.json', {}, function() {
+			$(dom).unmask();	
+			// Do something after loading the data
 				
-				
-			});
-			
-			
-			CI.Grid.init(pagedef.grid);
-			for(var i = 0; i < pagedef.modules.length; i++) {
-				var Module = new CI.Module(pagedef.modules[i]); 
-				CI.modules[pagedef.modules[i].id] = Module;
-				CI.Grid.addModule(Module);
-			}
 		});
 	});
 	

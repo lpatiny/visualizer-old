@@ -1,19 +1,28 @@
 
 
-CI.EntryPoint = function(options, onLoad) {
+CI.EntryPoint = function(structureUrl, dataUrl, options, onLoad) {
+	
 	
 	this.options = options;
 	this.onLoad = onLoad;
 	
+	var entryPoint = this;
 	
-	switch(this.options.type) {
+	jQuery.getJSON(structureUrl, {}, function(pagedef) {
 		
-		case 'url':
-			this.doFetchUrl();		
-		break;
-	}
-	
-	CI.DataSource.prototype._bindEvent();
+		CI.Grid.init(pagedef.grid);
+		for(var i = 0; i < pagedef.modules.length; i++) {
+			var Module = new CI.Module(pagedef.modules[i]); 
+			CI.modules[pagedef.modules[i].id] = Module;
+			CI.Grid.addModule(Module);
+		}
+		
+		CI.DataSource.prototype._bindEvent();
+				
+		jQuery.getJSON(dataUrl, {}, function(data) {
+			entryPoint.loaded(data);	
+		});
+	});
 }
 
 
@@ -30,26 +39,6 @@ CI.EntryPoint.prototype = {
 			this.onLoad(this, this.data);
 	},
 
-	doFetchUrl: function() {
-		
-		var entryPoint = this;
-		var url = this.options.url;
-		var type = this.options.dataType;
-		var func;
-		
-		switch(type) {
-			
-			default:
-			case 'json':
-			
-				func = 'getJSON';
-			break;
-		}
-		
-		jQuery[func](url, {}, function(data) {
-			entryPoint.loaded(data);
-		});
-	}
 	
 	
 }
