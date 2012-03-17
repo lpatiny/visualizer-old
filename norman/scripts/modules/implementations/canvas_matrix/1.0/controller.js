@@ -27,7 +27,7 @@ CI.Module.prototype._types.canvas_matrix.Controller.prototype = {
 		
 		//getDomView
 			
-		if(typeof actions.onPixelHover !== "undefined")
+		if(typeof actions.onPixelHover !== "undefined") 
 			$(this.module.getDomView()).on('mousemove', 'canvas', function(e) {
 				
 				
@@ -89,7 +89,9 @@ CI.Module.prototype._types.canvas_matrix.Controller.prototype = {
 				
 			});
 		
-		if(actions.onPixelClick) {}
+		if(actions.onPixelClick) {
+		}
+		var view = this.module.view;
 		// do something if you want !
 	}
 }

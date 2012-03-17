@@ -25,6 +25,10 @@ CI.Module.prototype._types.canvas_matrix.View.prototype = {
 		this.lastCellWidth = 0;
 		this.lastCellHeight = 0;
 		this.lastImageData = null;
+		this.moduleCenterX = 0.5; //center is stored as 0.0-1.0 rather than pixels, to be zoom-level independent
+		this.moduleCenterY = 0.5;
+		this.lastModuleCenterX = 0.5; 
+		this.lastModuleCenterY = 0.5;
 
 		this.dom = document.createElement("div");
 		var title = document.createElement("h3");
@@ -52,8 +56,40 @@ CI.Module.prototype._types.canvas_matrix.View.prototype = {
 		
 		this.fitFillMode = "fit";
 
+		$(canvasContainer).on('mousewheel', 'canvas', function(e) {
+			e.preventDefault();
+			var delta = e.originalEvent.wheelDelta;
+			var speed;
+			// Get normalized wheel speed
+			if (typeof (view.zoomMax) == 'undefined') {
+				speed = Math.min(Math.abs(delta),3);
+			} else {
+				view.zoomMax = Math.max(view.zoomMax, Math.abs(delta));
+				speed = 3*Math.abs(delta)/view.zoomMax;
+			}
+			
+			view.onZoom((delta<0?-1:1)*speed);
+		});
+		
+		$(canvasContainer).drag(function(e1, e2) {
+			e1.preventDefault();
+			view.moduleCenterX = view.lastModuleCenterX - (e2.deltaX)/view.lastImageData.width;
+			view.moduleCenterY = view.lastModuleCenterY - (e2.deltaY)/view.lastImageData.height;
+			view.updateCanvas();
+		});		
+		$(canvasContainer).drag("start",function(e1, e2) {
+			e1.preventDefault();
+			view.lastModuleCenterX = view.moduleCenterX;
+			view.lastModuleCenterY = view.moduleCenterY;
+		});
 		
 		this.onResize();
+	},
+	onDrag: function(x,y,newDrag) {
+		if (newDrag) {
+			this.startX = x;
+			this.startY = y;
+		}
 	},
 	
 	onResize: function() {
@@ -88,14 +124,10 @@ CI.Module.prototype._types.canvas_matrix.View.prototype = {
 		this.updateCanvas();
 	},
 	
+	//expects zoomFactor = 1-5
 	onZoom: function(zoomFactor) {
-		if (zoomFactor<0) {
-			this.cellWidth--;
-			this.cellHeight--;
-		} else if (zoomFactor>0) {
-			this.cellWidth++;
-			this.cellHeight++;
-		}
+		this.cellWidth+=Math.ceil(zoomFactor);
+		this.cellHeight+=Math.ceil(zoomFactor);	
 		this.zoomLevelPreset = true;
 		this.updateCanvas();
 	},
@@ -120,6 +152,7 @@ CI.Module.prototype._types.canvas_matrix.View.prototype = {
 	
 	updateCanvas: function() {
 		
+		this.canvasContext.clearRect(0,0,this.canvas.width, this.canvas.height);
 		var moduleValue = this.module.getValue();
 		
 		var newWidth = this.cellWidth;
@@ -136,7 +169,6 @@ CI.Module.prototype._types.canvas_matrix.View.prototype = {
 			if(newWidth == 0 || newHeight == 0)
 				return;
 			
-			this.canvasContext.clearRect(0,0,this.canvas.width, this.canvas.height);
 			this.gridImage = this.canvasContext.createImageData(newWidth * this.colNumber, newHeight * this.rowNumber); // Store the image
 			for(var i in moduleValue) {
 				if(moduleValue[i] == null || this.gridImage == undefined)
@@ -154,7 +186,7 @@ CI.Module.prototype._types.canvas_matrix.View.prototype = {
 				break;
 			}
 		} else {
-			this.canvasContext.putImageData(this.lastImageData, (this.canvas.width-this.lastImageData.width)/2, (this.canvas.height-this.lastImageData.height)/2);
+			this.canvasContext.putImageData(this.lastImageData, this.canvas.width*0.5 - (this.lastImageData.width)*this.moduleCenterX,  this.canvas.height*0.5 - (this.lastImageData.height)*this.moduleCenterY);
 		}
 		
 		

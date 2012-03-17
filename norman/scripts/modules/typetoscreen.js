@@ -74,7 +74,7 @@ CI.typeToScreen.prototype = {
 	
 	/* Implement other types */
 	asUrl: function(val) {
-		console.log(val);
+		//console.log(val);
 		return ['<a href="', val.url, '">', val.label, '</a>'].join('');
 	}
 }
