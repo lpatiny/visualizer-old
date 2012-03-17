@@ -77,7 +77,7 @@ CI.Module.prototype._types.canvas_matrix.View.prototype = {
 			
 			this.lastCanvasWidth = this.canvas.width;
 			this.lastCanvasHeight = this.canvas.height;
-			
+		
 			if(newWidth == 0 || newHeight == 0)
 				return;
 			
@@ -90,45 +90,32 @@ CI.Module.prototype._types.canvas_matrix.View.prototype = {
 	},
 	
 	update: function() {
+		var moduleValue;
 		
-		var moduleValue = this.module.getValue();
-		for(var i in moduleValue) {
-			
-			this.colNumber = moduleValue[i].nbCols;
-			this.rowNumber = moduleValue[i].nbRows;
-			
-			this._domTitle.innerHTML = moduleValue[i].data.title;
-			
-			break;
-		}
+		if(!(moduleValue = this.module.getDataFromRel('matrix').getData()))
+			return;
 		
+		this.colNumber = moduleValue.xLabel.length;
+		this.rowNumber = moduleValue.yLabel.length;
+		this.dataMatrix = moduleValue.value;
 		
-		
+		this._domTitle.innerHTML = "Luc tell me where you want to put the title";//moduleValue.data.title;
 		this.onResize()
 	},
 	
 	updateCanvas: function() {
 		
-		var view = this,
-		    moduleValue = this.module.getValue();
-		
-		for(var i in moduleValue) {
-			
-			if(moduleValue[i] == null || this.gridImage == undefined)
-				continue;
-			
-			this.worker.postMessage({
-				gridData: moduleValue[i].dataMatrix,
-				gridImageData: this.gridImage,
-				cols: this.colNumber,
-				rows: this.rowNumber,
-				cellWidth: this.cellWidth,
-				cellHeight: this.cellHeight
-			});
-		
-			break;
-		}
-		
+		if(this.gridImage == undefined)
+			return;
+	
+		this.worker.postMessage({
+			gridData: this.dataMatrix,
+			gridImageData: this.gridImage,
+			cols: this.colNumber,
+			rows: this.rowNumber,
+			cellWidth: this.cellWidth,
+			cellHeight: this.cellHeight
+		});
 	},
 	
 	getDom: function() {

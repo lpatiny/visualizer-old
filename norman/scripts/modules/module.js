@@ -43,9 +43,9 @@ CI.Module = function(definition) {
 		this.viewExpander = $('<div class="ci-module-expand">...</div>');
 		
 		//Initialises the MVC pattern for the module
-		this.model = new CI.Module.prototype._types[moduleType].Model(this);
 		this.view = new CI.Module.prototype._types[moduleType].View(this);
 		this.controller = new CI.Module.prototype._types[moduleType].Controller(this);
+		this.model = new CI.Module.prototype._types[moduleType].Model(this);
 		
 		this.view.init();
 		this.controller.init();
@@ -169,6 +169,24 @@ CI.Module.prototype = {
 		throw "The module has not been loaded yet";
 	},
 	
+	
+	getDataFromRel: function(rel) {
+	
+		for(var i in this.definition.dataSource)
+			if(this.definition.dataSource[i].rel == rel)
+				return this.model.data[this.definition.dataSource[i].name];
+		return;
+	},
+	
+	getDataRelFromName: function(name) {
+		
+		for(var i in this.definition.dataSource)
+			if(this.definition.dataSource[i].name == name)
+				return this.definition.dataSource[i].rel;
+				
+		return false;
+	},
+	
 	/** 
 	 * Returns the data for the module's model
 	 */
@@ -208,38 +226,30 @@ CI.Module.prototype._impl = {
 		 */
 		init: function(module, model) {
 			
-			var sourceName, sourceData;
+			var sourceName, sourceAccepts;
 			
 			model.module = module;
 			model.data = [];
 			model.dataValue = [];
 			
 			//loop through the data provided in the definition and copy it into the model as a DataSource
-			for(var i = 0; i < module.definition.dataSource.length; i++) {
-				sourceName = module.definition.dataSource[i].name;
+			var sources = module.definition.dataSource;
+			
+			for(var i = 0; i < sources.length; i++) {
+				sourceName = sources[i].name;
+				
+				if(typeof sources[i].rel == "undefined") {
+					throw {display: true, notify: true, message: "The rel of any datasource need to be specified"};
+					return;
+				}
+				sourceRel = sources[i].rel;
 				
 				sourceData = null;
-				if(typeof module.definition.dataSource[i].data !== "undefined")
-					sourceData = module.definition.dataSource[i].data;
+				sourceAccepts = module.controller.getAcceptedTypes(sourceRel);
 				
-				model.data[sourceName] = new CI.DataSource(model.module, sourceName, sourceData);
+				model.data[sourceName] = new CI.DataSource(model.module, sourceName, sourceAccepts);
 				model.dataValue[sourceName] = null;
 			}
-		},
-		
-		/**
-		 * Called after initialisation of the given module to bind an event to data changing, ensuring the model's data (and the module itself) is updated appropriately
-		 */
-		afterInit: function(module) {
-			
-			module.getDomWrapper().bind('sharedDataChanged', function(event, dataName, dataVal) {
-				event.stopPropagation();
-				event.preventDefault();
-				
-				module.model.data[dataName].setData(dataVal);
-				module.onDataChange(dataName);
-			});
-			
 		}
 	},
 	

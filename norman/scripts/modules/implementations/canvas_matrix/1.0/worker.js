@@ -10,8 +10,8 @@ function generateGrid(gridData, gridImage, cols, rows, cellWidth, cellHeight) {
 		//gridData[x/cellWidth] = [];
 		while (y<rows) {
 			
-			
-			color = Math.round(gridData[x][y].value * 255);
+
+			color = Math.round(gridData[x][y] * 255);
 			
 		//	color = Math.floor( Math.random() * 255 );
 		//	gridData[x/cellWidth][y/cellHeight] = color;
@@ -38,5 +38,6 @@ function generateGrid(gridData, gridImage, cols, rows, cellWidth, cellHeight) {
 }
 
 onmessage = function(event) {
+	
 	postMessage(generateGrid(event.data.gridData, event.data.gridImageData, event.data.cols, event.data.rows, event.data.cellWidth, event.data.cellHeight));
 }

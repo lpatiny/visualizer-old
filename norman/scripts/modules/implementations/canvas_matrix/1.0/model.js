@@ -26,7 +26,7 @@ CI.Module.prototype._types.canvas_matrix.Model.prototype = {
 	
 	// Usually you don't really to init a model. But who knows. Please leave it.
 	init: function() {	
-		CI.Module.prototype._impl.model.afterInit(this.module);
+	//	CI.Module.prototype._impl.model.afterInit(this.module);
 	},
 	
 	

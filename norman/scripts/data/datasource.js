@@ -7,99 +7,76 @@
  * @param {string} sourceName the name of this data object
  * @param {object} sourceData The actual data object (requires at least type to be set)
  */
-CI.DataSource = function(module, sourceName, sourceData) {
+CI.DataSource = function(module, sourceName, sourceAccepts) {
 	
 	this.module = module;
 	this.sourceName = sourceName;
-	this.sourceData = sourceData;
+	this.sourceAccepts = sourceAccepts;
 	this.data = null;
+
 	
-	// No action required ?
-	if(this.sourceData == null)
-		return;
-	
-	if(typeof this.sourceData.type == "undefined")
-		return;
-	
-	
-	// What is the required action ?
-	switch(this.sourceData.type) {
-		
-		case 'url':
-			this.sourceUrl();
-		break;
-		
-		default:
-			
-		break;
-	}
+	if(typeof CI.DataSource.prototype._dataSources[sourceName] == "undefined")
+		CI.DataSource.prototype._dataSources[sourceName] = [];
+	CI.DataSource.prototype._dataSources[sourceName].push(this);
 }
 
 
 CI.DataSource.prototype = {
 	
+	/* Static functions */
+	_bindEvent: function() {
+		
+		$(document).bind('sharedDataChanged', function(event, varName, varVal) {
+			var allSources = CI.DataSource.prototype._dataSources[varName];
+			if(typeof allSources == "undefined")
+				return;
+			for(var i = 0; i < allSources.length; i++)
+				allSources[i].setData(varVal)
+		});
+	},
+	
+	_dataSources: [],
+	
 	setData: function(data) {
-		this.data = data;
+		if(this.buildData(data))
+			return this.module.model.onDataChange(this.sourceName);
+		return false;
+	},
+	
+	buildData: function(data) {
+		
+		var dataRebuilt = {};
+		
+		
+		if(!(this.sourceAccepts.type instanceof Array))
+			this.sourceAccepts.type = [this.sourceAccepts.type];
+		
+		var mustRebuild = false;
+		var asObject = typeof this.sourceAccepts.asObject != "undefined" && this.sourceAccepts.asObject;
+		
+		for(var i = 0; i < this.sourceAccepts.type.length; i++) {
+			
+			if(this.sourceAccepts.type[i] == CI.dataType.getType(data))
+				return this.data = data;
+			else if(asObject && CI.dataType.getType(data) == 'object') {
+				
+				for(var j in data) {
+					if(CI.dataType.getType(data[j]) == this.sourceAccepts.type[i]) {
+						dataRebuilt[j] = data[j];
+						mustRebuild = true;
+					}
+				}
+			}
+		}
+		
+			
+		if(mustRebuild)
+			return this.data = dataRebuilt;
+			
+		return false;
 	},
 	
 	getData: function() {
 		return this.data;
-	},
-	
-	getSourceData: function() {
-		return this.sourceData;
-	},
-	
-	eraseAjaxData: function() {
-		this.sourceData = {};
-	},
-	
-	setAjaxData: function(data) {
-		
-		if(typeof this.sourceData.data )
-		this.sourceData.data = $.extend(this.sourceData.data, data);	
-	},
-	
-	doGetAjaxData: function() {
-	
-		if(this.sourceData.type == "url")
-			return this.sourceUrl();
-			
-		throw "Impossible to get the data. DataSource does not support it"
-	},
-	
-	/**
-	 * If necessary, set up the DataSource to be updateable via Ajax (url), then run the AJAX update through jQuery
-	 */
-	sourceUrl: function() {
-		
-		if(typeof this.sourceData.url == 'undefined')
-			return;
-		
-		if(typeof this.sourceData.dataType == "undefined")
-			this.sourceData.dataType = 'html';
-		
-		if(typeof this.sourceData.method == 'undefined' || ['post', 'get'].indexOf(this.sourceData.method.toLowerCase()) == -1)
-			this.sourceData.method = 'get';
-			
-		if(typeof this.sourceData.data == 'undefined')
-			this.sourceData.data = {};
-			
-		var ajaxMethod = this.sourceData.method.toLowerCase();
-		
-		if(this.sourceData.dataType == 'json');
-			ajaxMethod += 'JSON';
-		
-		if(typeof jQuery[ajaxMethod] !== "function") {
-			throw "jQuery doesn't support ajax method : " + ajaxMethod;
-			return;
-		}	
-		
-		var source = this;
-		jQuery[ajaxMethod](this.sourceData.url, this.sourceData.data, function(response, xhr) {
-			source.data = response;
-			
-			CI.API.setSharedVar(source.sourceName, response);
-		});
 	}
 }

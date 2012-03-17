@@ -1,5 +1,11 @@
 {
 
+"entryPoint": {
+	"type": "url",
+	"dataType": "json",
+	"url": "./testcase/randommatrix.json"
+},
+
 "grid": {
 	"xWidth": 10,
 	"yHeight": 10
@@ -28,36 +34,36 @@
     },
     
 
-    "dataActions": {
-	"onPixelHover": {
+
+
+
+    "dataSend": {
 	
-		"row": {
-			"sharedVar": "row_hovered",
-			"keys": ["name", "cas"]	
+	"onPixelHover": [
+		{
+			"varname": "row_hovered",
+			"rel": "row",
+			"keys": ["id", "pill"]	
 		},
 		
-		"col": {
-			"sharedVar": "col_hovered",
-			"keys": ["name", "image"]	
+		{
+			"varname": "col_hovered",
+			"rel": "col",
+			"keys": ["id", "pill"]	
 		},
 	
-		"intersect": {
-			"sharedVar": "intersect_hovered",
-			"keys": ["value", "url"]
+		{
+			"rel": "intersect",
+			"varname": "intersect_hovered"
 		}
-	}
+	]
     },
-    
 
     "dataSource": [{
-    	"name": "matrix1",
-    	"data": {
-    		"type": "url",
-    		"dataType": "json",
-    		"url": "./testcase/randommatrix.json"
-    	}
+    	"name": "distanceMatrix",
+    	"rel": "matrix"
     }]
-}, 
+},
 
 
 {
@@ -85,26 +91,21 @@
     		"row": "Ligne",
     		"col": "Colonne",
     		"intersect": "Différence",
-    		"val": "Valeur de la différence"
+    		"val": "Valeur de la différence",
+    		"diff": "Valeur de la différence" 
     	}
     	
     },
 
     "dataSource": [{
     	"name": "row_hovered",
-    	"data": {
-    		"rel": "row"
-    		}
+    	"rel": "row"
     }, {
     	"name": "col_hovered",
-    	"data": {
-    		"rel": "col"
-    		}
+    	"rel": "col"
     }, {
     	"name": "intersect_hovered",
-    	"data": {
-    		"rel": "intersect"
-    		}
+    	"rel": "intersect"
     }]
 }]
 

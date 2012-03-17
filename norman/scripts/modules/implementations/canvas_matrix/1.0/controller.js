@@ -16,12 +16,25 @@ CI.Module.prototype._types.canvas_matrix.Controller = function(module) {
 
 CI.Module.prototype._types.canvas_matrix.Controller.prototype = {
 	
+	_accepts: [{rel: 'matrix', type: 'matrix'}],
+	
+	getAcceptedTypes: function(rel) {
+		
+		for(var i in this._accepts)
+			if(this._accepts[i].rel == rel) {
+				return this._accepts[i];
+			}
+			
+		return { data: rel, type: [], asObject: false };
+	},
+	
+	
 	init: function() {
 		
 		var module = this.module;
 		
 		var actions;
-		if(!(actions = this.module.definition.dataActions))	
+		if(!(actions = this.module.definition.dataSend))	
 			return;
 			
 		
@@ -48,45 +61,47 @@ CI.Module.prototype._types.canvas_matrix.Controller.prototype = {
 				var cellX = 1;
 				var cellY = 1;
 				
-				var gridData = module.model.getValue();
-				for(var i in gridData) {
-					gridData = gridData[i];
-					break;
-				}
+				var moduleValue;
+				if(!(moduleValue = module.getDataFromRel('matrix').getData()))
+					return;
+				
+				var xLabel = moduleValue.xLabel;
+				var yLabel = moduleValue.yLabel;
+				var gridData = moduleValue.value;
+				
 				
 				var xpx = e.pageX - $(e.target).offset().left;
 				var ypx = e.pageY - $(e.target).offset().top;
 				
-				var x = Math.floor(xpx * gridData.nbRows / e.target.width);
-				var y = Math.floor(ypx * gridData.nbCols / e.target.height);
+				var x = Math.floor(xpx * xLabel.length / e.target.width);
+				var y = Math.floor(ypx * yLabel.length / e.target.height);
 				
-				var dataKeyed = gridData.dataMatrix[x][y];
-				
-				for(var i in actions.onPixelHover) {
+				var dataKeyed = gridData[x][y];
+				var value = false;
+				for(var i = 0; i < actions.onPixelHover.length; i++) {
 					
 					var hashmap = false;
-					switch(i) {
+					switch(actions.onPixelHover[i].rel) {
 						case 'row':
-							hashmap = gridData.dataRows[y];	
+							hashmap = yLabel[y];	
 						break;
 						
 						case 'col':
-							hashmap = gridData.dataCols[x];
+							hashmap = xLabel[x];
 						break;
 						
 						case 'intersect':
-							hashmap = dataKeyed;
+							hashmap = false;
+							value = dataKeyed;
 						break;
 					}
 					
 					if(!!hashmap) {
 						var data = getDataToSend(hashmap, actions.onPixelHover[i].keys);
-						CI.API.setSharedVar(actions.onPixelHover[i].sharedVar, data);
-					}
+						CI.API.setSharedVar(actions.onPixelHover[i].varname, data);
+					} else if(!!value)
+						CI.API.setSharedVar(actions.onPixelHover[i].varname, value);
 				}
-				
-				
-				
 			});
 		
 		if(actions.onPixelClick) {}
