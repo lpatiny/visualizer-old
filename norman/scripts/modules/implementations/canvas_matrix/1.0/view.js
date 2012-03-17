@@ -22,6 +22,9 @@ CI.Module.prototype._types.canvas_matrix.View.prototype = {
 		this.canvasContext = this.canvas.getContext('2d'); // Store the context
 		this.lastCanvasWidth = 0;
 		this.lastCanvasHeight = 0;
+		this.lastCellWidth = 0;
+		this.lastCellHeight = 0;
+		this.lastImageData = null;
 
 		this.dom = document.createElement("div");
 		var title = document.createElement("h3");
@@ -42,13 +45,15 @@ CI.Module.prototype._types.canvas_matrix.View.prototype = {
 		this.worker = new Worker('./scripts/modules/implementations/canvas_matrix/1.0/worker.js');
 		var view = this;
 		this.worker.addEventListener('message', function(event) {
-			view.canvasContext.putImageData(event.data, 0, 0);
+			view.lastImageData = event.data;
+			view.updateCanvas();
 		});
 		this.gridImage = this.canvasContext.createImageData(this.canvas.width, this.canvas.height);
 		
-		this.fitFillMode = "fill";
+		this.fitFillMode = "fit";
+
 		
-		this.updateCanvas();
+		this.onResize();
 	},
 	
 	onResize: function() {
@@ -61,36 +66,38 @@ CI.Module.prototype._types.canvas_matrix.View.prototype = {
 		
 		container.height(moduleHeight);
 		
-		if (this.fitFillMode == "fit")
-			var size = Math.min(moduleWidth, moduleHeight);
-		else if (this.fitFillMode == "fill")
-			var size = Math.max(moduleWidth, moduleHeight);
-		else return;
-		
 		if(this.rowNumber == undefined || this.colNumber == undefined)
 			return;
-		
-		this.cellHeight = Math.ceil(size / this.rowNumber);
-		this.cellWidth = Math.ceil(size / this.colNumber); 
-		
-		var newWidth = this.cellWidth * this.colNumber;
-		var newHeight = this.cellHeight * this.rowNumber;
-		
-		
-		if(newWidth != this.lastCanvasWidth || newHeight != this.lastCanvasHeight) {
 			
-			this.lastCanvasWidth = this.canvas.width;
-			this.lastCanvasHeight = this.canvas.height;
+		if (typeof this.zoomLevelPreset == 'undefined' || !this.zoomLevelPreset) {
+			var size;
+			if (typeof this.fitFillMode != 'undefined' && this.fitFillMode == "fit")
+				size = Math.min(moduleWidth, moduleHeight);
+			else if (typeof this.fitFillMode != 'undefined' && this.fitFillMode == "fill")
+				size = Math.max(moduleWidth, moduleHeight);
+			else return;
 			
-			if(newWidth == 0 || newHeight == 0)
-				return;
-			
-			this.canvas.width = newWidth;
-			this.canvas.height = newHeight;
-			
-			this.gridImage = this.canvasContext.createImageData(this.canvas.width, this.canvas.height); // Store the image
-			this.updateCanvas();
+			this.cellHeight = Math.ceil(size / this.rowNumber);
+			this.cellWidth = Math.ceil(size / this.colNumber); 
+			this.zoomLevelPreset = true;
 		}
+	
+		this.canvas.width = moduleWidth;
+		this.canvas.height = moduleHeight;
+		
+		this.updateCanvas();
+	},
+	
+	onZoom: function(zoomFactor) {
+		if (zoomFactor<0) {
+			this.cellWidth--;
+			this.cellHeight--;
+		} else if (zoomFactor>0) {
+			this.cellWidth++;
+			this.cellHeight++;
+		}
+		this.zoomLevelPreset = true;
+		this.updateCanvas();
 	},
 	
 	update: function() {
@@ -108,30 +115,49 @@ CI.Module.prototype._types.canvas_matrix.View.prototype = {
 		
 		
 		
-		this.onResize()
+		this.onResize();
 	},
 	
 	updateCanvas: function() {
 		
-		var view = this,
-		    moduleValue = this.module.getValue();
+		var moduleValue = this.module.getValue();
 		
-		for(var i in moduleValue) {
-			
-			if(moduleValue[i] == null || this.gridImage == undefined)
-				continue;
-			
-			this.worker.postMessage({
-				gridData: moduleValue[i].dataMatrix,
-				gridImageData: this.gridImage,
-				cols: this.colNumber,
-				rows: this.rowNumber,
-				cellWidth: this.cellWidth,
-				cellHeight: this.cellHeight
-			});
+		var newWidth = this.cellWidth;
+		var newHeight = this.cellHeight;
 		
-			break;
+		
+		// We only need to re-evaluate the pixels when the zoom-level has changed.
+		// Otherwise, keep the same imagedata, but put it elsewhere
+		if(newWidth != this.lastCellWidth || newHeight != this.lastCellHeight) {
+			
+			this.lastCellWidth = newWidth;
+			this.lastCellHeight = newHeight;
+			
+			if(newWidth == 0 || newHeight == 0)
+				return;
+			
+			this.canvasContext.clearRect(0,0,this.canvas.width, this.canvas.height);
+			this.gridImage = this.canvasContext.createImageData(newWidth * this.colNumber, newHeight * this.rowNumber); // Store the image
+			for(var i in moduleValue) {
+				if(moduleValue[i] == null || this.gridImage == undefined)
+					continue;
+				
+				this.worker.postMessage({
+					gridData: moduleValue[i].dataMatrix,
+					gridImageData: this.gridImage,
+					cols: this.colNumber,
+					rows: this.rowNumber,
+					cellWidth: this.cellWidth,
+					cellHeight: this.cellHeight
+				});
+			
+				break;
+			}
+		} else {
+			this.canvasContext.putImageData(this.lastImageData, (this.canvas.width-this.lastImageData.width)/2, (this.canvas.height-this.lastImageData.height)/2);
 		}
+		
+		
 		
 	},
 	
