@@ -16,21 +16,7 @@ CI.Module.prototype._types.datamatrix_intersect.Controller = function(module) {
 
 CI.Module.prototype._types.datamatrix_intersect.Controller.prototype = {
 	
-	_accepts: [
-		{rel: 'row', type: ["string", "integer", "image"], asObject: true},
-		{rel: 'col', type: [], asObject: true},
-		{rel: 'intersect', type: ["number", "string"], asObject: true}
-	],
-	
-	getAcceptedTypes: function(rel) {
-		
-		for(var i in this._accepts)
-			if(this._accepts[i].rel == rel)
-				return this._accepts[i];
-			
-		return { data: rel, type: [], asObject: false };
-	},
-	
+
 	init: function() {
 		
 		var module = this.module;

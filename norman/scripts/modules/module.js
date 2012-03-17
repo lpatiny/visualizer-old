@@ -170,6 +170,16 @@ CI.Module.prototype = {
 	},
 	
 	
+	getAcceptedTypes: function(rel) {
+		
+		for(var i in this.model._accepts)
+			if(this.model._accepts[i].rel == rel)
+				return this.model._accepts[i];
+			
+		return { data: rel, type: [], asObject: false };
+	},
+	
+	
 	getDataFromRel: function(rel) {
 	
 		for(var i in this.definition.dataSource)
@@ -228,6 +238,7 @@ CI.Module.prototype._impl = {
 			
 			var sourceName, sourceAccepts;
 			
+			module.model = model;
 			model.module = module;
 			model.data = [];
 			model.dataValue = [];
@@ -245,7 +256,7 @@ CI.Module.prototype._impl = {
 				sourceRel = sources[i].rel;
 				
 				sourceData = null;
-				sourceAccepts = module.controller.getAcceptedTypes(sourceRel);
+				sourceAccepts = module.getAcceptedTypes(sourceRel);
 				
 				model.data[sourceName] = new CI.DataSource(model.module, sourceName, sourceAccepts);
 				model.dataValue[sourceName] = null;

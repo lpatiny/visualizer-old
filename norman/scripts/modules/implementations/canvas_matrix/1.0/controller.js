@@ -16,18 +16,6 @@ CI.Module.prototype._types.canvas_matrix.Controller = function(module) {
 
 CI.Module.prototype._types.canvas_matrix.Controller.prototype = {
 	
-	_accepts: [{rel: 'matrix', type: 'matrix'}],
-	
-	getAcceptedTypes: function(rel) {
-		
-		for(var i in this._accepts)
-			if(this._accepts[i].rel == rel) {
-				return this._accepts[i];
-			}
-			
-		return { data: rel, type: [], asObject: false };
-	},
-	
 	
 	init: function() {
 		

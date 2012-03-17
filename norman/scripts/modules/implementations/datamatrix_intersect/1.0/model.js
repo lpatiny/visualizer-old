@@ -18,6 +18,14 @@ CI.Module.prototype._types.datamatrix_intersect.Model = function(module) {
 
 CI.Module.prototype._types.datamatrix_intersect.Model.prototype = {
 	
+	_accepts: [
+		{rel: 'row', type: ["string", "integer", "image"], asObject: true},
+		{rel: 'col', type: [], asObject: true},
+		{rel: 'intersect', type: ["number", "string"], asObject: true}
+	],
+	
+	
+	
 	// Usually you don't really to init a model. But who knows. Please leave it.
 	init: function() {	
 //		CI.Module.prototype._impl.model.afterInit(this.module);

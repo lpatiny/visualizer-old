@@ -24,6 +24,9 @@ CI.Module.prototype._types.canvas_matrix.Model = function(module) {
 
 CI.Module.prototype._types.canvas_matrix.Model.prototype = {
 	
+	_accepts: [{rel: 'matrix', type: 'matrix'}],
+	
+	
 	// Usually you don't really to init a model. But who knows. Please leave it.
 	init: function() {	
 	//	CI.Module.prototype._impl.model.afterInit(this.module);

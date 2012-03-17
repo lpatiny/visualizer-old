@@ -45,6 +45,10 @@ CI.Module.prototype._types.datamatrix_intersect.View.prototype = {
 					html.push(CI.dataType.toScreen(moduleValue[i][j], j, this));
 					html.push('</td></tr>');
 				}
+				
+			/*
+			 * Maybe this needs to be thought better
+			 */
 			else if(i == 'intersect') {
 				html.push('<tr><td class="ci-label">');
 				html.push(this.getLabel('diff'));

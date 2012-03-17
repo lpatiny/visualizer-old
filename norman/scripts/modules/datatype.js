@@ -31,51 +31,25 @@ CI.dataType = {
 	},
 	
 	
-	typeToScreen: function(val, repoFuncs) {
+	typeToScreen: function(value, repoFuncs) {
 	
-		if(!val)
+		if(!value)
 			return;
-			
-		//var name, repoTypes, repoFuncs;
 		
-		/*if(typeof p3 != "undefined") {
-	   	    name = p1, 
-		    repoTypes = p2,
-		    repoFuncs = p3;
-		} else
-		    repoFuncs = p1;
-		*/
-		var type;
+		var type = CI.dataType.getType(value);
 		
-		var toFunc = val;
-		// Unimplemented
-		/*if(typeof repoTypes !== "undefined" && typeof repoTypes[val.type] != "undefined")
-			type = repoTypes[val.type];
-		else */
-		if(typeof val == 'number')
-			type = 'number';
-		else if(typeof val == 'string')
-			type = 'string';
-		else if(val instanceof Array)
-			type = 'array';
-		else if(val.type !== undefined) {
-				toFunc = typeof val.url != "undefined" ? val.url : val.value;
-				type = val.type;
-		} else {
-			throw "The type of data has not been recognized";
-			return;
-		}
-		
+		var toFunc = value;
+		if(typeof value.type !== "undefined")
+			toFunc = typeof value.url != "undefined" ? value.url : value.value;
 	    	var method = ['as', type.charAt(0).toUpperCase(), type.substr(1)].join('');
-		
+
 		if(typeof repoFuncs[method] == 'function')
 			return repoFuncs[method](toFunc);
 			
 		if(typeof CI.dataType.basicImpl[method] == 'function')
 			return CI.dataType.basicImpl[method](toFunc);
 			
-		throw "The variable type \"" + type + "\" is not supported";
-		
+		throw "The variable type \"" + type + "\" is not supported";		
 	}
 	
 }
