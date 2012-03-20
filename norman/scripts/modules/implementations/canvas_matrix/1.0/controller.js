@@ -20,18 +20,12 @@ CI.Module.prototype._types.canvas_matrix.Controller.prototype = {
 	init: function() {
 		
 		var module = this.module;
-		
 		var actions;
 		if(!(actions = this.module.definition.dataSend))	
 			return;
-			
-		
-		//getDomView
-			
+				
 		if(typeof actions.onPixelHover !== "undefined")
 			$(this.module.getDomView()).on('mousemove', 'canvas', function(e) {
-				
-				
 				function getDataToSend(hashmap, toselect) {
 					var dataToSendType = typeof toselect, dataToSend;
 					if(dataToSendType == 'string')
@@ -94,5 +88,43 @@ CI.Module.prototype._types.canvas_matrix.Controller.prototype = {
 		
 		if(actions.onPixelClick) {}
 		// do something if you want !
+	},
+	
+	getConfigurationSend: function() {
+		
+		return {
+
+			events: {
+				onPixelHover: {
+					label: 'mouse hover pixel',
+					description: 'When the mouses moves over a new pixel of the data matrix'
+				},
+				onPixelClick: {
+					label: 'click on a pixel',
+					description: 'When the users click on any pixel'
+				},
+				onPixelDblClick: {
+					label: 'double click on a pixel',
+					description: 'When the user double clics on any pixel'
+				}
+			},
+			
+			rels: {
+				'row': {
+					label: 'Row',
+					description: 'Sends the information description the row'
+				},
+				
+				'col': {
+					label: 'Column',
+					description: 'Sends the information description the column'
+				},
+				
+				'intersect': {
+					label: 'Intersection',
+					description: 'Sends the information description the intersection where the mouse is located'
+				}
+			}
+		}
 	}
 }

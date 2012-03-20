@@ -20,5 +20,19 @@ CI = new Object();
 	});
 	
 }) (jQuery);
+/*
 
+var webworker = new Worker('domatrix.js');
 
+webworker.postMessage('go');
+
+var timeStart = Date.now();
+webworker.addEventListener('message', function(event) {
+	
+	if(!!event.data.progress)
+		console.log('Progress: ' + event.data.iterations + ' time: ' + (Date.now() - timeStart));
+	
+	if(!!event.data.finished)
+		console.log('Progress: ' + event.data.iterations + ' time: ' + (Date.now() - timeStart));
+	
+})*/

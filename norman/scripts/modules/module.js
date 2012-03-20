@@ -50,6 +50,10 @@ CI.Module = function(definition) {
 		this.view.init();
 		this.controller.init();
 		this.model.init();
+		
+		this.dom.find('.ci-configure').bind('click', function(event) {
+			$(document).trigger('onChangeSendCfg', module);
+		})
 	}
 	
 	/**
@@ -65,6 +69,11 @@ CI.Module = function(definition) {
 		html.push(this.definition.id);
 		html.push('"><div class="ci-module"><div class="ci-module-header"><div class="ci-module-header-title">');
 		html.push(this.definition.title);
+		html.push('</div>');
+		html.push('<div class="ci-module-header-toolbar">');
+		html.push('<ul>');
+		html.push('<li class="ci-configure">Configure</li>')
+		html.push('</ul>');
 		html.push('</div>');
 		html.push('</div><div class="ci-module-content"><div class="ci-module-content-overflow">');
 		
@@ -195,6 +204,19 @@ CI.Module.prototype = {
 				return this.definition.dataSource[i].rel;
 				
 		return false;
+	},
+	
+	
+	getKeysByRel: function(rel, sent) {
+		
+		if(!sent) {
+			var data = this.getDataFromRel(rel);
+			if(typeof data == "undefined")
+				return false;
+			return data.getDataKeys();
+		} else {
+			return this.model.getKeysFromRel(rel);
+		}
 	},
 	
 	/** 
