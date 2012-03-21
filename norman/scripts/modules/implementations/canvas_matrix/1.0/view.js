@@ -17,7 +17,6 @@ CI.Module.prototype._types.canvas_matrix.View = function(module) {
 CI.Module.prototype._types.canvas_matrix.View.prototype = {
 	
 	init: function() {	
-		
 		this.canvas = document.createElement("canvas"); // Store the pointer
 		this.canvasContext = this.canvas.getContext('2d'); // Store the context
 		this.lastCanvasWidth = 0;
@@ -51,10 +50,11 @@ CI.Module.prototype._types.canvas_matrix.View.prototype = {
 		this.worker.addEventListener('message', function(event) {
 			view.lastImageData = event.data;
 			view.updateCanvas();
+			console.profileEnd("gridGenWW");
 		});
 		this.gridImage = this.canvasContext.createImageData(this.canvas.width, this.canvas.height);
 		
-		this.fitFillMode = "fit";
+		this.fitFillMode = "fill";
 
 		$(canvasContainer).on('mousewheel', 'canvas', function(e) {
 			e.preventDefault();
@@ -141,21 +141,27 @@ CI.Module.prototype._types.canvas_matrix.View.prototype = {
 		this.colNumber = moduleValue.xLabel.length;
 		this.rowNumber = moduleValue.yLabel.length;
 		this.dataMatrix = moduleValue.value;
-		
-		this._domTitle.innerHTML = "Luc tell me where you want to put the title";//moduleValue.data.title;
+				
+		/*this._domTitle.innerHTML = "Luc tell me where you want to put the title";//;
+		if ( typeof moduleValue.data.title != 'undefined')
+			this.module.domHeader.find("div")[0].innerHTML = moduleValue.data.title;
+		*/
 		this.onResize()
 	},
 	
 	updateCanvas: function() {
+		var moduleValue;
+		if(!(moduleValue = this.module.getDataFromRel('matrix').getData()))
+			return;
+	
 		this.canvasContext.clearRect(0,0,this.canvas.width, this.canvas.height);
-		var moduleValue = this.module.getValue();
 		
 		var newWidth = this.cellWidth;
 		var newHeight = this.cellHeight;
 		
 		
-		// We only need to re-evaluate the pixels when the zoom-level has changed.
-		// Otherwise, keep the same imagedata, but put it elsewhere
+		// We only need to trigger re-evaluation of the pixels when the zoom-level has changed.
+		// Otherwise, keep the same imagedata, but draw it in another position
 		if(newWidth != this.lastCellWidth || newHeight != this.lastCellHeight) {
 			
 			this.lastCellWidth = newWidth;
@@ -166,18 +172,32 @@ CI.Module.prototype._types.canvas_matrix.View.prototype = {
 			
 			this.gridImage = this.canvasContext.createImageData(newWidth * this.colNumber, newHeight * this.rowNumber); // Store the image
 			for(var i in moduleValue) {
-				if(moduleValue[i] == null || this.gridImage == undefined)
+				if(moduleValue[i] != "matrix" || this.gridImage == undefined)
 					continue;
 				
+				//first generate only the visible part of the grid
 				this.worker.postMessage({
-					gridData: moduleValue[i].dataMatrix,
+					gridData: moduleValue.value,
 					gridImageData: this.gridImage,
-					cols: this.colNumber,
-					rows: this.rowNumber,
+					startCol: Math.floor(Math.max(0,(this.gridImage.width)*this.moduleCenterX - this.canvas.width*0.5 )/this.cellWidth),
+					startRow: Math.floor(Math.max(0,(this.gridImage.height)*this.moduleCenterY - this.canvas.height*0.5)/this.cellHeight),
+					endCol: this.colNumber - Math.ceil(Math.max(0,this.gridImage.width*(1-this.moduleCenterX) - this.canvas.width*0.5 - this.cellWidth)/this.cellWidth),
+					endRow: this.rowNumber - Math.ceil(Math.max(0,this.gridImage.height*(1-this.moduleCenterY) - this.canvas.height*0.5 - this.cellHeight)/this.cellHeight),
 					cellWidth: this.cellWidth,
 					cellHeight: this.cellHeight
 				});
-			
+				
+				//then afterwards generate the whole thing
+				this.worker.postMessage({
+					gridData: moduleValue.value,
+					gridImageData: this.gridImage,
+					startCol: 0,
+					startRow: 0,
+					endCol: this.colNumber,
+					endRow: this.rowNumber,
+					cellWidth: this.cellWidth,
+					cellHeight: this.cellHeight
+				});
 				break;
 			}
 		} else {
