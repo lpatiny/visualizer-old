@@ -50,5 +50,32 @@ CI.Module.prototype._types.canvas_matrix.Model.prototype = {
 	
 	getValue: function() {
 		return this.dataValue;
+	},
+	
+	getKeysFromRel: function(rel) {
+		
+		function getKeys(el) {
+			var keys = [];
+			for(var i in el)
+				keys.push(i);
+			return keys;	
+		}
+		
+		var matrixData = this.module.getDataFromRel('matrix').getData();
+		
+		switch(rel) {
+			case 'row':
+				return getKeys(matrixData.yLabel[0])
+			break;
+			
+			case 'col':
+				return getKeys(matrixData.xLabel[0])
+			break;
+			
+			case 'intersect':
+				return false
+			break;
+		}
+		
 	}
 }

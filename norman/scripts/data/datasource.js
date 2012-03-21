@@ -78,5 +78,17 @@ CI.DataSource.prototype = {
 	
 	getData: function() {
 		return this.data;
+	},
+	
+	getDataKeys: function() {
+		
+		if(typeof this.data != 'object')
+			return false;
+			
+		var keys = [];
+		for(var i in this.data)
+			keys.push(i);
+			
+		return keys;
 	}
 }
