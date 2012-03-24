@@ -43,8 +43,6 @@ public class JsonGenerator {
 	}
 
 	public void run() {
-
-
 		for (int zoomFactor=MIN_ZOOM_FACTOR; zoomFactor<=MAX_ZOOM_FACTOR; zoomFactor++) {
 			// for each zoom factor we need to create a kind of table of content
 			int numberValues=(int)Math.pow(zoomStep,zoomFactor);
@@ -62,10 +60,19 @@ public class JsonGenerator {
 		StringBuffer jsonBuffer=new StringBuffer();
 		jsonBuffer.append("{type:'matrix',");
 		if (zoomFactor<MAX_ZOOM_FACTOR) {
-			jsonBuffer.append("zoomIn:{type:'matrix', url:'../../"+(zoomFactor+1)+"/json/toc.json'},");
+			if (type==0) {
+				jsonBuffer.append("zoomIn:{type:'matrix', url:'../../"+(zoomFactor+1)+"/json/toc.json'},");
+			} else if (type==1) {
+				jsonBuffer.append("zoomIn:{type:'matrix', url:'../../"+(zoomFactor+1)+"/json/tocImg.json'},");
+			}
 		}
 		if (zoomFactor>MIN_ZOOM_FACTOR) {
-			jsonBuffer.append("zoomOut:{type:'matrix', url:'../../"+(zoomFactor-1)+"/json/toc.json'},");
+			if (type==0) {
+				jsonBuffer.append("zoomOut:{type:'matrix', url:'../../"+(zoomFactor-1)+"/json/toc.json'},");
+			} else if (type==1) {
+				jsonBuffer.append("zoomOut:{type:'matrix', url:'../../"+(zoomFactor-1)+"/json/tocImg.json'},");
+			}
+			
 		}
 		
 		jsonBuffer.append("value:");
