@@ -116,3 +116,16 @@ div.ci-module-wrapper .ci-module-content {
 .ci-label {
 	font-weight: bold;
 }
+
+.ci-displaylist-list {
+	margin: 20px;
+}
+
+.ci-displaylist-list > div {
+	margin-bottom: 10px;
+}
+
+.ci-displaylist-list > div > .ci-chemical-iupac {
+	float: left;
+	width: 250px;
+}
