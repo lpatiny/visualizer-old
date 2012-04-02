@@ -56,6 +56,7 @@ CI.Grid = {
 		}).draggable({
 			grid: [CI.Grid.definition.xWidth, CI.Grid.definition.yHeight],
 			containment: "parent",
+			handle: '.ci-module-header',
 			start: function() {
 				var myZIndex  = $(this).css("zIndex");
 				var count = 0;

@@ -24,7 +24,7 @@ CI.Module.prototype._types.canvas_matrix.Controller.prototype = {
 		if(!(actions = this.module.definition.dataSend))	
 			return;
 				
-		if(typeof actions.onPixelHover !== "undefined")
+		if(typeof actions.onPixelHover !== "undefined") 
 			$(this.module.getDomView()).on('mousemove', 'canvas', function(e) {
 				
 				function getDataToSend(hashmap, toselect) {
@@ -52,13 +52,20 @@ CI.Module.prototype._types.canvas_matrix.Controller.prototype = {
 				var yLabel = moduleValue.yLabel;
 				var gridData = moduleValue.value;
 				
-				
+				//Positions relative to top-left of canvas
 				var xpx = e.pageX - $(e.target).offset().left;
 				var ypx = e.pageY - $(e.target).offset().top;
 				
-				var x = Math.floor(xpx * xLabel.length / e.target.width);
-				var y = Math.floor(ypx * yLabel.length / e.target.height);
+				//offset by the position of the grid within the canvas
+				xpx += module.view.moduleCenterX * module.view.lastImageData.width - $(e.target).width()/2
+				ypx += module.view.moduleCenterY * module.view.lastImageData.height - $(e.target).height()/2
 				
+				//grid coordinates
+				var x = Math.floor(xpx / module.view.lastCellWidth);
+				var y = Math.floor(ypx / module.view.lastCellHeight);
+				if (x<0 || y<0 || x>=gridData.length || y>=gridData[0].length)
+					return;
+					
 				var dataKeyed = gridData[x][y];
 				var value = false;
 				for(var i = 0; i < actions.onPixelHover.length; i++) {
@@ -66,10 +73,12 @@ CI.Module.prototype._types.canvas_matrix.Controller.prototype = {
 					var hashmap = false;
 					switch(actions.onPixelHover[i].rel) {
 						case 'row':
+							//yLabel[y].id = x + ", " + y;
 							hashmap = yLabel[y];	
 						break;
 						
 						case 'col':
+							//yLabel[x].id = x + ", " + y;
 							hashmap = xLabel[x];
 						break;
 						
@@ -87,7 +96,9 @@ CI.Module.prototype._types.canvas_matrix.Controller.prototype = {
 				}
 			});
 		
-		if(actions.onPixelClick) {}
+		if(actions.onPixelClick) {
+		}
+		var view = this.module.view;
 		// do something if you want !
 	},
 	
