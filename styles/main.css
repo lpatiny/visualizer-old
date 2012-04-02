@@ -28,10 +28,8 @@ body, th, td {
 
 #ci-modules-grid > div.ci-module-wrapper {
 	position: absolute; /* important */
-	border: 1px solid #333333;
-	
+	border: 1px solid #999999;
 	background: white;
-	
 	-webkit-border-radius: 3px;
 	-moz-border-radius: 3px;
 	border-radius: 3px;
@@ -73,8 +71,25 @@ div.ci-module-wrapper .ci-module-header {
 div.ci-module-wrapper .ci-module-header .ci-module-header-title {
 	line-height: 20px;
 	margin-left: 10px;
+	float: left;
 }
 
+div.ci-module-header-toolbar {
+	float: right;
+	height: 100%;
+}
+div.ci-module-header-toolbar ul {
+	margin: 0;
+	height: 100%;
+	margin-right: 10px;
+}
+
+div.ci-module-header-toolbar ul li {
+	margin: 0;
+	list-style-type: none;
+	line-height: 100%;
+	padding-top: 3px;
+}
 
 div.ci-module-wrapper .ci-module-content {
 	width: 100%;
