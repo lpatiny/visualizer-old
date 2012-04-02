@@ -54,9 +54,15 @@ CI.Module.prototype._types.display_list.View.prototype = {
 		asChemical: function(data) {
 			return $("<div>").each(function(i) {
 					var div = $(this);
+					div.append('<div class="ci-chemical-iupac"></div><div class="ci-chemical-mw"></div>');
 					data.instance.getIUPAC(function(val) {
-						div.html(val);
+						div.children('.ci-chemical-iupac').html(val);
 					});
+					
+					data.instance.getMW(function(val) {
+						div.children('.ci-chemical-mw').html(val);
+					});
+					
 				});
 		}
 		
