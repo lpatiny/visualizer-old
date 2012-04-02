@@ -198,11 +198,23 @@ CI.Types.chemical.prototype = {
 	},
 	
 	
-	getIUPAC: function(fct) {
+	getIUPAC: function(fct, pos) {
 		this.callbacks.push(function(chemical) {
-			var iupac = this.data.entry.iupac.value;
-			fct(iupac);
+			var iupac = this.data.entry.iupac;
+			if(iupac instanceof Array)
+				fct(iupac[pos == undefined ? 0 : pos].value);
+			else
+				fct(iupac.value);
 		});
+	},
+	
+	getMW: function(fct) {
+	
+		this.callbacks.push(function(chemical) {
+			var mw = this.data.entry.mf.mw;
+			fct(mw);
+		});
+		
 	},
 	
 	doCallbacks: function() {
