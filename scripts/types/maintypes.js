@@ -78,6 +78,8 @@ CI.Types._valueFromJPathAndJson = function(jPath, json) {
 	return element;
 }
 
+
+
 CI.Types.jPathFromJson = function(source, jpaths, root) {
 	
 	if(source instanceof Array)
