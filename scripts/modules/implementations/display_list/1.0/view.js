@@ -51,7 +51,6 @@ CI.Module.prototype._types.display_list.View.prototype = {
 	typeToScreen: {
 		
 		asChemical: function(data) {
-			console.log(data);
 			return $("<div>").each(function(i) {
 					var div = $(this);
 					data.instance.getIUPAC(function(val) {
