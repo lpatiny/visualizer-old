@@ -43,6 +43,7 @@ CI.Module.prototype._types.display_list.View.prototype = {
 		}
 	},
 	
+	
 
 	getDom: function() {
 		return this.dom;
