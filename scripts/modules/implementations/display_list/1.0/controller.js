@@ -6,15 +6,15 @@
  * Dual licensed under the MIT or GPL Version 2 licenses.
  */
 
-if(typeof CI.Module.prototype._types.chemicalarray == 'undefined')
-	CI.Module.prototype._types.chemicalarray = {};
+if(typeof CI.Module.prototype._types.display_list == 'undefined')
+	CI.Module.prototype._types.display_list = {};
 
-CI.Module.prototype._types.chemicalarray.Controller = function(module) {
+CI.Module.prototype._types.display_list.Controller = function(module) {
 	
 	CI.Module.prototype._impl.controller.init(module, this);
 }
 
-CI.Module.prototype._types.chemicalarray.Controller.prototype = {
+CI.Module.prototype._types.display_list.Controller.prototype = {
 	
 	
 	init: function() {
@@ -41,9 +41,9 @@ CI.Module.prototype._types.chemicalarray.Controller.prototype = {
 			},
 			
 			rels: {
-				'chemical': {
-					label: 'Chemical',
-					description: 'Sends the information description the chemical'
+				'listelement': {
+					label: 'Element in the list',
+					description: 'Returns the selected element in the list'
 				}
 			}
 		}

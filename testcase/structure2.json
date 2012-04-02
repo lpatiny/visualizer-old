@@ -9,7 +9,7 @@
 "modules": [
 {
     "id": "12345",	
-    "type": "chemicalarray",
+    "type": "display_list",
     "title": "Chemicals available",
 
     "position": {
@@ -56,7 +56,7 @@
 
     "dataSource": [{
     	"name": "list",
-    	"rel": "chemicals"
+    	"rel": "listelements"
     }]
 }]
 

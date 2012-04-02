@@ -40,21 +40,22 @@ CI.dataType = {
 	},
 	
 	toScreen: function(val, view) {
-		var repoFuncs = typeof view.toScreen == 'object' ? view.toScreen : {}; 
+		var repoFuncs = typeof view.typeToScreen == 'object' ? view.typeToScreen : {}; 
 		return CI.dataType.typeToScreen(val, repoFuncs);	
 	},
 	
 	
 	typeToScreen: function(value, repoFuncs) {
-	
+		
 		if(!value)
 			return;
 		
 		var type = CI.dataType.getType(value);
 		
 		var toFunc = value;
-		if(typeof value.type !== "undefined")
+/*		if(typeof value.type !== "undefined")
 			toFunc = typeof value.url != "undefined" ? value.url : value.value;
+			*/
 	    	var method = ['as', type.charAt(0).toUpperCase(), type.substr(1)].join('');
 
 		if(typeof repoFuncs[method] == 'function')

@@ -7,10 +7,10 @@
  */
 
 
-if(typeof CI.Module.prototype._types.chemicalarray == 'undefined')
-	CI.Module.prototype._types.chemicalarray = {};
+if(typeof CI.Module.prototype._types.display_list == 'undefined')
+	CI.Module.prototype._types.display_list = {};
 
-CI.Module.prototype._types.chemicalarray.Model = function(module) {
+CI.Module.prototype._types.display_list.Model = function(module) {
 	
 	/*
 	 * Sets
@@ -22,9 +22,9 @@ CI.Module.prototype._types.chemicalarray.Model = function(module) {
 	// Call anything else if you want. The prototyped init() function can also be used.
 }
 
-CI.Module.prototype._types.chemicalarray.Model.prototype = {
+CI.Module.prototype._types.display_list.Model.prototype = {
 	
-	_accepts: [{rel: 'chemicals', type: 'array'}],
+	_accepts: [{rel: 'listelements', type: 'array'}],
 	
 	
 	// Usually you don't really to init a model. But who knows. Please leave it.
@@ -64,7 +64,7 @@ CI.Module.prototype._types.chemicalarray.Model.prototype = {
 			return jpaths;
 		}
 		
-		var data = this.module.getDataFromRel('chemicals');
+		var data = this.module.getDataFromRel('listelements');
 		
 		if(!data)
 			return;
