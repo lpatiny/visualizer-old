@@ -1,6 +1,7 @@
 /**
  * @namespace Holds all the functionality for the visualizer
  */
+
 CI = new Object();
 
 
@@ -8,11 +9,13 @@ CI = new Object();
 	
 	$(document).ready(function() {
 		
+		ajaxManager = new UTIL.AjaxManager();
+		ajaxManager.setProxyUrl('http://localhost:8888/git/visualizer/proxify.php?url=<url>');
+		
 		var dom = $("body");
 		$(dom).mask('Data is loading. Please wait...');
 		
-				
-		var Entry = new CI.EntryPoint('testcase/structure.json', 'testcase/data.json', {}, function() {
+		var Entry = new CI.EntryPoint('testcase/structure2.json', './data/json/chemical/chemicalTable.json', {}, function() {
 			$(dom).unmask();	
 			// Do something after loading the data
 				

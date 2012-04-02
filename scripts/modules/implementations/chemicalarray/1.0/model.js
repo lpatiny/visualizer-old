@@ -7,10 +7,10 @@
  */
 
 
-if(typeof CI.Module.prototype._types.canvas_matrix == 'undefined')
-	CI.Module.prototype._types.canvas_matrix = {};
+if(typeof CI.Module.prototype._types.chemicalarray == 'undefined')
+	CI.Module.prototype._types.chemicalarray = {};
 
-CI.Module.prototype._types.canvas_matrix.Model = function(module) {
+CI.Module.prototype._types.chemicalarray.Model = function(module) {
 	
 	/*
 	 * Sets
@@ -22,9 +22,9 @@ CI.Module.prototype._types.canvas_matrix.Model = function(module) {
 	// Call anything else if you want. The prototyped init() function can also be used.
 }
 
-CI.Module.prototype._types.canvas_matrix.Model.prototype = {
+CI.Module.prototype._types.chemicalarray.Model.prototype = {
 	
-	_accepts: [{rel: 'matrix', type: 'matrix'}],
+	_accepts: [{rel: 'chemicals', type: 'array'}],
 	
 	
 	// Usually you don't really to init a model. But who knows. Please leave it.
@@ -41,6 +41,7 @@ CI.Module.prototype._types.canvas_matrix.Model.prototype = {
 	 * or don't if for any reason it's not necessary to update the module
 	 */
 	onDataChange: function(dataName) {
+		
 		/* Here you can transform the data coming from the DAO */
 		this.dataValue[dataName] = this.data[dataName].getData();
 		
@@ -53,32 +54,6 @@ CI.Module.prototype._types.canvas_matrix.Model.prototype = {
 		return this.dataValue;
 	},
 	
-	getKeysFromRel: function(rel) {
-		
-		function getKeys(el) {
-			var keys = [];
-			for(var i in el)
-				keys.push(i);
-			return keys;	
-		}
-		
-		var matrixData = this.module.getDataFromRel('matrix').getData();
-		
-		switch(rel) {
-			case 'row':
-				return getKeys(matrixData.yLabel[0])
-			break;
-			
-			case 'col':
-				return getKeys(matrixData.xLabel[0])
-			break;
-			
-			case 'intersect':
-				return false
-			break;
-		}
-		
-	},
 	
 	getjPath: function(rel) {
 		
@@ -89,26 +64,11 @@ CI.Module.prototype._types.canvas_matrix.Model.prototype = {
 			return jpaths;
 		}
 		
-		var data = this.module.getDataFromRel('matrix');
+		var data = this.module.getDataFromRel('chemicals');
 		
 		if(!data)
 			return;
-		
 		data = data.getData();
-		
-		switch(rel) {
-			case 'row':
-				var data = data.yLabel;
-				return getjPath(data);
-			break;
-			case 'col':
-				var data = data.xLabel;
-				return getjPath(data);
-			break;
-			
-			default:
-				return false;
-			break;
-		}
+		return getjPath(data);
 	}
 }

@@ -25,6 +25,20 @@ CI.dataType = {
 		return type;
 	},
 	
+	
+	instanciate: function(data) {
+	
+		var type = CI.dataType.getType(data);
+		
+		if(!(typeof CI.Types[type] == "function"))
+			if(typeof CI.Types[type].instanciate == "function")
+				return CI.Types[type].instanciate(data);
+			else
+				return;
+				
+		return data.instance = new CI.Types[type](data.value, data.url);		
+	},
+	
 	toScreen: function(val, view) {
 		var repoFuncs = typeof view.toScreen == 'object' ? view.toScreen : {}; 
 		return CI.dataType.typeToScreen(val, repoFuncs);	
@@ -46,16 +60,15 @@ CI.dataType = {
 		if(typeof repoFuncs[method] == 'function')
 			return repoFuncs[method](toFunc);
 			
-		if(typeof CI.dataType.basicImpl[method] == 'function')
-			return CI.dataType.basicImpl[method](toFunc);
+		if(typeof CI.dataType.implToScreen[method] == 'function')
+			return CI.dataType.implToScreen[method](toFunc);
 			
 		throw "The variable type \"" + type + "\" is not supported";		
 	}
-	
 }
 
 
-CI.dataType.basicImpl = {
+CI.dataType.implToScreen = {
 	
 	/* Primitive types */
 	asNumber: function(val) {

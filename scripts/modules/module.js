@@ -207,6 +207,8 @@ CI.Module.prototype = {
 	},
 	
 	
+	// Useless
+	/*
 	getKeysByRel: function(rel, sent) {
 		
 		if(!sent) {
@@ -218,7 +220,7 @@ CI.Module.prototype = {
 			return this.model.getKeysFromRel(rel);
 		}
 	},
-	
+	*/
 	/** 
 	 * Returns the data for the module's model
 	 */

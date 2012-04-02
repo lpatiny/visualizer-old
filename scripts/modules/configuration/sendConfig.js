@@ -35,7 +35,7 @@ $(document).bind('onChangeSendCfg', function(event, module) {
 	cfgLine.push('Rel: <select class="_eventrel">');
 	cfgLine.push(allRels.join(''));
 	cfgLine.push('</select>');
-	cfgLine.push('Fields to send: <select class="_eventkeys" multiple>');
+	cfgLine.push('Fields to send: <select class="_eventkeys">');
 	cfgLine.push('</select>');
 	cfgLine.push('Store in: <input type="text" class="_eventvarname" />')
 	cfgLine.push('</li class="CfgSendEl">')
@@ -45,22 +45,10 @@ $(document).bind('onChangeSendCfg', function(event, module) {
 		var rel = $(this).val();
 		var keys;
 		var cfg = $(this).parents('.CfgSendEl');
+		var options = CI.Types._jPathToOptions(module.model.getjPath(rel));
+		console.log(options);
+		line.find('select._eventkeys').html(options);
 		
-		if(keys = module.getKeysByRel(rel, true)) {
-			var allKeys = [];
-			
-			allKeys.push('<option></option>');
-			for(var i = 0; i < keys.length; i++) {
-				allKeys.push('<option value="');
-				allKeys.push(keys[i]);
-				allKeys.push('">');
-				allKeys.push(keys[i]);
-				allKeys.push('</option>');
-			}
-			
-			cfg.find('select._eventkeys').html(allKeys.join('')).removeAttr('disabled');
-		} else
-			cfg.find('select._eventkeys').val(['']).attr('disabled', 'disabled');
 	});
 	
 	function fillLine(currentCfg, line, eventName) {

@@ -10,7 +10,7 @@
 {
     "id": "12345",	
     "type": "chemicalarray",
-    "title": "My Awesome Array",
+    "title": "Chemicals available",
 
     "position": {
     	"left": 1,
@@ -19,8 +19,8 @@
     
 
     "size": {
-    	"width": 40,
-    	"hight": 40
+    	"width": 60,
+    	"height": 80
     },
 
 
@@ -34,13 +34,30 @@
 
     "dataSend": {
 	
+	"onPixelHover": [
+		{
+			"varname": "row_hovered",
+			"rel": "row",
+			"key": "pill"	
+		},
+		
+		{
+			"varname": "col_hovered",
+			"rel": "col",
+			"key": "salut.byebye"	
+		},
+	
+		{
+			"rel": "intersect",
+			"varname": "intersect_hovered"
+		}
+	]
     },
 
     "dataSource": [{
     	"name": "list",
     	"rel": "chemicals"
     }]
-}
-]
+}]
 
 }

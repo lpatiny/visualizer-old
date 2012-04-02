@@ -26,6 +26,7 @@ CI.Module.prototype._types.canvas_matrix.Controller.prototype = {
 				
 		if(typeof actions.onPixelHover !== "undefined")
 			$(this.module.getDomView()).on('mousemove', 'canvas', function(e) {
+				
 				function getDataToSend(hashmap, toselect) {
 					var dataToSendType = typeof toselect, dataToSend;
 					if(dataToSendType == 'string')
@@ -79,7 +80,7 @@ CI.Module.prototype._types.canvas_matrix.Controller.prototype = {
 					}
 					
 					if(!!hashmap) {
-						var data = getDataToSend(hashmap, actions.onPixelHover[i].keys);
+						var data = CI.Types.getValueFromJPath(actions.onPixelHover[i].key, hashmap);
 						CI.API.setSharedVar(actions.onPixelHover[i].varname, data);
 					} else if(!!value)
 						CI.API.setSharedVar(actions.onPixelHover[i].varname, value);

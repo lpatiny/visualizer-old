@@ -2,7 +2,6 @@
 
 CI.EntryPoint = function(structureUrl, dataUrl, options, onLoad) {
 	
-	
 	this.options = options;
 	this.onLoad = onLoad;
 	
@@ -18,7 +17,6 @@ CI.EntryPoint = function(structureUrl, dataUrl, options, onLoad) {
 		}
 		
 		CI.DataSource.prototype._bindEvent();
-				
 		jQuery.getJSON(dataUrl, {}, function(data) {
 			entryPoint.loaded(data);	
 		});
@@ -32,8 +30,13 @@ CI.EntryPoint.prototype = {
 		
 		this.data = data;
 		
-		for(var i in this.data)
+		for(var i in this.data) {
+			CI.dataType.instanciate(this.data[i]);
 			CI.API.setSharedVar(i, this.data[i], true);
+			
+		}
+		
+		
 		
 		if(typeof this.onLoad == 'function')
 			this.onLoad(this, this.data);
