@@ -24,9 +24,26 @@ CI.Module.prototype._types.display_list.Controller.prototype = {
 		if(!(actions = this.module.definition.dataSend))	
 			return;
 				
-		if(typeof actions.onEntryHover !== "undefined")
-			console.log('Implement it =)');
-		// do something if you want !
+		if(typeof actions.onEntryHover !== "undefined") {
+			
+			module.getDomView().on('mouseenter', 'div.ci-displaylist-element', function() {
+				
+				var index = $(this).index();
+				for(var i = 0; i < actions.onEntryHover.length; i++) {
+					switch(actions.onEntryHover[i].rel) {
+						case 'element':
+							var toSend = module.view.list[index];	
+						break;
+					}
+					
+					if(!!toSend) {
+						var data = CI.Types.getValueFromJPath(actions.onEntryHover[i].key, toSend);
+						CI.API.setSharedVar(actions.onEntryHover[i].varname, data);
+					}
+				}
+				
+			});
+		}
 	},
 	
 	getConfigurationSend: function() {

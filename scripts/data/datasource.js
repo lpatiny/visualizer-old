@@ -28,6 +28,7 @@ CI.DataSource.prototype = {
 		
 		$(document).bind('sharedDataChanged', function(event, varName, varVal) {
 			var allSources = CI.DataSource.prototype._dataSources[varName];
+			
 			if(typeof allSources == "undefined")
 				return;
 			for(var i = 0; i < allSources.length; i++)
@@ -40,6 +41,7 @@ CI.DataSource.prototype = {
 	setData: function(data) {
 		if(this.buildData(data))
 			return this.module.model.onDataChange(this.sourceName);
+		
 		return false;
 	},
 	

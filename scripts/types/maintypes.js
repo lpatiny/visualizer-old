@@ -54,6 +54,9 @@ CI.Types._jPathToOptions = function(jpath) {
 
 CI.Types.getValueFromJPath = function(jPath, data) {
 	
+	if((jPath + "").length == 0)
+		return data;
+	
 	if(typeof data['valueFromjPath'] == "function")
 		data.valueFromjPath(jPath);
 	else {
@@ -199,6 +202,13 @@ CI.Types.chemical.prototype = {
 	
 	
 	getIUPAC: function(fct, pos) {
+		if(this.loaded) {
+			var iupac = this.data.entry.iupac;
+			if(iupac instanceof Array)
+				fct(iupac[pos == undefined ? 0 : pos].value);
+			else
+				fct(iupac.value);
+		} else 
 		this.callbacks.push(function(chemical) {
 			var iupac = this.data.entry.iupac;
 			if(iupac instanceof Array)
@@ -210,10 +220,13 @@ CI.Types.chemical.prototype = {
 	
 	getMW: function(fct) {
 	
-		this.callbacks.push(function(chemical) {
-			var mw = this.data.entry.mf.mw;
-			fct(mw);
-		});
+		if(this.loaded)
+			fct(this.data.entry.mf.mw);
+		else
+			this.callbacks.push(function(chemical) {
+				var mw = this.data.entry.mf.mw;
+				fct(mw);
+			});
 		
 	},
 	

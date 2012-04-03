@@ -27,20 +27,6 @@ CI.Module.prototype._types.canvas_matrix.Controller.prototype = {
 		if(typeof actions.onPixelHover !== "undefined") 
 			$(this.module.getDomView()).on('mousemove', 'canvas', function(e) {
 				
-				function getDataToSend(hashmap, toselect) {
-					var dataToSendType = typeof toselect, dataToSend;
-					if(dataToSendType == 'string')
-						dataToSend = hashmap[toselect]
-					else if(dataToSendType == 'object') {
-						dataToSend = {};
-						for(var i in toselect)
-							dataToSend[toselect[i]] = hashmap[toselect[i]];
-					} else
-						dataToSend = hashmap;
-					return dataToSend;
-				}
-				
-				
 				var cellX = 1;
 				var cellY = 1;
 				

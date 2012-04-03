@@ -43,7 +43,6 @@ CI.Module.prototype._types.display_list.View.prototype = {
 		}
 	},
 	
-	
 
 	getDom: function() {
 		return this.dom;
@@ -52,17 +51,12 @@ CI.Module.prototype._types.display_list.View.prototype = {
 	typeToScreen: {
 		
 		asChemical: function(data) {
-			return $("<div>").each(function(i) {
+			
+			return $('<div class="ci-displaylist-element">').each(function(i) {
 					var div = $(this);
-					div.append('<div class="ci-chemical-iupac"></div><div class="ci-chemical-mw"></div>');
 					data.instance.getIUPAC(function(val) {
-						div.children('.ci-chemical-iupac').html(val);
+						div.html(val);
 					});
-					
-					data.instance.getMW(function(val) {
-						div.children('.ci-chemical-mw').html(val);
-					});
-					
 				});
 		}
 		
