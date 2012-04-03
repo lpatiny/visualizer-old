@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" language="javascript" type="text/javascript"></script>
+</head>
+
+<body>
+
+<textarea id="data">
+{"list": [{"type":"chemical", "url":"http://www.chemexper.com/search/reference/json/quick/1745-81-9"},
+{"type":"chemical", "url":"http://www.chemexper.com/search/reference/json/quick/6203-18-5"},
+{"type":"chemical", "url":"http://www.chemexper.com/search/reference/json/quick/106-24-1"},
+{"type":"chemical", "url":"http://www.chemexper.com/search/reference/json/quick/4530-20-5"},
+{"type":"chemical", "url":"http://www.chemexper.com/search/reference/json/quick/95-51-2"},
+{"type":"chemical", "url":"http://www.chemexper.com/search/reference/json/quick/75-29-6"},
+{"type":"chemical", "url":"http://www.chemexper.com/search/reference/json/quick/100-41-4"},
+{"type":"chemical", "url":"http://www.chemexper.com/search/reference/json/quick/104-51-8"},
+{"type":"chemical", "url":"http://www.chemexper.com/search/reference/json/quick/98-06-6"},
+{"type":"chemical", "url":"http://www.chemexper.com/search/reference/json/quick/78-76-2"}]}
+</textarea><br>
+<input type="text" value="./chemicalTable/data.js" id="dataUrl"></input>
+
+Layout: 
+<select id="layout">
+<option value="chemcalcMonoisotopic/layout.js">chemcalcMonoisotopic</option>
+<option value="chemicalTable/layout.js">chemicalTable</option>
+</select>
+
+<button onclick="openVisualizer();">Open visualizer</button>
+
+
+<script language="javascript">
+function getLayout() {
+	return $('#layout').val();
+}
+
+
+function getData() {
+	// return JSON.parse($('#data').val());
+	return $('#dataUrl').val();
+}
+
+function openVisualizer() {
+	var newWindow=window.open("./visualizer.html","visualizer");
+	
+}
+</script>
+
+</body>
