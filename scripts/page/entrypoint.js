@@ -12,7 +12,7 @@ CI.EntryPoint = function(structure, data, options, onLoad) {
 		if(typeof structure == "object")
 			doStructure(structure);
 		else
-			doGetStructure();
+			doGetStructure(structure);
 	}
 	
 	function doStructure(structure) {
