@@ -1,30 +1,66 @@
 
 
-CI.EntryPoint = function(structureUrl, dataUrl, options, onLoad) {
+CI.EntryPoint = function(structure, data, options, onLoad) {
 	
 	this.options = options;
 	this.onLoad = onLoad;
 	
 	var entryPoint = this;
 	
-	jQuery.getJSON(structureUrl, {}, function(pagedef) {
+	
+	function init() {
+		if(typeof structure == "object")
+			doStructure(structure);
+		else
+			doGetStructure();
+	}
+	
+	function doStructure(structure) {
 		
-		CI.Grid.init(pagedef.grid);
-		for(var i = 0; i < pagedef.modules.length; i++) {
-			var Module = new CI.Module(pagedef.modules[i]); 
-			CI.modules[pagedef.modules[i].id] = Module;
+		CI.Grid.init(structure.grid);
+		for(var i = 0; i < structure.modules.length; i++) {
+			var Module = new CI.Module(structure.modules[i]); 
+			CI.modules[structure.modules[i].id] = Module;
 			CI.Grid.addModule(Module);
 		}
 		
 		CI.DataSource.prototype._bindEvent();
-		jQuery.getJSON(dataUrl, {}, function(data) {
-			entryPoint.loaded(data);	
+		
+		if(typeof data == "object")
+			doData(data);
+		else
+			doGetData(data);
+		
+	}
+	
+	function doGetStructure(structure) {
+		jQuery.getJSON(structure, {}, function(structure) {
+			doStructure(structure);
 		});
-	});
+	}
+	
+	function doData(page) {
+		entryPoint.loaded(page);
+	}
+	
+	function doGetData(data) {
+		jQuery.getJSON(data, {}, function(data) {
+			doData(data);	
+		});
+	}
+	
+	init();
 }
 
 
 CI.EntryPoint.prototype = {
+
+	
+
+
+
+
+
 
 	loaded: function(data) {
 		
