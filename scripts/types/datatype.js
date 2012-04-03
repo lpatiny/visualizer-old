@@ -85,16 +85,17 @@ CI.dataType.implToScreen = {
 		return val.join();
 	},
 	
-	
 	/* Implement other types */
 	asImage: function(img) {
 		return '<img src="' + img + '" />';
 	},
 	
-	
 	/* Implement other types */
 	asUrl: function(val) {
-		console.log(val);
 		return ['<a href="', val.url, '">', val.label, '</a>'].join('');
+	},
+	
+	asObject: function(val) {
+		return '--object--';
 	}
 }

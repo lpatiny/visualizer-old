@@ -278,11 +278,12 @@ CI.Module.prototype._impl = {
 					return;
 				}
 				sourceRel = sources[i].rel;
+				jPath = sources[i].jpath;
 				
 				sourceData = null;
 				sourceAccepts = module.getAcceptedTypes(sourceRel);
 				
-				model.data[sourceName] = new CI.DataSource(model.module, sourceName, sourceAccepts);
+				model.data[sourceName] = new CI.DataSource(model.module, sourceName, sourceAccepts, jPath);
 				model.dataValue[sourceName] = null;
 			}
 		}

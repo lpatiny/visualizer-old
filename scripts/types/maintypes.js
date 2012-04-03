@@ -31,7 +31,6 @@ CI.Types._jPathToOptions = function(jpath) {
 				fracjPath(jpath[i], str, lvl+1);
 			}
 		} else if(typeof jpath == 'object') {
-
 			for(var i in jpath) {
 				val = i;
 				str = base + (base.length > 0 ? "." : '') + val;
@@ -61,16 +60,17 @@ CI.Types.getValueFromJPath = function(jPath, data) {
 		data.valueFromjPath(jPath);
 	else {
 		var constructor = CI.Types[CI.dataType.getType(data)];
+		
 		if(typeof constructor['valueFromjPath'] == "function")
 			return constructor.valueFromjPath(jPath, data);
 	}
 }
 
 CI.Types._valueFromJPathAndJson = function(jPath, json) {
-
+console.log('here');
 	if(!new RegExp('^([a-zA-Z0-9]*(\.[a-zA-Z0-9]|\[[a-zA-Z0-9]*\]))*$').test(jPath))
 		return;
-
+console.log('there');
 	try {
 		eval("var element = json." + jPath);
 	} catch(e) { return null; }
@@ -147,12 +147,13 @@ CI.Types.object = {
 		}
 	},
 	
-	instanciate: function() {
+	instanciate: function(data) {
 		for(var i in data)
-			CI.Types.instanciate(data[i]);
+			CI.dataType.instanciate(data[i]);
 	},
 	
 	valueFromjPath: function(jPath, data) {
+		
 		return CI.Types._valueFromJPathAndJson(jPath, data);
 	}
 }
@@ -202,20 +203,15 @@ CI.Types.chemical.prototype = {
 	
 	
 	getIUPAC: function(fct, pos) {
+		
 		if(this.loaded) {
 			var iupac = this.data.entry.iupac;
-			if(iupac instanceof Array)
-				fct(iupac[pos == undefined ? 0 : pos].value);
-			else
-				fct(iupac.value);
+			fct(iupac[pos == undefined ? 0 : pos].value);
 		} else 
-		this.callbacks.push(function(chemical) {
-			var iupac = this.data.entry.iupac;
-			if(iupac instanceof Array)
+			this.callbacks.push(function(chemical) {
+				var iupac = this.data.entry.iupac;
 				fct(iupac[pos == undefined ? 0 : pos].value);
-			else
-				fct(iupac.value);
-		});
+			});
 	},
 	
 	getMW: function(fct) {

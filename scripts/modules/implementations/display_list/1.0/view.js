@@ -52,9 +52,10 @@ CI.Module.prototype._types.display_list.View.prototype = {
 		
 		asChemical: function(data) {
 			
-			return $('<div class="ci-displaylist-element">').each(function(i) {
+			return $('<div class="ci-displaylist-element"></div>').each(function(i) {
 					var div = $(this);
 					data.instance.getIUPAC(function(val) {
+						console.log(div);
 						div.html(val);
 					});
 				});

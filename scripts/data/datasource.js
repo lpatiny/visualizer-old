@@ -7,12 +7,13 @@
  * @param {string} sourceName the name of this data object
  * @param {object} sourceData The actual data object (requires at least type to be set)
  */
-CI.DataSource = function(module, sourceName, sourceAccepts) {
+CI.DataSource = function(module, sourceName, sourceAccepts, jPath) {
 	
 	this.module = module;
 	this.sourceName = sourceName;
 	this.sourceAccepts = sourceAccepts;
 	this.data = null;
+	this.jPath = jPath;
 
 	
 	if(typeof CI.DataSource.prototype._dataSources[sourceName] == "undefined")
@@ -48,8 +49,6 @@ CI.DataSource.prototype = {
 	buildData: function(data) {
 		
 		var dataRebuilt = {};
-		
-		
 		if(!(this.sourceAccepts.type instanceof Array))
 			this.sourceAccepts.type = [this.sourceAccepts.type];
 		
@@ -92,5 +91,9 @@ CI.DataSource.prototype = {
 			keys.push(i);
 			
 		return keys;
+	},
+	
+	getjPath: function() {
+		return this.jPath;
 	}
 }

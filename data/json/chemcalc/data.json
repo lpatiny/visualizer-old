@@ -1,0 +1,7 @@
+{"formulas":[{"error":"-0.000273","unsat":"5","em":"300.122727","mf":"C12ClH19N5O2","info":"ClN5O2C12H19"},
+{"error":"0.000384","unsat":"6","em":"300.123384","mf":"C12FH17N4O4","info":"FN4O4C12H17"},
+{"error":"0.000584","unsat":"9","em":"300.123584","mf":"C17H18NO4","info":"NO4C17H18"},
+{"error":"-0.00069","unsat":"1","em":"300.12231","mf":"C14Cl2F2H24","info":"Cl2F2C14H24"},
+{"error":"-0.000759","unsat":"10","em":"300.122241","mf":"C15H16N4O3","info":"N4O3C15H16"},
+{"error":"0.00087","unsat":"1","em":"300.12387","mf":"C9ClFH20N5O3","info":"ClFN5O3C9H20"},
+{"error":"-0.000952","unsat":"1","em":"300.122048","mf":"C11FH21O8","info":"FO8C11H21"}]}

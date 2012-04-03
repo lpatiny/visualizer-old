@@ -34,8 +34,18 @@ CI.EntryPoint = function(structure, data, options, onLoad) {
 	}
 	
 	function doGetStructure(structure) {
-		jQuery.getJSON(structure, {}, function(structure) {
-			doStructure(structure);
+		jQuery.ajax({
+			url: structure,
+			data: {},
+			type: 'get',
+			dataType: 'json',
+			success: function(structure) {
+				doStructure(structure);
+			},
+			
+			error: function() {
+				$("body").unmask().mask("Error while loading structure JSON. Check JSON integrity", { error: true });
+			}
 		});
 	}
 	
@@ -44,8 +54,18 @@ CI.EntryPoint = function(structure, data, options, onLoad) {
 	}
 	
 	function doGetData(data) {
-		jQuery.getJSON(data, {}, function(data) {
-			doData(data);	
+		jQuery.ajax({
+			url: data,
+			data: {},
+			type: 'get',
+			dataType: 'json',
+			success: function(data) {
+				doData(data);
+			},
+			
+			error: function() {
+				$("body").unmask().mask("Error while loading data JSON. Check JSON integrity", { error: true });				
+			}
 		});
 	}
 	

@@ -45,6 +45,17 @@ CI.Module.prototype._types.display_list.Model.prototype = {
 		/* Here you can transform the data coming from the DAO */
 		this.dataValue[dataName] = this.data[dataName].getData();
 		
+		var jpath;
+		if(jpath = this.data[dataName].getjPath()) {
+			
+			for(var i = 0; i < this.dataValue[dataName].length; i++) {
+				
+				this.dataValue[dataName][i] = CI.Types.getValueFromJPath(jpath, this.dataValue[dataName][i]);	
+			}
+			console.log(this.dataValue[dataName]);
+						
+		}
+		
 		
 		/* Triggers a module update */
 		this.module.updateView();
