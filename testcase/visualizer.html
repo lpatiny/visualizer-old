@@ -13,13 +13,13 @@
 
 
 <script>
-/**
- * @namespace Holds all the functionality for the visualizer
- */
 
-console.log(opener);
-console.log(opener.getLayout());
-console.log(opener.getData());
+
+if (opener) {
+	console.log(opener);
+	
+	console.log(opener.getData());
+}
  
  
 CI = new Object();
