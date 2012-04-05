@@ -1,0 +1,131 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<title>Scripting example</title>
+	
+	<script type="text/javascript" src="javascript/includes/json_parse.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" language="javascript" type="text/javascript"></script>
+	
+</head>
+
+<body>
+	<h3>Servlet script</h3>
+	<table style="width:100%;">
+	<tr>
+		<td valign="top" rowspan=2>
+			Available scripts:<br>
+			<table>
+				<tr><td>
+					<select size=30 id="scriptList" onChange="loadScript(this.value)">
+					</select>
+				</td></tr>
+			</table>
+		</td>
+		<td valign="top">
+		  		<table>
+		  			<tr><td>
+		  				Put your js script here:<br>
+		  				<div style="width:750px">
+		  				<textarea id="script" name="script" rows=20 cols=90></textarea></div>
+		  			</td></tr>
+		  			<tr><td><center>
+		    			<button onclick="runScript()">Run script</button>
+		    		</center></td></tr>
+		  		</table>
+		</td>
+		<td valign="top" rowspan=3 width="100%">
+			<div id="hints" class="help">&nbsp;</div>
+		</td>
+	</tr>
+	<tr>
+		<td valign="top">Output:<br><textarea name="result" id="result" rows=10 cols=90></textarea></td>
+	</tr>
+	</table>
+	
+		
+<script type="text/javascript">
+	var url='http://script.epfl.ch/servletScript/JavaScriptServlet';
+
+	
+	function runScript() {
+		jQuery.post(url,
+				{
+					script: $('#script').val()
+				},
+				function(data) {
+					$('#result').val(data);
+			  });
+		
+	}
+	
+	
+	
+	
+	function loadScript(scriptName) {
+		jQuery.get(url,
+			{
+				action: "LoadScript",
+				name:scriptName
+			},
+			function(data) {
+				$('#script').val(data);
+		  });
+	}
+	
+	
+
+	
+	function refreshScript() {
+		jQuery.get(url,
+			{
+				action: "ListScript"
+			},
+			function(data) {
+				var lines=data.split(/[\r\n]+/);
+				$('scriptList').innerHTML="";
+				for (var i=0; i<lines.length; i++) {
+					if (lines[i]!="") {
+						var option = document.createElement('option');
+						option.value=lines[i];
+						option.appendChild(document.createTextNode(lines[i].replace(".js","")));
+						$('#scriptList').append(option);
+					}
+				}
+		  });
+	}
+	
+
+	refreshScript();
+
+</script>
+
+Layout: 
+<select id="layout">
+<option value="chemcalcMonoisotopic/layout.js">chemcalcMonoisotopic</option>
+<option value="chemicalTable/layout.js">chemicalTable</option>
+</select>
+
+<button onclick="openVisualizer();">Open visualizer</button>
+
+
+<script language="javascript">
+function getLayout() {
+	return $('#layout').val();
+}
+
+
+function getData() {
+	var value=JSON.parse($('#data').val());
+	console.log(value)
+	return value.result;
+}
+
+function openVisualizer() {
+	var newWindow=window.open("./visualizer.html","visualizer");
+	
+}
+</script>
+
+</body>
+</html>
