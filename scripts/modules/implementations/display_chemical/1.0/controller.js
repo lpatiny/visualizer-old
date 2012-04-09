@@ -47,5 +47,20 @@ CI.Module.prototype._types.display_chemical.Controller.prototype = {
 				}
 			}
 		}
+	},
+	
+	getConfigurationReceive: function() {
+		
+		
+		return {
+			
+			chemical: {
+				type: 'chemical',
+				label: 'Chemical',
+				description: 'Receives any chemical'
+			}
+			
+		}
+	
 	}
 }

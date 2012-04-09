@@ -9,20 +9,82 @@ body, th, td {
 	color: black;
 }
 
+.ci-spacer {
+	clear: both;
+}
+
+/**
+ * 	Main Page
+ */
+
+#ci-viewport {
+	width: 100%;
+}
+
+
+#ci-left {
+	vertical-align: top;
+	width: 300px;
+	box-shadow: 0px 0px 4px rgba(100, 100, 100, 0.5);
+	border-right: 1px solid #333333;
+}
+
+#ci-right {
+	vertical-align: top;
+	width: 300px;
+	box-shadow: 0px 0px 4px rgba(100, 100, 100, 0.5);
+	border-left: 1px solid #333333;
+}
+
+
+#ci-center {
+}
+
+#ci-right-accordion h3, #ci-left-accordion h3 {
+	border-radius: 0px !important;
+	border: none;
+	margin-top: 0px;
+	border-top: 1px solid #c0c0c0;
+}
+
+
+#ci-right-accordion h3 a, #ci-left-accordion h3 a {
+	color: #a0a0a0;
+}
+
+#ci-right-accordion h3.ui-state-active, #ci-left-accordion h3.ui-state-active {
+	background: #fcfcfc;
+	border-top: 1px solid #555555;
+}
+
+
+#ci-right-accordion h3.ui-state-active a, #ci-left-accordion h3.ui-state-active a {
+	color: #333333;
+}
+
+#ci-right-accordion > div, #ci-left-accordion > div {
+	background: #fcfcfc !important;
+	border: 0px;
+	padding: 0px;
+}
+
+#ci-right-moduleselected, #ci-left-moduleselected {
+	background: #fcfcfc;
+
+	width: 100%;
+	border-bottom: 1px solid #f0f0f0;
+}
+
+
 /**
  * 	Main Module Grid
  */
 
 #ci-modules-grid {
-	
-	width: 1000px;
+	width: 100%;
 	height: 600px;
 	
-	margin-left: 20px;
-	margin-top: 20px;
-	border: 1px solid black;
-	background: #f0f0f0;
-	
+	background: #fefefe;
 	position: relative; /* important */
 }
 
@@ -128,4 +190,41 @@ div.ci-module-wrapper .ci-module-content {
 .ci-displaylist-list > div > .ci-chemical-iupac {
 	float: left;
 	width: 250px;
+}
+
+.ci-cfg-module label {
+	float: left;
+	width: 100px;
+	
+}
+
+.ci-cfg-module ul {
+	list-style-type: none;
+	margin: 0px;
+	padding: 0px;
+	padding-left: 10px;
+	padding-right: 10px;
+}
+
+.ci-cfg-module > div > ul > li {
+	margin: 0px;
+	padding: 0px;
+	margin-bottom: 15px;
+}
+
+
+.ci-cfg-module > div > ul > li > ul > li {
+	margin: 0px;
+	padding: 0px;
+	margin-bottom: 4px;
+	
+}
+
+.ci-varname {
+	font-weight: bold;
+	font-size: 1.2em;
+}
+
+.ci-varsent, .ci-varreceived {
+	margin-left: 10px;
 }

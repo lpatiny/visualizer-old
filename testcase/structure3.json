@@ -32,7 +32,7 @@
 	
 	"onEntryHover": [
 		{
-			"varname": "entry_hovered",
+			"name": "entry_hovered",
 			"rel": "element",
 			"key": ""	
 		}

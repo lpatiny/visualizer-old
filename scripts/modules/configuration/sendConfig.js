@@ -28,17 +28,17 @@ $(document).bind('onChangeSendCfg', function(event, module) {
 	}
 	
 	var cfgLine = [];
-	cfgLine.push('<li class="CfgSendEl">');
-	cfgLine.push('Event: <select class="_eventname">');
+	cfgLine.push('<li class="CfgSendEl"><ul>');
+	cfgLine.push('<li><label>Event: </label><select class="_eventname">');
 	cfgLine.push(allEvents.join(''));
-	cfgLine.push('</select>');
-	cfgLine.push('Rel: <select class="_eventrel">');
+	cfgLine.push('</select></li>');
+	cfgLine.push('<li><label>Rel: </label><select class="_eventrel">');
 	cfgLine.push(allRels.join(''));
-	cfgLine.push('</select>');
-	cfgLine.push('Fields to send: <select class="_eventkeys">');
-	cfgLine.push('</select>');
-	cfgLine.push('Store in: <input type="text" class="_eventvarname" />')
-	cfgLine.push('</li class="CfgSendEl">')
+	cfgLine.push('</select></li>');
+	cfgLine.push('<li><label>Fields to send: </label><select class="_eventkeys">');
+	cfgLine.push('</select></li>');
+	cfgLine.push('<li><label>Store in: </label><input type="text" class="_eventvarname" /></li>')
+	cfgLine.push('</ul></li>')
 	
 	var cfg = $(cfgLine.join(''));
 	cfg.find('select._eventrel').bind('change', function(event) {
@@ -55,10 +55,11 @@ $(document).bind('onChangeSendCfg', function(event, module) {
 		line.find('select._eventname').val(eventName);
 		line.find('select._eventrel').val(currentCfg.rel);
 		line.find('select._eventrel').trigger('change');
-		line.find('input._eventvarname').val(currentCfg.varname);
+		line.find('input._eventvarname').val(currentCfg.name);
 		line.find('select._eventkeys').val(currentCfg.keys);
 	}
 	
+	var wrapper = $("<div />");
 	var html = $("<ul />");
 	
 	for(var i in currentCfg) {
@@ -75,5 +76,14 @@ $(document).bind('onChangeSendCfg', function(event, module) {
 	
 	var line = cfg.clone(true);
 	html.append(line);
-	$("#ci-cfg-send").html(html);
+	
+	
+	wrapper.append($('<div class="ci-duplicate">+ Add a line</div>').bind('click', function() {
+		html.append(cfg.clone(true));
+		$("#ci-right-accordion").accordion('resize');
+	}));
+	
+	wrapper.prepend(html);
+	
+	$("#ci-cfg-send").html(wrapper);
 });

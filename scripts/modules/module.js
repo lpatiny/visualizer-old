@@ -52,7 +52,10 @@ CI.Module = function(definition) {
 		this.model.init();
 		
 		this.dom.find('.ci-configure').bind('click', function(event) {
+			
 			$(document).trigger('onChangeSendCfg', module);
+			$(document).trigger('onChangeReceiveCfg', module);
+			$("#ci-right-accordion").accordion('resize');
 		})
 	}
 	

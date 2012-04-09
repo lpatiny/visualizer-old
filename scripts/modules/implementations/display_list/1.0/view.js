@@ -59,6 +59,10 @@ CI.Module.prototype._types.display_list.View.prototype = {
 						div.html(val);
 					});
 				});
+		},
+		
+		asString: function(val) {
+			return '<p>' + val + '</p>';
 		}
 		
 	}

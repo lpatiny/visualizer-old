@@ -76,9 +76,9 @@ CI.Module.prototype._types.canvas_matrix.Controller.prototype = {
 					
 					if(!!hashmap) {
 						var data = CI.Types.getValueFromJPath(actions.onPixelHover[i].key, hashmap);
-						CI.API.setSharedVar(actions.onPixelHover[i].varname, data);
+						CI.API.setSharedVar(actions.onPixelHover[i].name, data);
 					} else if(!!value)
-						CI.API.setSharedVar(actions.onPixelHover[i].varname, value);
+						CI.API.setSharedVar(actions.onPixelHover[i].name, value);
 				}
 			});
 		
@@ -124,5 +124,16 @@ CI.Module.prototype._types.canvas_matrix.Controller.prototype = {
 				}
 			}
 		}
+	},
+	
+	getConfigurationReceive: function() {
+		
+		return {
+			'matrix': {
+				accepts: 'matrix',
+				label: 'Matrix',
+				description: 'Receives the matrix to display'
+			}
+		};
 	}
 }

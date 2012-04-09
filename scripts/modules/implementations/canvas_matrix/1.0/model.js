@@ -24,9 +24,6 @@ CI.Module.prototype._types.canvas_matrix.Model = function(module) {
 
 CI.Module.prototype._types.canvas_matrix.Model.prototype = {
 	
-	_accepts: [{rel: 'matrix', type: 'matrix'}],
-	
-	
 	// Usually you don't really to init a model. But who knows. Please leave it.
 	init: function() {	
 	//	CI.Module.prototype._impl.model.afterInit(this.module);
@@ -80,12 +77,12 @@ CI.Module.prototype._types.canvas_matrix.Model.prototype = {
 		
 	},
 	
-	getjPath: function(rel) {
+	getjPath: function(rel, accepts) {
 		
-		function getjPath(data) {
+		function getjPath(data, accepts) {
 			var jpaths = {};
 			for(var i = 0; i < data.length; i++) 
-				CI.Types._getjPath(data[i], jpaths);
+				CI.Types._getjPath(data[i], jpaths, accepts);
 			return jpaths;
 		}
 		
@@ -99,11 +96,11 @@ CI.Module.prototype._types.canvas_matrix.Model.prototype = {
 		switch(rel) {
 			case 'row':
 				var data = data.yLabel;
-				return getjPath(data);
+				return getjPath(data, accepts);
 			break;
 			case 'col':
 				var data = data.xLabel;
-				return getjPath(data);
+				return getjPath(data, accepts);
 			break;
 			
 			default:

@@ -24,8 +24,6 @@ CI.Module.prototype._types.display_list.Model = function(module) {
 
 CI.Module.prototype._types.display_list.Model.prototype = {
 	
-	_accepts: [{rel: 'listelements', type: 'array'}],
-	
 	
 	// Usually you don't really to init a model. But who knows. Please leave it.
 	init: function() {	
@@ -70,6 +68,7 @@ CI.Module.prototype._types.display_list.Model.prototype = {
 		
 		function getjPath(data) {
 			var jpaths = {};
+			
 			for(var i = 0; i < data.length; i++) 
 				CI.Types._getjPath(data[i], jpaths);
 			return jpaths;
@@ -77,9 +76,13 @@ CI.Module.prototype._types.display_list.Model.prototype = {
 		
 		var data = this.module.getDataFromRel('listelements');
 		
-		if(!data)
+		if(!data || data == null)
 			return;
 		data = data.getData();
+		
+		if(data == null)
+			return;
+			
 		return getjPath(data);
 	}
 }

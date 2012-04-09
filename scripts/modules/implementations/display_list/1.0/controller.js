@@ -38,7 +38,7 @@ CI.Module.prototype._types.display_list.Controller.prototype = {
 					
 					if(!!toSend) {
 						var data = CI.Types.getValueFromJPath(actions.onEntryHover[i].key, toSend);
-						CI.API.setSharedVar(actions.onEntryHover[i].varname, data);
+						CI.API.setSharedVar(actions.onEntryHover[i].name, data);
 					}
 				}
 				
@@ -64,5 +64,16 @@ CI.Module.prototype._types.display_list.Controller.prototype = {
 				}
 			}
 		}
+	},
+	
+	getConfigurationReceive: function() {
+		return {
+			listelements: {
+				type: 'array',
+				label: 'List',
+				description: 'Any list of displayable element'
+			}
+		}
 	}
+
 }

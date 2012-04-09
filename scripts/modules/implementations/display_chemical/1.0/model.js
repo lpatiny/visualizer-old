@@ -24,8 +24,6 @@ CI.Module.prototype._types.display_chemical.Model = function(module) {
 
 CI.Module.prototype._types.display_chemical.Model.prototype = {
 	
-	_accepts: [{rel: 'chemical', type: 'chemical'}],
-	
 	
 	// Usually you don't really to init a model. But who knows. Please leave it.
 	init: function() {	

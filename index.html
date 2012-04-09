@@ -25,6 +25,7 @@
 	<script src="./scripts/types/datatype.js" type="text/javascript" language="javascript"></script>
 	<script src="./scripts/types/maintypes.js" type="text/javascript" language="javascript"></script>
 	<script src="./scripts/modules/configuration/sendConfig.js" type="text/javascript" language="javascript"></script>
+	<script src="./scripts/modules/configuration/receiveConfig.js" type="text/javascript" language="javascript"></script>
 	
 	
 	<script src="./scripts/modules/implementations/canvas_matrix/1.0/controller.js" type="text/javascript" language="javascript"></script>
@@ -72,8 +73,36 @@
 
 <body>
 	
-	<div id="ci-modules-grid"></div>
-	
-	<div id="ci-cfg-send"></div>
-	
+	<table id="ci-viewport" cellpadding="0" cellspacing="0">
+		
+		<tr>
+			<td colspan="3" id="ci-header">
+				
+				
+			</td>
+		</tr>
+		<tr>
+			<td id="ci-left">
+				<div id="ci-left-accordion">
+					<h3><a href="#">All shared variables</a></h3>
+					<div id="ci-cfg-shared"></div>
+				</div>
+			</td>
+			<td id="ci-center">
+				<div id="ci-modules-grid"></div>
+			</td>
+			
+			<td id="ci-right">
+				<div id="ci-right-moduleselected">No module selected</div>
+				<div id="ci-right-accordion">
+					<h3><a href="#">Data source</a></h3>
+					<div id="ci-cfg-receive" class="ci-cfg-module"></div>
+					<h3><a href="#">Data to send</a></h3>
+					<div id="ci-cfg-send" class="ci-cfg-module"></div>
+				</div>
+			</td>
+		</tr>
+		
+	</table>
+		
 </body>
