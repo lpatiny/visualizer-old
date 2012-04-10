@@ -184,10 +184,11 @@ CI.Module.prototype = {
 	
 	getAcceptedTypes: function(rel) {
 		
-		for(var i in this.model._accepts)
-			if(this.model._accepts[i].rel == rel)
-				return this.model._accepts[i];
-			
+		var accept = this.controller.getConfigurationReceive();
+		
+		if(accept[rel])
+			return accept[rel];
+		
 		return { data: rel, type: [], asObject: false };
 	},
 	

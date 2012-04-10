@@ -55,9 +55,9 @@ CI.Types.getValueFromJPath = function(jPath, data) {
 	
 	if((jPath + "").length == 0)
 		return data;
-	
-	if(typeof data['valueFromjPath'] == "function")
-		data.valueFromjPath(jPath);
+		
+	if(typeof data.instance['valueFromjPath'] == "function")
+		return data.instance.valueFromjPath(jPath);
 	else {
 		var constructor = CI.Types[CI.dataType.getType(data)];
 		
@@ -67,10 +67,10 @@ CI.Types.getValueFromJPath = function(jPath, data) {
 }
 
 CI.Types._valueFromJPathAndJson = function(jPath, json) {
-console.log('here');
-	if(!new RegExp('^([a-zA-Z0-9]*(\.[a-zA-Z0-9]|\[[a-zA-Z0-9]*\]))*$').test(jPath))
+
+	if(!new RegExp('^([a-zA-Z0-9]*((\.[a-zA-Z0-9])|(\[[0-9]+]))?)*$').test(jPath))
 		return;
-console.log('there');
+
 	try {
 		eval("var element = json." + jPath);
 	} catch(e) { return null; }
@@ -181,8 +181,11 @@ CI.Types.chemical = function(source, url) {
 		this.loaded = false;
 		var query = new UTIL.AjaxQuery({
 			url: url,
+			dataType: 'json',
 			success: function(data) {
-				chemical.data = data;
+				
+				//var data = JSON.parse(jQuery.trim(data));
+				chemical.source = data;
 				chemical.loaded = true;
 				chemical.doCallbacks();
 			}
@@ -191,6 +194,18 @@ CI.Types.chemical = function(source, url) {
 	
 }
 
+CI.Types.lastIdCallback = 0;
+CI.Types.addCallbackLoader = function(path, object) {
+	var id = ++CI.Types.lastIdCallback;
+	
+	object.callbacks.push(function() {
+		
+		$('#callback-load-' + id).html(object.valueFromjPath(path));
+	});
+	return '<span id="callback-load-' + id + '"></span>';
+}
+
+
 CI.Types.chemical.prototype = {
 	
 	getjPath: function(jpaths) {
@@ -198,9 +213,13 @@ CI.Types.chemical.prototype = {
 	},
 	
 	valueFromjPath: function(jPath) {
+		if(!this.loaded)
+			return CI.Types.addCallbackLoader(jPath, this);
+			
+			console.log(jPath);
+			console.log(this.source);
 		return CI.Types._valueFromJPathAndJson(jPath, this.source)	
 	},
-	
 	
 	getIUPAC: function(fct, pos) {
 		
@@ -227,7 +246,9 @@ CI.Types.chemical.prototype = {
 	},
 	
 	doCallbacks: function() {
+		
 		for(var i = 0; i < this.callbacks.length; i++) {
+			
 			this.callbacks[i].call(this);
 		}
 	}

@@ -9,7 +9,7 @@
 "modules": [
 {
     "id": "12345",	
-    "type": "display_list",
+    "type": "grid",
     "title": "Chemicals available",
 
     "position": {
@@ -40,9 +40,8 @@
     },
 
     "dataSource": [{
-    	"name": "formulas",
-    	"rel": "listelements",
-    	"jpath": "mf"
+    	"name": "list",
+    	"rel": "list"
     }]
 }]
 
