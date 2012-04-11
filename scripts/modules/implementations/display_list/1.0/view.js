@@ -36,7 +36,7 @@ CI.Module.prototype._types.display_list.View.prototype = {
 		if(!(moduleValue = this.module.getDataFromRel('listelements').getData()))
 			return;
 		
-		this.list = moduleValue;
+		this.list = moduleValue.value;
 		for(var i = 0; i < this.list.length; i++) {
 			var div = CI.dataType.toScreen(this.list[i], this);
 			this.dom.append(div);

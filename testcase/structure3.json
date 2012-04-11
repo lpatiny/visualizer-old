@@ -26,8 +26,11 @@
 
     "configuration": {
     	"colsjPaths": {
-		"IUPAC": "entry.iupac[0].value",
-		"MW": "entry.mf.mw"
+		"Em": "em",
+		"Error": "error",
+		"Info": "info",
+		"Molecular Formula": "mf",
+		"Insaturation": "unsat"
 	}
     },
    
@@ -43,7 +46,7 @@
     },
 
     "dataSource": [{
-    	"name": "list",
+    	"name": "possibleMF",
     	"rel": "list"
     }]
 }]

@@ -45,7 +45,9 @@ CI.Module.prototype._types.grid.View.prototype = {
 			Table.addColumn(Column);
 			Columns[j] = Column;
 		}
-		this.list = moduleValue;
+		
+		this.list = moduleValue.value;
+		console.log(this.list);
 		var Content = new CI.Tables.Content();
 		for(var i = 0, length = this.list.length; i < length; i++) {
 			var element = {};

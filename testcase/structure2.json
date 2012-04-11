@@ -40,7 +40,7 @@
     },
 
     "dataSource": [{
-    	"name": "list",
+    	"name": "possibleMF",
     	"rel": "listelements"
     }]
 },

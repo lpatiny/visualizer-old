@@ -56,7 +56,7 @@ CI.Types.getValueFromJPath = function(jPath, data, array, elId) {
 	if((jPath + "").length == 0)
 		return data;
 		
-	if(typeof data.instance['valueFromjPath'] == "function")
+	if(data.instance && typeof data.instance['valueFromjPath'] == "function")
 		return data.instance.valueFromjPath(jPath, array, elId);
 	else {
 		var constructor = CI.Types[CI.dataType.getType(data)];

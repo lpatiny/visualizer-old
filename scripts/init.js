@@ -23,7 +23,7 @@ CI = new Object();
 		var dom = $("body");
 		$(dom).mask('Data is loading. Please wait...');
 		
-		var Entry = new CI.EntryPoint('testcase/structure3.json', './data/json/chemical/chemicalTable.json', {}, function() {
+		var Entry = new CI.EntryPoint(_structure, _data, {}, function() {
 			$(dom).unmask();
 			
 			
