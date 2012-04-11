@@ -20,6 +20,7 @@ window[_namespaces['table']].Tables.Table.prototype = {
 	
 	addColumn: function(col) {
 		this.cols.push(col);
+		col.setTable(this);
 	},
 	
 	removeCol: function(col) {
@@ -78,17 +79,56 @@ window[_namespaces['table']].Tables.Table.prototype = {
 		return this.dom;
 	},
 	
+	afterInit: function() {
+		var inst = this;
+		this.dom.on('click', 'th', function() {
+			var thName = $(this).data('colname');
+			var col = inst.getColumn(thName);
+			inst.selectColumn(col);
+		});
+		
+		this.dom.on('click', 'th .ci-table-sort span', function() {
+			var el = $(this);
+			var asc = el.hasClass('triangle-up');
+			var col = inst.getColumn($(this).parents('th:eq(0)').data('colname'));
+			inst.content.sort(col, asc);
+			inst.commitContent();
+			
+		});
+		
+		for(var i = 0; i < this.cols.length; i++) {
+			this.cols[i].afterInit();
+		}
+	},
+	
 	getColumn: function(name) {
-		for(var i = 0; i < this.cols.length; i++)
+		
+		for(var i = 0; i < this.cols.length; i++) {
+			
 			if(this.cols[i].getName() == name)
 				return this.cols[i];
+		}
 	},
 	
 	getColumns: function() {
 		return this.cols;
 	},
 	
+	selectColumn: function(column, exclusive) {
+		
+		if(typeof column == "number")
+			column = this.cols[column];
+			
+		if(exclusive) 
+			for(var i = 0, length = this.cols.length; i < length; i++)
+				this.cols[i].select(false);
+			
+		column.select(!column.isSelected());
+	//	this.commitContent();
+	},
+	
 	commitContent: function() {
+		
 		this.body.html(this.content.build());
 	},
 	
@@ -97,6 +137,8 @@ window[_namespaces['table']].Tables.Table.prototype = {
 		this.commitContent();
 		
 		dom.html(this.dom);
+		
+		this.afterInit();
 	}
 }
 

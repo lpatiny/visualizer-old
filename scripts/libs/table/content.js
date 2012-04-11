@@ -25,17 +25,13 @@ window[_namespaces['table']].Tables.Content.prototype = {
 		var html = [];
 		
 		for(var i = 0; i < this.elements.length; i++) {
-			
 			if(!this.doSearch(this.elements[i]))
 				continue;
 			j++;
-			
 			if(j < (this.page - 1) * this.pagination || j >= this.page * this.pagination)
 				continue;
-				
 			html.push(this.buildElement(this.elements[i], i));
 		}
-		
 		this.table.setContentHtml(html.join(''));
 	},
 	
@@ -50,9 +46,7 @@ window[_namespaces['table']].Tables.Content.prototype = {
 			
 			var elVal = element[name];
 			if(typeof elVal != "undefined") {
-				html.push('<td>');
-				html.push(elVal)
-				html.push('</td>');
+				html.push(columns[i].buildElement(elVal));
 			} else
 				html.push('<td></td>');
 			
@@ -98,6 +92,19 @@ window[_namespaces['table']].Tables.Content.prototype = {
 			search.replace(metachars[i], "\\" + metachars[i]);
 		search = search.toLowerCase();
 		this.search = new RegExp(search);
+	},
+	
+	sort: function(col, asc) {
+		var elName = col.getName();
+		
+		this.elements.sort(function(a, b) {
+			if(!a[elName]) return -1;
+			if(!b[elName]) return 1;
+			return a[elName] < b[elName];
+		});
+		
+		if(!asc)
+			this.elements.reverse();
+		
 	}
 }
-

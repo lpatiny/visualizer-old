@@ -51,18 +51,18 @@ CI.Types._jPathToOptions = function(jpath) {
 
 
 
-CI.Types.getValueFromJPath = function(jPath, data) {
+CI.Types.getValueFromJPath = function(jPath, data, array, elId) {
 	
 	if((jPath + "").length == 0)
 		return data;
 		
 	if(typeof data.instance['valueFromjPath'] == "function")
-		return data.instance.valueFromjPath(jPath);
+		return data.instance.valueFromjPath(jPath, array, elId);
 	else {
 		var constructor = CI.Types[CI.dataType.getType(data)];
 		
 		if(typeof constructor['valueFromjPath'] == "function")
-			return constructor.valueFromjPath(jPath, data);
+			return constructor.valueFromjPath(jPath, data, array, elId);
 	}
 }
 
@@ -196,12 +196,15 @@ CI.Types.chemical = function(source, url) {
 }
 
 CI.Types.lastIdCallback = 0;
-CI.Types.addCallbackLoader = function(path, object) {
+CI.Types.addCallbackLoader = function(path, object, array, elId) {
 	var id = ++CI.Types.lastIdCallback;
 	
 	object.callbacks.push(function() {
 		
-		$('#callback-load-' + id).html(object.valueFromjPath(path));
+		var val = object.valueFromjPath(path);
+		
+		array[elId] = val;
+		$('#callback-load-' + id).html(val);
 	});
 	return '<span id="callback-load-' + id + '"></span>';
 }
@@ -213,9 +216,10 @@ CI.Types.chemical.prototype = {
 		return CI.Types.jPathFromJson(this.source, jpaths, "");
 	},
 	
-	valueFromjPath: function(jPath) {
+	valueFromjPath: function(jPath, array, elId) {
+		
 		if(!this.loaded)
-			return CI.Types.addCallbackLoader(jPath, this);
+			return CI.Types.addCallbackLoader(jPath, this, array, elId);
 		return CI.Types._valueFromJPathAndJson(jPath, this.source)	
 	},
 	

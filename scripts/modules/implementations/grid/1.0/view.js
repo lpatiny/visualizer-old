@@ -50,7 +50,7 @@ CI.Module.prototype._types.grid.View.prototype = {
 		for(var i = 0, length = this.list.length; i < length; i++) {
 			var element = {};
 			for(var j in jpaths)
-				element[j] =  CI.dataType.toScreen(CI.Types.getValueFromJPath(jpaths[j], this.list[i]), this);
+				element[j] =  CI.dataType.toScreen(CI.Types.getValueFromJPath(jpaths[j], this.list[i], element, j), this);
 			Content.addElement(element);
 		}
 		Table.setContent(Content);
