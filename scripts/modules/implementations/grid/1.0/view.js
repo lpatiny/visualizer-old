@@ -36,35 +36,25 @@ CI.Module.prototype._types.grid.View.prototype = {
 		if(!(moduleValue = this.module.getDataFromRel('list').getData()))
 			return;
 		
-		var table = new CI.Tables.Table();
-		var jpaths = {
-			'IUPAC': 'entry.iupac[0].value',
-			'MW': 'entry.mf.mw'
-		}
-		
-		
+		var jpaths = this.module.getConfiguration().colsjPaths;
+		var Table = new CI.Tables.Table();
 		var Columns = {};
 		for(var j in jpaths) {
 			var Column = new CI.Tables.Column(j);
-			Column.setTitle(new CI.Tables.AnyTitle(j));
-			table.addColumn(Column);
+			Column.setTitle(new CI.Title(j));
+			Table.addColumn(Column);
 			Columns[j] = Column;
 		}
-		
 		this.list = moduleValue;
 		var Content = new CI.Tables.Content();
-		for(var i = 0; i < this.list.length; i++) {
-			
+		for(var i = 0, length = this.list.length; i < length; i++) {
 			var element = {};
-			for(var j in jpaths) {
-				
+			for(var j in jpaths)
 				element[j] =  CI.dataType.toScreen(CI.Types.getValueFromJPath(jpaths[j], this.list[i]), this);
-			}
 			Content.addElement(element);
 		}
-		
-		table.setContent(Content);
-		table.init(this.dom);
+		Table.setContent(Content);
+		Table.init(this.dom);
 	},
 	
 
@@ -86,7 +76,7 @@ CI.Module.prototype._types.grid.View.prototype = {
 		},
 		
 		asString: function(val) {
-			return '<p>' + val + '</p>';
+			return val;
 		}
 		
 	}

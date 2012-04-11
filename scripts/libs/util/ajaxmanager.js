@@ -1,16 +1,18 @@
 
+if(!window[_namespaces['util']].Util) window[_namespaces['util']].Util = {};
 
-if(typeof UTIL == "undefined")
-	UTIL = {};
-	
-UTIL.AjaxManager = function() {
+window[_namespaces['util']].Util.AjaxManager = function() {
 	this.queries = [[],[],[],[]];
 	this.queued = 0;
 	this.running = 0;
 	this.runningQueries = {};
 }
 
-UTIL.AjaxManager.prototype = {
+window[_namespaces['util']].Util.AjaxManager.prototype = {
+	
+	createQuery: function(options, doNotQuery) {
+		return new window[_namespaces['util']].Util.AjaxQuery(options, doNotQuery);
+	},
 	
 	addQuery: function(query) {
 		var priority = query.getPriority() - 1;

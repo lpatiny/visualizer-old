@@ -24,6 +24,8 @@ CI.modules = {};
 CI.Module = function(definition) {
 
 	this.definition = $.extend(true, {}, CI.Module.prototype.defaults, definition);
+	this.cfgModule = $.extend(true, {}, definition.configuration);
+	
 	
 	/**
 	 * @function Initialises the module, constructs the DOM within the module, and initialises the MVC
@@ -57,6 +59,8 @@ CI.Module = function(definition) {
 			$(document).trigger('onChangeReceiveCfg', module);
 			$("#ci-right-accordion").accordion('resize');
 		})
+		
+		
 	}
 	
 	/**
@@ -181,6 +185,9 @@ CI.Module.prototype = {
 		throw "The module has not been loaded yet";
 	},
 	
+	getConfiguration: function() {
+		return this.cfgModule;
+	},
 	
 	getAcceptedTypes: function(rel) {
 		

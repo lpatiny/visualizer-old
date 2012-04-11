@@ -179,7 +179,8 @@ CI.Types.chemical = function(source, url) {
 	var chemical = this;
 	if(this.source == null) {
 		this.loaded = false;
-		var query = new UTIL.AjaxQuery({
+		console.log(CI.Util);
+		var query = new CI.Util.AjaxQuery({
 			url: url,
 			dataType: 'json',
 			success: function(data) {
@@ -215,9 +216,6 @@ CI.Types.chemical.prototype = {
 	valueFromjPath: function(jPath) {
 		if(!this.loaded)
 			return CI.Types.addCallbackLoader(jPath, this);
-			
-			console.log(jPath);
-			console.log(this.source);
 		return CI.Types._valueFromJPathAndJson(jPath, this.source)	
 	},
 	

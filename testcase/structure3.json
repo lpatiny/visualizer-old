@@ -24,8 +24,11 @@
     },
 
 
-    "dataModule": {
-    	
+    "configuration": {
+    	"colsjPaths": {
+		"IUPAC": "entry.iupac[0].value",
+		"MW": "entry.mf.mw"
+	}
     },
    
     "dataSend": {

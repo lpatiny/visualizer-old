@@ -1,17 +1,17 @@
 
-if(typeof UTIL == "undefined")
-	UTIL = {};
 
-UTIL.AjaxQuery = function(options, doNotQueueIt) {
+if(!window[_namespaces['util']].Util) window[_namespaces['util']].Util = {};
+
+window[_namespaces['util']].Util.AjaxQuery = function(options, doNotQueueIt) {
 	
-	this.options = $.extend(true, {}, UTIL.AjaxQuery.prototype.defaults, options);
+	this.options = $.extend(true, {}, window[_namespaces['util']].Util.AjaxQuery.prototype.defaults, options);
 	this.setPriority(this.options.priority);
 	
 	if(!doNotQueueIt)
 		window.ajaxManager.addQuery(this);
 }
 
-UTIL.AjaxQuery.prototype = {
+window[_namespaces['util']].Util.AjaxQuery.prototype = {
 	
 	defaults: {
 		url: null,

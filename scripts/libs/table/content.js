@@ -1,5 +1,6 @@
+if(!window[_namespaces['table']].Tables) window[_namespaces['table']].Tables = {};
 
-CI.Tables.Content = function() {
+window[_namespaces['table']].Tables.Content = function() {
 	
 	this.elements = [];
 	this.table;
@@ -9,7 +10,7 @@ CI.Tables.Content = function() {
 }
 
 
-CI.Tables.Content.prototype = {
+window[_namespaces['table']].Tables.Content.prototype = {
 	
 	setTable: function(table) {
 		this.table = table;

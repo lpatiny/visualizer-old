@@ -1,14 +1,15 @@
+if(!window[_namespaces['table']].Tables) window[_namespaces['table']].Tables = {};
 
-CI.Tables.Column = function(name, options) {
+window[_namespaces['table']].Tables.Column = function(name, options) {
 	
 	this.title;
-	this.options = $.extend(true, {}, CI.Tables.Column.prototype.defaults, options);
+	this.options = $.extend(true, {}, window[_namespaces['table']].Tables.Column.prototype.defaults, options);
 	
 	this.name = name;
 }
 
 
-CI.Tables.Column.prototype = {
+window[_namespaces['table']].Tables.Column.prototype = {
 	
 	defaults: {
 		sortable: false,

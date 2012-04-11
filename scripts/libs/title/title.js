@@ -1,6 +1,5 @@
 
-
-CI.Tables.AnyTitle = function(text, icon) {
+window[_namespaces['title']].Title = function(text, icon) {
 	this.labels = {};
 	this.icon;
 	
@@ -12,7 +11,7 @@ CI.Tables.AnyTitle = function(text, icon) {
 
 }
 
-CI.Tables.AnyTitle.prototype = {
+window[_namespaces['title']].Title.prototype = {
 	
 	setIcon: function(icon) {
 		this.icon = icon;
@@ -20,13 +19,13 @@ CI.Tables.AnyTitle.prototype = {
 	
 	setLabel: function(label, lang) {
 		if(lang == undefined)
-			lang = CI.util.getCurrentLang();
+			lang = window[_namespaces['util']].Util.getCurrentLang();
 			
 		this.labels[lang] = label;
 	},
 	
 	getIconUrl: function() {
-		return CI.icons.iconToUrl(this.icon);
+		return window[_namespaces['util']].Icons.iconToUrl(this.icon);
 	},
 	
 	getImgIcon: function() {
@@ -36,16 +35,16 @@ CI.Tables.AnyTitle.prototype = {
 	getLabel: function(lang) {
 		
 		if(!lang)
-			lang = CI.util.getCurrentLang();
-			
+			lang = window[_namespaces['util']].Util.getCurrentLang();
+		
 		if(typeof this.labels[lang] !== "undefined")
 			return this.labels[lang];
-		
+			
 		//throw {notify: true, display: true, message: "An error has occured. No label exists for the lang " + lang}; 
 	},
 	
 	duplicate: function() {
-		var title = new CI.Forms.AnyTitle();
+		var title = new window[_namespaces['util']].Title();
 		for(var i in this.labels)
 			title.setLabel(this.labels[i], i);
 		title.setIcon(this.icon);

@@ -1,0 +1,23 @@
+
+.ci-table {
+	width: 100%;
+}
+
+
+.ci-table th {
+	text-align: left;
+	padding-left: 10px;
+}
+
+.ci-table td {
+	border-bottom: 1px solid #eaeaea;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	padding-left: 10px;	
+}
+
+
+
+.ci-table tr:nth-child(2n) td {
+	background-color: #fcfcfc;
+}

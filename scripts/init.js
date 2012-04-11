@@ -2,14 +2,22 @@
  * @namespace Holds all the functionality for the visualizer
  */
 
-CI = new Object();
+_namespaces = {
+	title: 'CI',
+	table: 'CI',
+	lang: 'CI',
+	util: 'CI',
+	visualizer: 'CI'
+};
 
+CI = new Object();
 
 (function($) {
 	
 	$(document).ready(function() {
 		
-		ajaxManager = new UTIL.AjaxManager();
+		console.log(CI);
+		ajaxManager = new CI.Util.AjaxManager();
 		//ajaxManager.setProxyUrl('http://localhost:8888/git/visualizer/proxify.php?url=<url>');
 		
 		var dom = $("body");
