@@ -13,11 +13,11 @@
 	<h3>Servlet script</h3>
 	<table style="width:100%;">
 	<tr>
-		<td valign="top" rowspan=2>
+		<td valign="top" rowspan=1>
 			Available scripts:<br>
 			<table>
 				<tr><td>
-					<select size=30 id="scriptList" onChange="loadScript(this.value)">
+					<select size=18 id="scriptList" onChange="loadScript(this.value)">
 					</select>
 				</td></tr>
 			</table>
@@ -39,8 +39,28 @@
 		</td>
 	</tr>
 	<tr>
+		<td valign="top" rowspan=1>
+		</td>
 		<td valign="top">Output:<br><textarea name="result" id="result" rows=10 cols=90></textarea></td>
 	</tr>
+	<tr>
+		<td>
+			Available view:<br>
+			<table>
+				<tr><td>
+					<select size=10 id="viewList" onChange="loadView(this.value)">
+					</select>
+				</td></tr>
+			</table>
+		
+		</td>
+		<td>
+			View: <button onclick="openVisualizer();">Open visualizer</button>
+			<br><textarea name="view" id="view" rows=10 cols=90></textarea>
+		</td>
+	</tr>
+
+
 	</table>
 	
 		
@@ -73,10 +93,20 @@
 		  });
 	}
 	
+	function loadView(scriptName) {
+		jQuery.get(url,
+			{
+				action: "LoadScript",
+				name:scriptName
+			},
+			function(data) {
+				$('#view').val(data);
+		  });
+	}
 	
 
 	
-	function refreshScript() {
+	function refreshInfo() {
 		jQuery.get(url,
 			{
 				action: "ListScript"
@@ -84,34 +114,34 @@
 			function(data) {
 				var lines=data.split(/[\r\n]+/);
 				$('scriptList').innerHTML="";
+				$('viewList').innerHTML="";
 				for (var i=0; i<lines.length; i++) {
 					if (lines[i]!="") {
 						var option = document.createElement('option');
 						option.value=lines[i];
-						option.appendChild(document.createTextNode(lines[i].replace(".js","")));
-						$('#scriptList').append(option);
+						if (lines[i].match(/.*\.js$/)) {
+							option.appendChild(document.createTextNode(lines[i]));
+							$('#scriptList').append(option);
+						}
+						if (lines[i].match(/.*\.view$/)) {
+							option.appendChild(document.createTextNode(lines[i]));
+							$('#viewList').append(option);
+						}
 					}
 				}
 		  });
 	}
 	
 
-	refreshScript();
+	refreshInfo();
 
 </script>
 
-Layout: 
-<select id="layout">
-<option value="chemcalcMonoisotopic/layout.js">chemcalcMonoisotopic</option>
-<option value="chemicalTable/layout.js">chemicalTable</option>
-</select>
-
-<button onclick="openVisualizer();">Open visualizer</button>
 
 
 <script language="javascript">
 function getLayout() {
-	return $('#layout').val();
+	return $('#view').val();
 }
 
 
