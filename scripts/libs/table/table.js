@@ -172,8 +172,6 @@ window[_namespaces['table']].Tables.Table.prototype = {
 		});
 		
 		var bottom = top.clone(true);
-		console.log(this.body);
-		console.log(top);
 		this.body.prepend(top).append(bottom);
 	}
 }

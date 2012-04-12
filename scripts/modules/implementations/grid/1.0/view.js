@@ -66,17 +66,6 @@ CI.Module.prototype._types.grid.View.prototype = {
 	
 	typeToScreen: {
 		
-		asChemical: function(data) {
-			
-			return $('<div class="ci-displaylist-element"></div>').each(function(i) {
-					var div = $(this);
-					data.instance.getIUPAC(function(val) {
-						console.log(div);
-						div.html(val);
-					});
-				});
-		},
-		
 		asString: function(val) {
 			return val;
 		}

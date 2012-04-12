@@ -176,23 +176,7 @@ CI.Types.chemical = function(source, url) {
 	this.loaded = true;
 	this.callbacks = [];
 	
-	var chemical = this;
-	if(this.source == null) {
-		this.loaded = false;
-		console.log(CI.Util);
-		var query = new CI.Util.AjaxQuery({
-			url: url,
-			dataType: 'json',
-			success: function(data) {
-				
-				//var data = JSON.parse(jQuery.trim(data));
-				chemical.source = data;
-				chemical.loaded = true;
-				chemical.doCallbacks();
-			}
-		});
-	}
-	
+	this.jsonLoader = new CI.Util.JsonLoader(url, this);
 }
 
 CI.Types.lastIdCallback = 0;
