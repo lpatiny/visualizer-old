@@ -32,6 +32,26 @@
     float: right;
 }
 
+.ci-table-pagination td {
+	text-align: center;
+}
+
+.ci-table-pagination span {
+	display: inline-block;
+	margin: 3px;
+	border: 1px solid #c0c0c0;
+	background: #f0f0f0;
+	padding: 3px;
+	width: 15px;
+	text-align: center;
+	opacity: 0.3;
+	cursor: pointer;
+}
+
+.ci-table-pagination span.ci-selected, .ci-table-pagination span:hover {
+	opacity: 0.9;
+	
+}
 span.triangle-up, span.triangle-down, span.triangle-left, span.triangle-right {
 	border-style: solid;
 	border-color: #333333;

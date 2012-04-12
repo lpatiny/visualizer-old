@@ -54,11 +54,12 @@ window[_namespaces['table']].Tables.Table.prototype = {
 	setPage: function(page) {
 		this.page = page;
 		this.execFuncContent('setPage', [this.page]);
+		this.commitContent();
 	},
 	
 	execFuncContent: function(funcName, vars) {
 		if(typeof this.content !== "undefined")
-			this.content[funcName].apply(vars.unshift(this.content));
+			this.content[funcName].apply(this.content, vars);
 	},
 	
 	buildTable: function() {
@@ -128,8 +129,8 @@ window[_namespaces['table']].Tables.Table.prototype = {
 	},
 	
 	commitContent: function() {
-		
 		this.body.html(this.content.build());
+		this.addPagination();
 	},
 	
 	init: function(dom) {
@@ -139,6 +140,41 @@ window[_namespaces['table']].Tables.Table.prototype = {
 		dom.html(this.dom);
 		
 		this.afterInit();
+	},
+	
+	addPagination: function() {
+		
+		var inst = this;
+		var pages = Math.ceil(this.content.entryCount / this.pagination);
+		var page = this.page;
+		
+		var html = [];
+		
+		html.push('<tr class="ci-table-pagination"><td colspan="');
+		html.push(this.cols.length);
+		html.push('">');
+		
+		for(var i = 1; i <= pages; i++) {
+			html.push('<span data-page="');
+			html.push(i);
+			html.push('" class="');
+			html.push(i == page ? 'ci-selected' : '');
+			html.push('">');
+			html.push(i);
+			html.push('</span>');
+		}
+		
+		html.push('</td></tr>');
+		
+		var top = $(html.join('')).on('click', 'span', function() {
+			
+			inst.setPage($(this).data('page'));
+		});
+		
+		var bottom = top.clone(true);
+		console.log(this.body);
+		console.log(top);
+		this.body.prepend(top).append(bottom);
 	}
 }
 

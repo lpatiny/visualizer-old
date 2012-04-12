@@ -7,6 +7,7 @@ window[_namespaces['table']].Tables.Content = function() {
 	this.seach;
 	this.pagination;
 	this.page;
+	this.entryCount = 0;
 }
 
 
@@ -18,6 +19,7 @@ window[_namespaces['table']].Tables.Content.prototype = {
 	
 	addElement: function(elJson) {
 		this.elements.push(elJson);
+		this.entryCount++;
 	},
 	
 	build: function() {
