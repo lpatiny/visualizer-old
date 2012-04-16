@@ -44,6 +44,13 @@ CI.Module = function(definition) {
 		this.domWrapper = this.dom;
 		this.viewExpander = $('<div class="ci-module-expand">...</div>');
 		
+		var moduleConstruct = CI.Module.prototype._types[moduleType];
+		
+		if(!(moduleConstruct && moduleConstruct.View && moduleConstruct.Controller && moduleConstruct.Model)) {
+			throw 'Module ' + moduleType + ' not fully implemented';
+			return 
+		}
+		
 		//Initialises the MVC pattern for the module
 		this.view = new CI.Module.prototype._types[moduleType].View(this);
 		this.controller = new CI.Module.prototype._types[moduleType].Controller(this);
@@ -217,7 +224,16 @@ CI.Module.prototype = {
 		return false;
 	},
 	
-	
+	inDom: function() {
+		
+		if(typeof this.view.inDom == "function")
+			this.view.inDom();
+		if(typeof this.controller.inDom == "function")
+			this.controller.inDom();
+		if(typeof this.model.inDom == "function")
+			this.model.inDom();
+		
+	},
 	// Useless
 	/*
 	getKeysByRel: function(rel, sent) {
@@ -254,6 +270,10 @@ CI.Module.prototype = {
 	 */
 	getSize: function() {
 		return this.definition.size;
+	},
+	
+	getId: function() {
+		return this.definition.id;
 	}
 };
 

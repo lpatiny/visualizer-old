@@ -78,10 +78,6 @@ CI.EntryPoint.prototype = {
 	
 
 
-
-
-
-
 	loaded: function(data) {
 		
 		this.data = data;

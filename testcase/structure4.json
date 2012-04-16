@@ -1,0 +1,79 @@
+{
+
+
+"grid": {
+	"xWidth": 10,
+	"yHeight": 10
+},
+
+"modules": [
+{
+    "id": "1",	
+    "type": "display_list",
+    "title": "Chemicals available",
+
+    "position": {
+    	"left": 1,
+    	"top": 1
+    },
+    
+
+    "size": {
+    	"width": 60,
+    	"height": 50
+    },
+
+
+    "configuration": {
+    
+    },
+   
+    "dataSend": {
+	
+	"onEntryHover": [
+		{
+			"name": "jcamp_url",
+			"rel": "element",
+			"jpath": "entry.nmr[0].jcamp"	
+		}
+	]
+    },
+
+    "dataSource": [{
+    	"name": "list",
+    	"rel": "listelements"
+    }]
+},
+
+
+
+{
+    "id": "1",	
+    "type": "spectra_displayer",
+    "title": "NMR Spectra",
+
+    "position": {
+    	"left": 10,
+    	"top": 10
+    },
+
+    "size": {
+    	"width": 60,
+    	"height": 50
+    },
+
+
+    "configuration": {
+     },
+   
+    "dataSend": {
+	
+    },
+
+    "dataSource": [{
+    	"name": "jcamp_url",
+    	"rel": "jcamp"
+    }]
+}]
+
+}

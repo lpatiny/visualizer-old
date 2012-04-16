@@ -26,11 +26,10 @@
 
     "configuration": {
     	"colsjPaths": {
-		"Em": "em",
-		"Error": "error",
-		"Info": "info",
 		"Molecular Formula": "mf",
-		"Insaturation": "unsat"
+		"Mass": "em",
+		"Error": "error",
+		"Score": "score"
 	}
     },
    

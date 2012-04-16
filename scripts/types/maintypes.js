@@ -187,7 +187,9 @@ CI.Types.addCallbackLoader = function(path, object, array, elId) {
 		
 		var val = object.valueFromjPath(path);
 		
-		array[elId] = val;
+		if(array && elId) {
+			array[elId] = val;
+		}
 		$('#callback-load-' + id).html(val);
 	});
 	return '<span id="callback-load-' + id + '"></span>';

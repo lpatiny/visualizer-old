@@ -38,11 +38,11 @@ CI.Grid = {
 		module.getDomWrapper().appendTo(CI.Grid._el).css({
 			top: modulePos.top * CI.Grid.definition.yHeight,
 			left: modulePos.left * CI.Grid.definition.xWidth,
-			
 			width: moduleSize.width * CI.Grid.definition.xWidth,
 			height: moduleSize.height * CI.Grid.definition.yHeight
 		});
 		
+		module.inDom();
 		
 		// Insert jQuery UI resizable and draggable
 		module.getDomWrapper().resizable({
@@ -70,15 +70,12 @@ CI.Grid = {
 			}
 		}).trigger('resize');
 		
-		
 		module.getDomWrapper().on('click', '.ci-module-expand', function() {
 			module.getDomWrapper().height((module.getDomContent().outerHeight() + module.getDomHeader().outerHeight()));
 			CI.Grid.moduleResize(module);
 		});
 		
-		
 		CI.Grid.moduleResize(module);
-		
 	},
 	/**
 	 * Is called by jQuery UI when a module is resized, to resize the module and allow the module view's contents to update accordingly.

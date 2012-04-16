@@ -2,7 +2,7 @@
 if(!window[_namespaces['util']].Util) window[_namespaces['util']].Util = {};
 
 window[_namespaces['util']].Util.JsonLoader = function(url, element) {
-
+console.log(element);
 	if(element.source == null && element.url) {
 		element.loaded = false;
 		var query = new CI.Util.AjaxQuery({

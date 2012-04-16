@@ -26,35 +26,60 @@ window[_namespaces['table']].Tables.Content.prototype = {
 		var j = 0;
 		var html = [];
 		
+		this.index = 0;
+		
+		this.supNav = [];
+		
 		for(var i = 0; i < this.elements.length; i++) {
 			if(!this.doSearch(this.elements[i]))
 				continue;
 			j++;
 			if(j < (this.page - 1) * this.pagination || j >= this.page * this.pagination)
 				continue;
-			html.push(this.buildElement(this.elements[i], i));
+			html.push(this.buildElement(this.elements[i], 0, 0, this.elements.length == i + 1));
 		}
+		
 		this.table.setContentHtml(html.join(''));
 	},
 	
-	buildElement: function(element, index) {
+	buildElement: function(element, parent, level, last) {
+		this.index++;
 		var html = [];
 		var columns = this.table.getColumns();
 		html.push('<tr data-element-id="');
-		html.push(index);
+		html.push(this.index);
+		var index = this.index;
+		html.push('" data-parent-id="');
+		html.push(parent);
+		html.push('" class="');
+		html.push(parent !== 0 ? 'ci-table-hidden' : '');
 		html.push('">');
+		
+		var hasChildren = false;
+		
+		this.supNav[level] = last ? 'corner' : 'cross';
 		for(var i = 0; i < columns.length; i++) {
 			var name = columns[i].getName();
 			
-			var elVal = element[name];
-			if(typeof elVal != "undefined") {
-				html.push(columns[i].buildElement(elVal));
-			} else
-				html.push('<td></td>');
+			hasChildren = false;
+			if(element.children)
+				hasChildren = true;
+			
+			var elVal = element.data[name];
+			html.push(columns[i].buildElement(((typeof elVal != "undefined") ? elVal : ''), i == 0, this.supNav, hasChildren, level));
 			
 		}
 		html.push('</tr>');
 		
+		if(element.children) {
+			this.supNav[level] = last ? 'space' : 'barre';
+			for(var i = 0, len = element.children.length; i < len; i++) {
+				html.push(this.buildElement(element.children[i], index, level + 1, i == len - 1));
+				
+			}
+		}
+		
+		delete this.supNav[level]; 
 		return html.join('');
 	},
 	
@@ -100,9 +125,9 @@ window[_namespaces['table']].Tables.Content.prototype = {
 		var elName = col.getName();
 		
 		this.elements.sort(function(a, b) {
-			if(!a[elName]) return -1;
-			if(!b[elName]) return 1;
-			return a[elName] < b[elName];
+			if(!a.data[elName]) return 1;
+			if(!b.data[elName]) return -1;
+			return a.data[elName] > b.data[elName];
 		});
 		
 		if(!asc)

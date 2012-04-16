@@ -36,10 +36,10 @@ CI.Module.prototype._types.display_list.View.prototype = {
 		if(!(moduleValue = this.module.getDataFromRel('listelements').getData()))
 			return;
 		
-		this.list = moduleValue.value;
+		this.list = moduleValue;
 		for(var i = 0; i < this.list.length; i++) {
 			var div = CI.dataType.toScreen(this.list[i], this);
-			this.dom.append(div);
+			this.dom.append($('<div class="ci-displaylist-element"></div>').append(div));
 		}
 	},
 	
@@ -51,18 +51,11 @@ CI.Module.prototype._types.display_list.View.prototype = {
 	typeToScreen: {
 		
 		asChemical: function(data) {
-			
-			return $('<div class="ci-displaylist-element"></div>').each(function(i) {
-					var div = $(this);
-					data.instance.getIUPAC(function(val) {
-						console.log(div);
-						div.html(val);
-					});
-				});
+			return data.instance.valueFromjPath('entry.iupac[0].value');;
 		},
 		
 		asString: function(val) {
-			return '<p>' + val + '</p>';
+			return val;
 		}
 		
 	}

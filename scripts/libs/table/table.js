@@ -82,17 +82,26 @@ window[_namespaces['table']].Tables.Table.prototype = {
 	
 	afterInit: function() {
 		var inst = this;
-		this.dom.on('click', 'th', function() {
-			var thName = $(this).data('colname');
-			var col = inst.getColumn(thName);
-			inst.selectColumn(col);
-		});
 		
-		this.dom.on('click', 'th .ci-table-sort span', function() {
+		this.dom.on('click', '.ci-table-expand', function() {
 			var el = $(this);
-			var asc = el.hasClass('triangle-up');
-			var col = inst.getColumn($(this).parents('th:eq(0)').data('colname'));
+			var tr = el.parents('tr').eq(0);
+			
+			var id = tr.data('element-id');
+			var html = el.children().html();
+			el[html == '+' ? 'addClass' : 'removeClass']('bottom').children().html(html == '+' ? '-' : '+'); 
+			tr.siblings('[data-parent-id="' + id + '"]').toggleClass('ci-table-hidden');
+		})
+		
+		this.dom.on('click', 'th', function() {
+			var el = $(this).find('.triangle-up:visible, .triangle-down:visible');
+			var asc = el.length > 0 ? el.hasClass('triangle-down') : true;
+			var col = inst.getColumn($(this).data('colname'));
+			
+			$(this).find('.triangle-up, .triangle-down').addClass('ci-table-hidden').filter('.triangle-' + (asc ? 'up' : 'down')).removeClass('ci-table-hidden');
+			
 			inst.content.sort(col, asc);
+			inst.selectColumn(col, true);
 			inst.commitContent();
 			
 		});
@@ -123,9 +132,8 @@ window[_namespaces['table']].Tables.Table.prototype = {
 		if(exclusive) 
 			for(var i = 0, length = this.cols.length; i < length; i++)
 				this.cols[i].select(false);
-			
+		
 		column.select(!column.isSelected());
-	//	this.commitContent();
 	},
 	
 	commitContent: function() {
@@ -172,7 +180,7 @@ window[_namespaces['table']].Tables.Table.prototype = {
 		});
 		
 		var bottom = top.clone(true);
-		this.body.prepend(top).append(bottom);
+		this.body/*.prepend(top).*/.append(bottom);
 	}
 }
 

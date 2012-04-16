@@ -29,15 +29,16 @@ CI.Module.prototype._types.display_list.Controller.prototype = {
 			module.getDomView().on('mouseenter', 'div.ci-displaylist-element', function() {
 				
 				var index = $(this).index();
+				
 				for(var i = 0; i < actions.onEntryHover.length; i++) {
 					switch(actions.onEntryHover[i].rel) {
 						case 'element':
-							var toSend = module.view.list[index];	
+							var toSend = module.view.list[index];
 						break;
 					}
 					
 					if(!!toSend) {
-						var data = CI.Types.getValueFromJPath(actions.onEntryHover[i].key, toSend);
+						var data = CI.Types.getValueFromJPath(actions.onEntryHover[i].jpath, toSend);
 						CI.API.setSharedVar(actions.onEntryHover[i].name, data);
 					}
 				}

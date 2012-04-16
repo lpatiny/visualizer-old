@@ -42,7 +42,7 @@ window[_namespaces['table']].Tables.Column.prototype = {
 		
 		html.push(this.title.getLabel());
 		
-		html.push('<div class="ci-table-sort"><span class="triangle-up"></span><span class="triangle-down"></span></div>');
+		html.push('<div class="ci-table-sort"><span class="triangle-up ci-table-hidden"></span><span class="triangle-down ci-table-hidden"></span></div>');
 		html.push('</th>');
 		return html.join('');
 	},
@@ -50,17 +50,37 @@ window[_namespaces['table']].Tables.Column.prototype = {
 	select: function(bln) {
 		this.selected = bln;
 		var index = this.index;
-		this.table.dom.children('tbody').children('tr').each(function() {
+		/*this.table.dom.children('tbody').children('tr').each(function() {
 			
 			$(this).children('td:eq(' + index + ')')[bln ? 'addClass' : 'removeClass']('ci-selected');
-		});
+		});*/
+		this.th[bln ? 'addClass' : 'removeClass']('ci-table-selected');
 	},
 	
 	isSelected: function() {
 		return this.selected;
 	},
 	
-	buildElement: function(element) {
-		return ['<td class="', (this.isSelected() ? 'ci-selected' : ''), '">', element, '</td>'].join('');
+	buildElement: function(element, firstCol, listEls, displayPlus, level) {
+		
+		var plus = '';
+		
+		var html = ['<td class="', (this.isSelected() ? 'ci-selected' : ''), '">'];
+		
+		if(firstCol) {
+			for(var i in listEls)
+				html.push('<span class="' + listEls[i] + '"></span>');
+			
+			
+			if(displayPlus)
+				html.push('<div class="ci-table-expand left"><span>+</span></div>');
+		}
+
+
+		html.push('<span class="ci-content">');
+		html.push(element);
+		html.push('</span></td>');
+		
+		return html.join('');
 	}
 }

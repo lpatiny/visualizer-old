@@ -24,6 +24,7 @@
 	<script src="./scripts/libs/util/ajaxmanager.js" type="text/javascript" language="javascript"></script>
 	<script src="./scripts/libs/util/util.js" type="text/javascript" language="javascript"></script>
 	<script src="./scripts/libs/util/ajaxquery.js" type="text/javascript" language="javascript"></script>
+	<script src="./scripts/libs/util/jsonloader.js" type="text/javascript" language="javascript"></script>
 	<script src="./scripts/libs/icons/icons.js" type="text/javascript" language="javascript"></script>
 	<script src="./scripts/libs/lang/lang.js" type="text/javascript" language="javascript"></script>
 	
@@ -35,6 +36,7 @@
 	<script src="./scripts/types/maintypes.js" type="text/javascript" language="javascript"></script>
 	<script src="./scripts/modules/configuration/sendConfig.js" type="text/javascript" language="javascript"></script>
 	<script src="./scripts/modules/configuration/receiveConfig.js" type="text/javascript" language="javascript"></script>
+
 	
 	
 	<script src="./scripts/modules/implementations/canvas_matrix/1.0/controller.js" type="text/javascript" language="javascript"></script>
@@ -66,6 +68,12 @@
 	
 	-->
 	
+	
+	
+	<script src="./scripts/modules/implementations/spectra_displayer/1.0/controller.js" type="text/javascript" language="javascript"></script>
+	<script src="./scripts/modules/implementations/spectra_displayer/1.0/model.js" type="text/javascript" language="javascript"></script>
+	<script src="./scripts/modules/implementations/spectra_displayer/1.0/view.js" type="text/javascript" language="javascript"></script>
+	
 	<script src="./scripts/modules/implementations/datamatrix_intersect/1.0/controller.js" type="text/javascript" language="javascript"></script>
 	<script src="./scripts/modules/implementations/datamatrix_intersect/1.0/model.js" type="text/javascript" language="javascript"></script>
 	<script src="./scripts/modules/implementations/datamatrix_intersect/1.0/view.js" type="text/javascript" language="javascript"></script>
@@ -80,12 +88,17 @@
 	<script src="./scripts/jquery/mask/mask.js" type="text/javascript" language="javascript"></script>
 	<link href="./scripts/jquery/mask/mask.css" rel="stylesheet" media="screen, print" />
 	
+		
+	<script src="./scripts/libs/chemdoodle/ChemDoodleWeb-libs.js" type="text/javascript" language="javascript"></script>
+	<script src="./scripts/libs/chemdoodle/ChemDoodleWeb.js" type="text/javascript" language="javascript"></script>
+	<link href="./scripts/libs/chemdoodle/ChemDoodleWeb.css" rel="stylesheet" media="screen, print" />
+	
 	
 	<script language="javascript" type="text/javascript">
 		<!--
 		
 		_structure = 'testcase/structure3.json';
-		_data = './data/json/chemical/chemicalTable.json';
+	//	_data = './data/json/chemical/chemicalTable.json';
 		
 		_data = window.opener.getData();
 		

@@ -33,10 +33,10 @@ CI.Module.prototype._types.grid.View.prototype = {
 		var moduleValue;
 		var view = this;
 		
+		var jpaths = this.module.getConfiguration().colsjPaths;
 		if(!(moduleValue = this.module.getDataFromRel('list').getData()))
 			return;
 		
-		var jpaths = this.module.getConfiguration().colsjPaths;
 		var Table = new CI.Tables.Table();
 		var Columns = {};
 		for(var j in jpaths) {
@@ -49,16 +49,33 @@ CI.Module.prototype._types.grid.View.prototype = {
 		this.list = moduleValue.value;
 		
 		var Content = new CI.Tables.Content();
-		for(var i = 0, length = this.list.length; i < length; i++) {
-			var element = {};
-			for(var j in jpaths)
-				element[j] =  CI.dataType.toScreen(CI.Types.getValueFromJPath(jpaths[j], this.list[i], element, j), this);
-			Content.addElement(element);
-		}
+		var elements = [];
+		this.buildElement(this.list, elements, jpaths);
+		
+		for(var i = 0, length = elements.length; i < length; i++)
+			Content.addElement(elements[i]);
 		Table.setContent(Content);
 		Table.init(this.dom);
 	},
 	
+
+	buildElement: function(source, arrayToPush, jpaths) {
+	
+		for(var i = 0, length = source.length; i < length; i++) {
+			var element = {};
+			element.data = {};
+			for(var j in jpaths)
+				element.data[j] =  CI.dataType.toScreen(CI.Types.getValueFromJPath(jpaths[j], source[i], element, j), this);
+			
+			if(source[i].children) {
+				element.children  = [];
+				this.buildElement(source[i].children, element.children, jpaths);
+			}
+			
+			arrayToPush.push(element);
+		}
+	},
+
 
 	getDom: function() {
 		return this.dom;
@@ -66,9 +83,63 @@ CI.Module.prototype._types.grid.View.prototype = {
 	
 	typeToScreen: {
 		
+		
 		asString: function(val) {
 			return val;
 		}
 		
 	}
 }
+
+/*
+ * 
+ * 
+
+
+clearLog();
+var mfRange = "C1-30H1-60O0-10N0-10";
+var MM = 300.123;
+var fragments = [100.123, 130.123];
+var fragLength = fragments.length;
+
+var result = [];
+
+// we gave a target monoisotopic mass, we just retrieve possible molecular formula
+var possibleMF=ChemCalc.mfFromMonoisotopicMass(MM, {mfRange: mfRange}).results;
+
+// for the 10 best molecular formula, we try to find the one that would have a
+// possible fragment with a mass of targetMass2
+for (var i=0; i<possibleMF.length && i<10; i++) {
+	result[i] = {};
+	result[i].mf = possibleMF[i].mf;
+	result[i].error = possibleMF[i].error;
+	result[i].em = possibleMF[i].em;
+	var intersection = ChemCalc.mfRangeIntersection(mfRange, possibleMF[i].mf, {});
+	result[i].children = [];
+	
+	for(var j = 0; j < fragLength; j++) {
+		result[i].children[j] = {
+			mf: fragments[j],
+			children: []
+		};
+		var possibleMFInt = ChemCalc.mfFromMonoisotopicMass(fragments[j], {mfRange: intersection.mf}).results;
+		for (var k = 0; k < possibleMFInt.length && k < 10; k++) {
+			result[i].children[j].children[k] = {};
+			result[i].children[j].children[k].mf = possibleMFInt[k].mf;
+			result[i].children[j].children[k].em = possibleMFInt[k].em;
+			result[i].children[j].children[k].error = possibleMFInt[k].error;
+		}
+
+	}
+
+}
+
+jexport("possibleMF",result,"array");
+
+
+
+
+
+
+*/
+ 
