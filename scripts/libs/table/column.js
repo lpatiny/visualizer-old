@@ -70,17 +70,41 @@ window[_namespaces['table']].Tables.Column.prototype = {
 		if(firstCol) {
 			for(var i in listEls)
 				html.push('<span class="' + listEls[i] + '"></span>');
-			
-			
 			if(displayPlus)
 				html.push('<div class="ci-table-expand left"><span>+</span></div>');
 		}
 
 
 		html.push('<span class="ci-content">');
-		html.push(element);
+		
+		if(typeof this.formatElement == "function")
+			html.push(this.formatElement(element));
+		else
+			html.push(element);
+			
 		html.push('</span></td>');
 		
 		return html.join('');
+	},
+	
+	format: function(mode, options) {
+		
+		switch(mode) {
+			
+			case 'imageUrl':
+				this.formatElement = this._formats['imageUrl'];
+			break;
+			
+			
+		}
+	},
+	
+	_formats: {
+		'imageUrl': function(element) {
+		//	return '<img src="' + element + '">';
+			return element;
+			// No much that can be done against dynamic loading. Luc has to change the chemexper json to a type image
+			
+		}
 	}
 }

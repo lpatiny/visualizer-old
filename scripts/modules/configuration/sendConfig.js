@@ -46,7 +46,7 @@ $(document).bind('onChangeSendCfg', function(event, module) {
 		var keys;
 		var cfg = $(this).parents('.CfgSendEl');
 		var options = CI.Types._jPathToOptions(module.model.getjPath(rel));
-		console.log(options);
+		
 		line.find('select._eventkeys').html(options);
 		
 	});

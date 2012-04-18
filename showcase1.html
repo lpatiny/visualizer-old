@@ -12,6 +12,7 @@
 	<!-- Load the visualizer scripts -->
 	<script src="./scripts/init.js" type="text/javascript" language="javascript"></script>
 	<script src="./scripts/visualizer.js" type="text/javascript" language="javascript"></script>
+	
 	<script src="./scripts/api/ci.api.js" type="text/javascript" language="javascript"></script>
 	
 	<script src="./scripts/libs/table/column.js" type="text/javascript" language="javascript"></script>
@@ -30,11 +31,6 @@
 	<script src="./scripts/libs/lang/lang.js" type="text/javascript" language="javascript"></script>
 	
 	
-	<script src="./scripts/libs/chemdoodle/ChemDoodleWeb.js" type="text/javascript" language="javascript"></script>
-	<script src="./scripts/libs/chemdoodle/ChemDoodleWeb-libs.js" type="text/javascript" language="javascript"></script>
-	<link href="./scripts/libs/chemdoodle/ChemDoodleWeb.css" rel="stylesheet" media="screen, print" />
-	
-	
 	<script src="./scripts/data/datasource.js" type="text/javascript" language="javascript"></script>
 	<script src="./scripts/data/repo.js" type="text/javascript" language="javascript"></script>
 	<script src="./scripts/modules/module.js" type="text/javascript" language="javascript"></script>
@@ -42,6 +38,7 @@
 	<script src="./scripts/types/maintypes.js" type="text/javascript" language="javascript"></script>
 	<script src="./scripts/modules/configuration/sendConfig.js" type="text/javascript" language="javascript"></script>
 	<script src="./scripts/modules/configuration/receiveConfig.js" type="text/javascript" language="javascript"></script>
+
 	
 	
 	<script src="./scripts/modules/implementations/canvas_matrix/1.0/controller.js" type="text/javascript" language="javascript"></script>
@@ -54,11 +51,6 @@
 	<script src="./scripts/modules/implementations/display_list/1.0/controller.js" type="text/javascript" language="javascript"></script>
 	<script src="./scripts/modules/implementations/display_list/1.0/model.js" type="text/javascript" language="javascript"></script>
 	<script src="./scripts/modules/implementations/display_list/1.0/view.js" type="text/javascript" language="javascript"></script>
-	
-	
-	<script src="./scripts/modules/implementations/display_spectra/1.0/controller.js" type="text/javascript" language="javascript"></script>
-	<script src="./scripts/modules/implementations/display_spectra/1.0/model.js" type="text/javascript" language="javascript"></script>
-	<script src="./scripts/modules/implementations/display_spectra/1.0/view.js" type="text/javascript" language="javascript"></script>
 	
 	
 	<script src="./scripts/modules/implementations/grid/1.0/controller.js" type="text/javascript" language="javascript"></script>
@@ -78,6 +70,12 @@
 	
 	-->
 	
+	
+	
+	<script src="./scripts/modules/implementations/spectra_displayer/1.0/controller.js" type="text/javascript" language="javascript"></script>
+	<script src="./scripts/modules/implementations/spectra_displayer/1.0/model.js" type="text/javascript" language="javascript"></script>
+	<script src="./scripts/modules/implementations/spectra_displayer/1.0/view.js" type="text/javascript" language="javascript"></script>
+	
 	<script src="./scripts/modules/implementations/datamatrix_intersect/1.0/controller.js" type="text/javascript" language="javascript"></script>
 	<script src="./scripts/modules/implementations/datamatrix_intersect/1.0/model.js" type="text/javascript" language="javascript"></script>
 	<script src="./scripts/modules/implementations/datamatrix_intersect/1.0/view.js" type="text/javascript" language="javascript"></script>
@@ -92,17 +90,22 @@
 	<script src="./scripts/jquery/mask/mask.js" type="text/javascript" language="javascript"></script>
 	<link href="./scripts/jquery/mask/mask.css" rel="stylesheet" media="screen, print" />
 	
+		
+	<script src="./scripts/libs/chemdoodle/ChemDoodleWeb-libs.js" type="text/javascript" language="javascript"></script>
+	<script src="./scripts/libs/chemdoodle/ChemDoodleWeb.js" type="text/javascript" language="javascript"></script>
+	<link href="./scripts/libs/chemdoodle/ChemDoodleWeb.css" rel="stylesheet" media="screen, print" />
+	
+	
 	<script language="javascript" type="text/javascript">
 		<!--
 		
-		_structure = 'testcase/structure3.json';
+		_structure = 'testcase/chemicaltable.json';
 		_data = './data/json/chemical/chemicalTable.json';
 		
-		//_data = window.opener.getData();
+	//	_data = window.opener.getData();
 		
 		-->
 	</script>
-	
 	<!-- Done loading visualizer scripts -->
 </head>
 
@@ -118,24 +121,15 @@
 		</tr>
 		<tr>
 			<td id="ci-left">
-				<div id="ci-left-accordion">
-					<h3><a href="#">All shared variables</a></h3>
-					<div id="ci-cfg-shared"></div>
-				</div>
+				
 			</td>
-			<td class="ci-expand" id="ci-expand-left">...</td>
+			<td class="ci-expand" id="ci-expand-left">.<br />.<br />.</td>
 			<td id="ci-center">
 				<div id="ci-modules-grid"></div>
 			</td>
-			<td class="ci-expand" id="ci-expand-right">...</td>
+			<td class="ci-expand" id="ci-expand-right">.<br />.<br />.</td>
 			<td id="ci-right">
-				<div id="ci-right-moduleselected">No module selected</div>
-				<div id="ci-right-accordion">
-					<h3><a href="#">Data source</a></h3>
-					<div id="ci-cfg-receive" class="ci-cfg-module"></div>
-					<h3><a href="#">Data to send</a></h3>
-					<div id="ci-cfg-send" class="ci-cfg-module"></div>
-				</div>
+				
 			</td>
 		</tr>
 		

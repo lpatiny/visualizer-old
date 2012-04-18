@@ -57,7 +57,8 @@ window[_namespaces['table']].Tables.Content.prototype = {
 		
 		var hasChildren = false;
 		
-		this.supNav[level] = last ? 'corner' : 'cross';
+		if(level > 0)
+			this.supNav[level] = last ? 'corner' : 'cross';
 		for(var i = 0; i < columns.length; i++) {
 			var name = columns[i].getName();
 			
@@ -72,14 +73,16 @@ window[_namespaces['table']].Tables.Content.prototype = {
 		html.push('</tr>');
 		
 		if(element.children) {
-			this.supNav[level] = last ? 'space' : 'barre';
+			if(level > 0)
+				this.supNav[level] = last ? 'space' : 'barre';
 			for(var i = 0, len = element.children.length; i < len; i++) {
 				html.push(this.buildElement(element.children[i], index, level + 1, i == len - 1));
 				
 			}
 		}
 		
-		delete this.supNav[level]; 
+		if(level > 0)
+			delete this.supNav[level]; 
 		return html.join('');
 	},
 	

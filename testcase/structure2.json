@@ -6,6 +6,16 @@
 	"yHeight": 10
 },
 
+"entryPoint": {
+	"variables": [
+		{
+			"varname": "entry_list",
+			"sourcename": "possibleMF",
+			"jpath": null
+		}
+	]
+},
+
 "modules": [
 {
     "id": "12345",	

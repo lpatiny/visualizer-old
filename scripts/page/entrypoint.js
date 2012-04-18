@@ -18,6 +18,10 @@ CI.EntryPoint = function(structure, data, options, onLoad) {
 	function doStructure(structure) {
 		
 		CI.Grid.init(structure.grid);
+		
+		entryPoint.structure = structure;
+		entryPoint.entryData = structure.entryPoint; 
+		
 		for(var i = 0; i < structure.modules.length; i++) {
 			var Module = new CI.Module(structure.modules[i]); 
 			CI.modules[structure.modules[i].id] = Module;
@@ -75,27 +79,41 @@ CI.EntryPoint = function(structure, data, options, onLoad) {
 
 CI.EntryPoint.prototype = {
 
-	
-
-
 	loaded: function(data) {
 		
 		this.data = data;
 		
+		var vars = this.entryData.variables;
+		if(!vars)
+			return;
+		
 		for(var i in this.data) {
 			CI.dataType.instanciate(this.data[i]);
-			CI.API.setSharedVar(i, this.data[i], true);
-			
+			for(var j = 0; j < vars.length; j++)
+				if(vars[j].sourcename == j)
+					CI.API.setSharedVar(vars[j].varname, CI.Types.getValueFromJPath(vars[j].jpath, this.data[i]), true);
 		}
-		
-		
 		
 		if(typeof this.onLoad == 'function')
 			this.onLoad(this, this.data);
 	},
-
 	
+	getEntryDataVariables: function() {
+		return this.entryData.variables;		
+		
+	},
 	
+	setEntryDataVariables: function(vars) {
+	
+		this.entryData.variables = vars;
+		console.log(this.structure);		
+	},
+	
+	getDataFromSource: function(child) {
+		
+		if(!child)
+			return this.data;
+		else
+			return this.data[child];
+	}
 }
-	
-	

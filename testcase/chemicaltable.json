@@ -1,0 +1,68 @@
+{
+
+
+"grid": {
+	"xWidth": 10,
+	"yHeight": 10
+},
+
+
+"entryPoint": {
+	"variables": [
+		{
+			"varname": "entry_list",
+			"sourcename": "possibleMF",
+			"jpath": null
+		}
+	]
+},
+
+
+"modules": [
+{
+    "id": "12345",	
+    "type": "grid",
+    "title": "Chemicals available",
+
+    "position": {
+    	"left": 1,
+    	"top": 1
+    },
+    
+
+    "size": {
+    	"width": 60,
+    	"height": 50
+    },
+
+
+    "configuration": {
+    	"colsjPaths": {
+		"Name": "entry.iupac[0].value",
+		"Molecular mass": "entry.mf.mw",
+		"Molecular formula": "entry.mf.value",
+		"Image": {
+			"jpath": "entry.mol.url",
+			"format": "imageUrl"
+		}
+	}
+    },
+   
+    "dataSend": {
+	
+	"onEntryHover": [
+		{
+			"name": "entry_hovered",
+			"rel": "element",
+			"key": ""	
+		}
+	]
+    },
+
+    "dataSource": [{
+    	"name": "list",
+    	"rel": "list"
+    }]
+}]
+
+}

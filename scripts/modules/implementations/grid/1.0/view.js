@@ -42,11 +42,15 @@ CI.Module.prototype._types.grid.View.prototype = {
 		for(var j in jpaths) {
 			var Column = new CI.Tables.Column(j);
 			Column.setTitle(new CI.Title(j));
+			
+			if(jpaths[j].format)
+				Column.format(jpaths[j].format);
+			
 			Table.addColumn(Column);
 			Columns[j] = Column;
 		}
 		
-		this.list = moduleValue.value;
+		this.list = moduleValue/*.value*/;
 		
 		var Content = new CI.Tables.Content();
 		var elements = [];
@@ -60,13 +64,17 @@ CI.Module.prototype._types.grid.View.prototype = {
 	
 
 	buildElement: function(source, arrayToPush, jpaths) {
-	
+		
 		for(var i = 0, length = source.length; i < length; i++) {
 			var element = {};
 			element.data = {};
-			for(var j in jpaths)
-				element.data[j] =  CI.dataType.toScreen(CI.Types.getValueFromJPath(jpaths[j], source[i], element, j), this);
-			
+			for(var j in jpaths) {
+				var jpath = jpaths[j];
+				if(jpath.jpath)
+					jpath = jpath.jpath;
+					
+				element.data[j] =  CI.dataType.toScreen(CI.Types.getValueFromJPath(jpath, source[i], element, j), this);
+			}
 			if(source[i].children) {
 				element.children  = [];
 				this.buildElement(source[i].children, element.children, jpaths);

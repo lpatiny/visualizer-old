@@ -1,13 +1,16 @@
 
 CI.Types = {};
 
-CI.Types._getjPath = function(data, jpaths, ext) {
+CI.Types._getjPath = function(data, jpaths, ext) { // ext serves to fech a children. Don't use from outside this scope
 	var constructor = CI.Types[CI.dataType.getType(data)];
 	if(typeof constructor == 'function') {
-		var el = new constructor(data);
-		return el.getjPath(typeof ext !== "undefined" ? jpaths[ext] : jpaths);
-	} else
-		return constructor.getjPath(typeof ext !== "undefined" ? jpaths[ext] : jpaths, data);
+		//var el = new constructor(data);
+		var el = data.instance;
+		return el.getjPath(jpaths/*typeof ext !== "undefined" ? jpaths[ext] : jpaths*/);
+	} else {
+		
+		return constructor.getjPath(data, jpaths/*typeof ext !== "undefined" ? jpaths[ext] : jpaths, data*/);
+	}
 }
 
 CI.Types._jPathToOptions = function(jpath) {
@@ -19,24 +22,38 @@ CI.Types._jPathToOptions = function(jpath) {
 		options.push(['<option style="padding-left:', padding, 'px" value="', str, '">', val, '</option>'].join(''));
 	}
 	
-	function fracjPath(jpath, base, lvl) {
+	var fracjPath = function(jpath, base, lvl) {
 		
 		var val;
 		
-		if(jpath instanceof Array) {
-			for(var i = 0; i < jpath.length; i++) {
-				val = "[" + i + "]"
-				str = base + val;
+		//if(jpath instanceof Array) {
+		if(typeof jpath == 'object') {
+			for(var i in jpath) {//}= 0; i < jpath.length; i++) {
+				
+				if(typeof i == "number") {
+					val = "[" + i + "]";
+					str = base + val;
+				} else {
+					val = i;				
+					str = base + (base.length > 0 ? "." : '') + val;
+				}
+				
 				addOption(str, val, lvl);
 				fracjPath(jpath[i], str, lvl+1);
 			}
-		} else if(typeof jpath == 'object') {
+		
+		//} else if(typeof jpath == 'object') {
+		/*	console.log('doobject');
 			for(var i in jpath) {
 				val = i;
 				str = base + (base.length > 0 ? "." : '') + val;
 				addOption(str, val, lvl);
-				fracjPath(jpath[i], str, lvl+1);
-			}
+				
+				console.log('do fetch children');
+
+				fracjPath(jpath[i], str, lvl+5);
+				console.log('fuction started');
+			}*/
 		} else if(typeof jpath != "boolean"){
 			str = base + jpath;
 			val = jpath;
@@ -46,6 +63,7 @@ CI.Types._jPathToOptions = function(jpath) {
 	}
 	
 	fracjPath(jpath, "", 0);
+	
 	return options.join('');
 }
 
@@ -83,28 +101,29 @@ CI.Types._valueFromJPathAndJson = function(jPath, json) {
 
 
 
-CI.Types.jPathFromJson = function(source, jpaths, root) {
+CI.Types.jPathFromJson = function(source, jpaths) {
 	
 	if(source instanceof Array)
 		for(var i = 0; i < source.length; i++) {
-			jpaths[root + "[" + i + "]"] = true;
-			this.dogetjPath(source[i], jpaths, root + "[" + i + "]");
+			jpaths[i] = [];
+			this._getjPath(source[i], jpaths[i]);
 		}
 	else if (typeof source == 'object') {
 		for(var i in source) {
-			var spacingChar = (root.substr(root.length - 1) == "]") ? '' : '.';
-			jpaths[root + spacingChar + i] = true;
-			this.dogetjPath(source[i], jpaths, root + spacingChar + i);
+			jpaths[i] = {};
+			this._getjPath(source[i], jpaths[i]);
 		}
 	} else {
 		// Not much to do here
 	}
+	
+//	console.log(jpaths);
 }
 
 
 CI.Types.string = {
 	
-	getjPath: function(jpaths, data) {
+	getjPath: function(data, jpaths) {
 		return jpaths;
 	}
 	
@@ -112,7 +131,7 @@ CI.Types.string = {
 
 CI.Types.number = {
 	
-	getjPath: function(jpaths, data) {
+	getjPath: function(data, jpaths) {
 		return jpaths;
 	}
 	
@@ -120,11 +139,8 @@ CI.Types.number = {
 
 CI.Types.array = {
 	
-	getjPath: function(jpaths, data) {
-		for(var i = 0; i < data.length; i++) {
-			jpaths[i] = new Array();
-			CI.Types._getjPath(data[i], jpaths, i);
-		}
+	getjPath: function(data, jpaths) {
+		return CI.Types.jPathFromJson(data, jpaths);
 	},
 	
 	valueFromjPath: function(jPath, data) {
@@ -140,11 +156,8 @@ CI.Types.array = {
 
 CI.Types.object = {
 	
-	getjPath: function(jpaths, data) {
-		for(var i in data) {
-			jpaths[i] = {};
-			CI.Types._getjPath(data[i], jpaths, i);
-		}
+	getjPath: function(data, jpaths) {
+		return CI.Types.jPathFromJson(data, jpaths);
 	},
 	
 	instanciate: function(data) {
