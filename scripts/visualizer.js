@@ -6,6 +6,20 @@ CI.Visualizer.left = {};
 CI.Visualizer.left.init = function() {
 		
 	var allSharedVars = [];
+	
+	
+	var vars = Entry.getEntryDataVariables();
+	
+	for(var i = 0; i < vars.length; i++) {
+		
+		if(typeof allSharedVars[vars[i].varname] == "undefined")
+			allSharedVars[vars[i].varname] = {send: [], receive: []};
+			
+		allSharedVars[vars[i].varname].send.push({
+			moduleName: '<em>entry point</em>'
+		});
+	}
+
 	for(var i in CI.modules) {
 		var def = CI.modules[i].definition;
 		
@@ -21,21 +35,18 @@ CI.Visualizer.left.init = function() {
 			});
 		}
 	
-	
 		
-		for(var k in def.dataSend) {
-			var source = def.dataSend[k];
-			for(var j = 0; j < source.length; j++) {
-			
-				if(typeof allSharedVars[source[j].name] == "undefined")
-					allSharedVars[source[j].name] = {send: [], receive: []};
-					
-				allSharedVars[source[j].name].send.push({
-					rel: source[j].rel,
-					moduleName: def.title
-				});
-			}
-		}	
+		
+		for(var j = 0; j < def.dataSend.length; j++) {
+		
+			if(typeof allSharedVars[def.dataSend[j].name] == "undefined")
+				allSharedVars[def.dataSend[j].name] = {send: [], receive: []};
+				
+			allSharedVars[def.dataSend[j].name].send.push({
+				rel: def.dataSend[j].rel,
+				moduleName: def.title
+			});
+		}
 	}
 	
 		
@@ -142,6 +153,12 @@ CI.Visualizer.left.init = function() {
 	$("#ci-left").next().bind('click', function() {
 		$("#ci-left").toggle();	
 	});
+	
+	$("#ci-left").on('click', 'h3', function() {
+		var h3 = $(this);
+		h3.next().toggle();
+		h3.children('span').toggleClass('triangle-down triangle-right');
+	});
 }
 
 
@@ -151,5 +168,11 @@ CI.Visualizer.right.init = function() {
 	$("#ci-right").prev().bind('click', function() {
 		$("#ci-right").toggle();	
 	});	
+	
+	$("#ci-right").on('click', 'h3', function() {
+		var h3 = $(this);
+		h3.next().toggle();
+		h3.children('span').toggleClass('triangle-down triangle-right');
+	});
 }	
 
