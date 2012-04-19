@@ -37,7 +37,14 @@ CI.Module.prototype._types.grid.View.prototype = {
 		if(!(moduleValue = this.module.getDataFromRel('list').getData()))
 			return;
 		
-		var Table = new CI.Tables.Table();
+		var Table = new CI.Tables.Table({
+			
+			onLineHover: function(element) {
+				var source = element._source;
+				view.module.controller.lineHover(source);
+			}
+		});
+		
 		var Columns = {};
 		for(var j in jpaths) {
 			var Column = new CI.Tables.Column(j);
@@ -58,6 +65,7 @@ CI.Module.prototype._types.grid.View.prototype = {
 		
 		for(var i = 0, length = elements.length; i < length; i++)
 			Content.addElement(elements[i]);
+		
 		Table.setContent(Content);
 		Table.init(this.dom);
 	},
@@ -79,6 +87,8 @@ CI.Module.prototype._types.grid.View.prototype = {
 				element.children  = [];
 				this.buildElement(source[i].children, element.children, jpaths);
 			}
+			
+			element._source = source[i];
 			
 			arrayToPush.push(element);
 		}

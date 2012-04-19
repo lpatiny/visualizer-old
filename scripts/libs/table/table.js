@@ -15,7 +15,9 @@ window[_namespaces['table']].Tables.Table = function(options) {
 window[_namespaces['table']].Tables.Table.prototype = {
 	
 	defaults: {
-		cssPrefix: _namespaces['table'].toLowerCase() 
+		cssPrefix: _namespaces['table'].toLowerCase(),
+		onLineHover: null,
+		onLineSelect: null
 	},
 	
 	addColumn: function(col) {
@@ -104,6 +106,11 @@ window[_namespaces['table']].Tables.Table.prototype = {
 			inst.selectColumn(col, true);
 			inst.commitContent();
 			
+		});
+		
+		this.dom.on('hover', 'tbody tr', function() {
+			if(typeof inst.options.onLineHover == "function")
+				inst.options.onLineHover(inst.content.getElementById($(this).data('element-id')));
 		});
 		
 		for(var i = 0; i < this.cols.length; i++) {

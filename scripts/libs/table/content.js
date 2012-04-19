@@ -8,6 +8,7 @@ window[_namespaces['table']].Tables.Content = function() {
 	this.pagination;
 	this.page;
 	this.entryCount = 0;
+	this.reIndexedElements = {};
 }
 
 
@@ -26,6 +27,7 @@ window[_namespaces['table']].Tables.Content.prototype = {
 		var j = 0;
 		var html = [];
 		
+		this.reIndexedElements = {};
 		this.index = 0;
 		
 		this.supNav = [];
@@ -36,6 +38,7 @@ window[_namespaces['table']].Tables.Content.prototype = {
 			j++;
 			if(j < (this.page - 1) * this.pagination || j >= this.page * this.pagination)
 				continue;
+			
 			html.push(this.buildElement(this.elements[i], 0, 0, this.elements.length == i + 1));
 		}
 		
@@ -43,6 +46,7 @@ window[_namespaces['table']].Tables.Content.prototype = {
 	},
 	
 	buildElement: function(element, parent, level, last) {
+		
 		this.index++;
 		var html = [];
 		var columns = this.table.getColumns();
@@ -56,6 +60,8 @@ window[_namespaces['table']].Tables.Content.prototype = {
 		html.push('">');
 		
 		var hasChildren = false;
+		
+		this.reIndexedElements[index] = element;
 		
 		if(level > 0)
 			this.supNav[level] = last ? 'corner' : 'cross';
@@ -126,15 +132,16 @@ window[_namespaces['table']].Tables.Content.prototype = {
 	
 	sort: function(col, asc) {
 		var elName = col.getName();
-		
 		this.elements.sort(function(a, b) {
 			if(!a.data[elName]) return 1;
 			if(!b.data[elName]) return -1;
 			return a.data[elName] > b.data[elName];
 		});
-		
 		if(!asc)
 			this.elements.reverse();
-		
+	},
+	
+	getElementById: function(id) {
+		return this.reIndexedElements[id];
 	}
 }

@@ -46,6 +46,22 @@ CI.Module.prototype._types.grid.Controller.prototype = {
 		}*/
 	},
 	
+	lineHover: function(element) {
+		
+		var actions;
+		if(!(actions = this.module.definition.dataSend))	
+			return;
+				
+		for(var i = 0; i < actions.length; i++) {
+			
+			if(actions[i].event == "onHover") {
+				CI.API.setSharedVar(actions[i].name, element);
+			}
+		}
+			
+		
+	},
+	
 	getConfigurationSend: function() {
 		
 		return {

@@ -49,7 +49,7 @@
     },
    
     "dataSend": [{
-    		"event": "onSelect",
+    		"event": "onHover",
 		"name": "entry_hovered",
 		"rel": "element",
 		"key": ""	
@@ -60,6 +60,36 @@
     	"name": "entry_list",
     	"rel": "list"
     }]
-}]
+},
+
+{
+    "id": "1",
+    "type": "display_chemical",
+    "title": "Details",
+
+    "position": {
+    	"left": 5,
+    	"top": 5
+    },
+    
+
+    "size": {
+    	"width": 60,
+    	"height": 50
+    },
+
+
+    "configuration": {
+    	
+    },
+   
+    "dataSend": [],
+  
+
+    "dataSource": [{
+    	"name": "entry_hovered",
+    	"rel": "chemical"
+    }]
+   }]
 
 }

@@ -89,7 +89,7 @@ CI.Types._valueFromJPathAndJson = function(jPath, json) {
 
 	if(!new RegExp('^([a-zA-Z0-9]*((\.[a-zA-Z0-9])|(\[[0-9]+]))?)*$').test(jPath))
 		return;
-
+	
 	try {
 		eval("var element = json." + jPath);
 	} catch(e) { return null; }
@@ -220,31 +220,20 @@ CI.Types.chemical.prototype = {
 		
 		if(!this.loaded)
 			return CI.Types.addCallbackLoader(jPath, this, array, elId);
+			
 		return CI.Types._valueFromJPathAndJson(jPath, this.source)	
 	},
 	
 	getIUPAC: function(fct, pos) {
-		
-		if(this.loaded) {
-			var iupac = this.data.entry.iupac;
-			fct(iupac[pos == undefined ? 0 : pos].value);
-		} else 
-			this.callbacks.push(function(chemical) {
-				var iupac = this.data.entry.iupac;
-				fct(iupac[pos == undefined ? 0 : pos].value);
-			});
+		return this.valueFromjPath('entry.iupac[0].value');
 	},
 	
 	getMW: function(fct) {
+		return this.valueFromjPath('entry.mf.mw');	
+	},
 	
-		if(this.loaded)
-			fct(this.data.entry.mf.mw);
-		else
-			this.callbacks.push(function(chemical) {
-				var mw = this.data.entry.mf.mw;
-				fct(mw);
-			});
-		
+	getImageUrl: function() {
+		return this.valueFromjPath('entry.mol.url');
 	},
 	
 	doCallbacks: function() {

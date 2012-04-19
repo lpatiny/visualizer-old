@@ -333,7 +333,6 @@ CI.Module.prototype._impl = {
 		 * Initialise the given module's controller (mvc)
 		 */
 		init: function(module, controller) {
-			
 			controller.module = module;
 			
 		}

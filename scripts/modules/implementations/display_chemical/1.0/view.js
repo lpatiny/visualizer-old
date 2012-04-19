@@ -53,14 +53,8 @@ CI.Module.prototype._types.display_chemical.View.prototype = {
 		asChemical: function(data) {
 			return $('<div class="ci-displaylist-list">').each(function(i) {
 					var div = $(this);
-					div.append('<div class="ci-chemical-iupac"></div><div class="ci-chemical-mw"></div>');
-					data.instance.getIUPAC(function(val) {
-						div.children('.ci-chemical-iupac').html(val);
-					});
+					div.append('<div class="ci-chemical-img"><img src="' + data.instance.getImageUrl() + '" /><div class="ci-chemical-iupac">' + data.instance.getIUPAC() + '</div><div class="ci-chemical-mw">' + data.instance.getMW() + '</div>');
 					
-					data.instance.getMW(function(val) {
-						div.children('.ci-chemical-mw').html(val);
-					});
 					
 				});
 		}
