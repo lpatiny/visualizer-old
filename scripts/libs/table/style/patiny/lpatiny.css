@@ -59,6 +59,10 @@
 	background-color: #fcfcfc;
 }
 
+.ci-table tr:hover td {
+	background-color: #eaeaea;
+}
+
 
 
 .ci-table-sort {

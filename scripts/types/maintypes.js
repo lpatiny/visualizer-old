@@ -232,6 +232,14 @@ CI.Types.chemical.prototype = {
 		return this.valueFromjPath('entry.mf.mw');	
 	},
 	
+	getMF: function() {
+		return this.valueFromjPath('entry.mf.value');
+	},
+	
+	getDensity: function() {
+		return this.valueFromjPath('entry.density.low');
+	},
+	
 	getImageUrl: function() {
 		return this.valueFromjPath('entry.mol.url');
 	},

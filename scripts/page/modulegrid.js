@@ -86,21 +86,18 @@ CI.Grid = {
 		var wrapper = module.getDomWrapper();
 		module.getPosition().width = wrapper.width() / CI.Grid.definition.xWidth;
 		module.getPosition().height = wrapper.height() / CI.Grid.definition.yHeight;
+		var containerHeight = wrapper.height() - module.getDomHeader().outerHeight(true);
 		
 		module.getDomContent().parent().css({
-			height: wrapper.height() - module.getDomHeader().outerHeight(true)
+			height: containerHeight
 		});
-		
-		module.view.onResize();
-		
+		module.view.onResize(module.getDomContent().width(), containerHeight);
 		CI.Grid.checkModuleSize(module);
-		
-		
 	},
 	
 	checkModuleSize: function(module) {
 		
-		if(module.getDomContent().height() > module.getDomContent().parent().outerHeight(true))
+		if(module.getDomContent().height() > module.getDomContent().parent().height(false))
 			module.getDomContent().parent().after(module.viewExpander);
 		else
 			module.viewExpander.remove();

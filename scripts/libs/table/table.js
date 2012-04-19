@@ -108,7 +108,8 @@ window[_namespaces['table']].Tables.Table.prototype = {
 			
 		});
 		
-		this.dom.on('hover', 'tbody tr', function() {
+		this.dom.children('tbody').on('mouseenter', 'tr', function() {
+			
 			if(typeof inst.options.onLineHover == "function")
 				inst.options.onLineHover(inst.content.getElementById($(this).data('element-id')));
 		});

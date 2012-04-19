@@ -53,10 +53,23 @@ CI.Module.prototype._types.display_chemical.View.prototype = {
 		asChemical: function(data) {
 			return $('<div class="ci-displaylist-list">').each(function(i) {
 					var div = $(this);
-					div.append('<div class="ci-chemical-img"><img src="' + data.instance.getImageUrl() + '" /><div class="ci-chemical-iupac">' + data.instance.getIUPAC() + '</div><div class="ci-chemical-mw">' + data.instance.getMW() + '</div>');
 					
 					
-				});
+					var html = [];
+					html.push('<div class="ci-chemical-display">');
+					html.push('<div class="ci-chemical-img"><img src="' + data.instance.getImageUrl() + '" /></div>');
+					html.push('<div class="ci-chemical-details">');
+					html.push('<div class="ci-chemical-iupac"><label>IUPAC</label>' + data.instance.getIUPAC() + '<div class="ci-spacer"></div></div>');
+					html.push('<div class="ci-chemical-mw"><label>Molecular weight</label>' + data.instance.getMW() + '<div class="ci-spacer"></div></div>');
+					html.push('<div class="ci-chemical-mw"><label>Molecular formula</label>' + data.instance.getMF() + '<div class="ci-spacer"></div></div>');
+					html.push('<div class="ci-chemical-mw"><label>Density</label>' + data.instance.getDensity() + '<div class="ci-spacer"></div></div>');
+					html.push('</div>');
+					html.push('</div>');
+					
+					div.append(html.join(''));
+					
+					
+			});
 		}
 		
 	}

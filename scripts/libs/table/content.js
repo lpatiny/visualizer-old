@@ -131,6 +131,7 @@ window[_namespaces['table']].Tables.Content.prototype = {
 	},
 	
 	sort: function(col, asc) {
+		
 		var elName = col.getName();
 		this.elements.sort(function(a, b) {
 			if(!a.data[elName]) return 1;

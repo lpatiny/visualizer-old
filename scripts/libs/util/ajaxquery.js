@@ -50,7 +50,6 @@ window[_namespaces['util']].Util.AjaxQuery.prototype = {
 			},
 			
 			success: function(data, xhr) {
-				console.log(data);
 				if(typeof query.options.success == "function")
 					query.options.success(data, xhr);
 			},

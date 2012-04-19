@@ -256,8 +256,22 @@ div.ci-module-wrapper .ci-module-content {
 	margin-bottom: 10px;
 }
 
-.ci-displaylist-list > div > .ci-chemical-iupac {
-	float: left;
-	width: 250px;
+
+.ci-chemical-display .ci-chemical-img {
+	float: right;
 }
 
+.ci-chemical-display .ci-chemical-details {
+	float: left;
+}
+
+.ci-chemical-display .ci-chemical-details > div{
+	margin-bottom: 5px;
+}
+
+
+.ci-chemical-display label {
+	float: left;
+	width: 100px;
+	font-weight: bold;
+}

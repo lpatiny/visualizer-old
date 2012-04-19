@@ -52,8 +52,17 @@
     		"event": "onHover",
 		"name": "entry_hovered",
 		"rel": "element",
-		"key": ""	
-    }],
+		"jpath": ""
+    },
+    
+    {
+    		"event": "onHover",
+		"name": "entry_hovered_spectra",
+		"rel": "element",
+		"jpath": "entry.nmr[0].jcamp"	
+    }
+    
+    ],
   
 
     "dataSource": [{
@@ -68,14 +77,14 @@
     "title": "Details",
 
     "position": {
-    	"left": 5,
+    	"left": 30,
     	"top": 5
     },
     
 
     "size": {
-    	"width": 60,
-    	"height": 50
+    	"width": 40,
+    	"height": 20
     },
 
 
@@ -89,6 +98,38 @@
     "dataSource": [{
     	"name": "entry_hovered",
     	"rel": "chemical"
+    }]
+   },
+   
+   
+   
+{
+    "id": "2",
+    "type": "spectra_displayer",
+    "title": "Spectra",
+
+    "position": {
+    	"left": 30,
+    	"top": 30
+    },
+    
+
+    "size": {
+    	"width": 30,
+    	"height": 30
+    },
+
+
+    "configuration": {
+    	
+    },
+   
+    "dataSend": [],
+  
+
+    "dataSource": [{
+    	"name": "entry_hovered_spectra",
+    	"rel": "jcamp"
     }]
    }]
 

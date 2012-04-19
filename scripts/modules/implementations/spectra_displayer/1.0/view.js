@@ -28,16 +28,14 @@ CI.Module.prototype._types.spectra_displayer.View.prototype = {
 	},
 	
 	inDom: function() {
-		
-		this.spectra = new ChemDoodle.PerspectiveCanvas(this.canvasid, '500', '400');
+		this.spectra = new ChemDoodle.PerspectiveCanvas(this.canvasid, '0', '0');
 		this.spectra.specs.plots_showYAxis = true;
 		this.spectra.specs.plots_flipXAxis = false;
 	},
 	
-	
-	onResize: function() {
+	onResize: function(width, height) {
 		
-	
+		this.spectra.resize(width, height);
 	},
 	
 	update: function() {
