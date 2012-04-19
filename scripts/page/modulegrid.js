@@ -67,6 +67,12 @@ CI.Grid = {
 					count++;
 				}
 				$(this).css("zIndex",count);
+			},
+			
+			stop: function() {
+				var position = $(this).position();
+				module.getPosition().left = position.left / CI.Grid.definition.xWidth;
+				module.getPosition().top = position.top / CI.Grid.definition.yHeight;
 			}
 		}).trigger('resize');
 		
@@ -84,8 +90,8 @@ CI.Grid = {
 	moduleResize: function(module) {
 		
 		var wrapper = module.getDomWrapper();
-		module.getPosition().width = wrapper.width() / CI.Grid.definition.xWidth;
-		module.getPosition().height = wrapper.height() / CI.Grid.definition.yHeight;
+		module.getSize().width = wrapper.width() / CI.Grid.definition.xWidth;
+		module.getSize().height = wrapper.height() / CI.Grid.definition.yHeight;
 		var containerHeight = wrapper.height() - module.getDomHeader().outerHeight(true);
 		
 		module.getDomContent().parent().css({

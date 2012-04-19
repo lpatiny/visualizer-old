@@ -109,7 +109,8 @@ CI.EntryPoint.prototype = {
 	},
 	
 	save: function() {
-		console.log(this.structure);
+		
+		$.fancybox('<h3>JSON of the structure</h3><textarea style="width: 500px; height: 300px;">' + JSON.stringify(this.structure) + '</textarea>', { autoSize: false, height: 350, width: 505});
 	},
 	
 	getDataFromSource: function(child) {

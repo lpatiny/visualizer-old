@@ -22,6 +22,8 @@ CI.Types._jPathToOptions = function(jpath) {
 		options.push(['<option style="padding-left:', padding, 'px" value="', str, '">', val, '</option>'].join(''));
 	}
 	
+	addOption("", "Do not specify", 0);
+	
 	var fracjPath = function(jpath, base, lvl) {
 		
 		var val;
@@ -30,7 +32,7 @@ CI.Types._jPathToOptions = function(jpath) {
 		if(typeof jpath == 'object') {
 			for(var i in jpath) {//}= 0; i < jpath.length; i++) {
 				
-				if(typeof i == "number") {
+				if(typeof i == "number" || !isNaN(parseInt(i))) {
 					val = "[" + i + "]";
 					str = base + val;
 				} else {
@@ -87,12 +89,15 @@ CI.Types.getValueFromJPath = function(jPath, data, array, elId) {
 
 CI.Types._valueFromJPathAndJson = function(jPath, json) {
 
+
 	if(!new RegExp('^([a-zA-Z0-9]*((\.[a-zA-Z0-9])|(\[[0-9]+]))?)*$').test(jPath))
 		return;
 	
 	try {
-		eval("var element = json." + jPath);
-	} catch(e) { return null; }
+		console.log("var element = json." + jPath + ";");
+		eval("var element = json." + jPath + ";");
+		console.log(element);
+	} catch(e) { console.log(e); return null; }
 	
 	if(typeof element == "undefined")
 		return null;
