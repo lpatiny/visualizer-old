@@ -57,7 +57,7 @@ CI.Module.prototype._types.grid.View.prototype = {
 			Columns[j] = Column;
 		}
 		
-		this.list = moduleValue/*.value*/;
+		this.list = CI.Util.getValue(moduleValue);
 		
 		var Content = new CI.Tables.Content();
 		var elements = [];
