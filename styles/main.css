@@ -17,8 +17,14 @@ body, th, td {
  * 	Main Page
  */
 
+html, body {
+	height: 100%;
+	min-height: 100%;
+}
+
 #ci-viewport {
 	width: 100%;
+	height: 100%;
 }
 
 #ci-left, #ci-right {
@@ -57,13 +63,13 @@ body, th, td {
 }
 
 
-.ci-cfg-entrypoint > li > ul {
+.ci-cfg ul > li > ul {
 	list-style-type: none;
 	margin: 0px !important;
 	margin-bottom: 15px !important;
 }
 
-.ci-cfg-entrypoint label {
+.ci-cfg label {
 	display: block;
 	font-weight: bold;
 	margin-top: 4px;
@@ -87,6 +93,7 @@ td.ci-expand {
 	background: #f0f0f0;
 	border: 1px solid #d0d0d0;
 	color: #c0c0c0;
+	cursor: pointer;
 }
 
 
@@ -110,6 +117,18 @@ td.ci-expand {
 }
 
 
+.ci-message-grey {
+	margin: auto;
+	padding-left: 20px;
+	padding-right: 20px;
+	color: #e0e0e0;
+	width: 75%;
+	margin-top: 50%;
+	text-align: center;
+	font-size: 2em;
+	
+}
+
 
 #ci-left .ci-varname, #ci-right .ci-varname {
 	font-weight: bold;
@@ -125,12 +144,17 @@ td.ci-expand {
  * 	Main Module Grid
  */
 
+#ci-center {
+	height: 100%;
+}
+
 #ci-modules-grid {
 	width: 100%;
-	height: 600px;
-	
+	height: 100%;
+	min-height: 100%;
 	background: #fefefe;
-	position: relative; /* important */
+	position: relative;
+	
 }
 
 #ci-modules-grid > div.ci-module-wrapper {
@@ -237,30 +261,3 @@ div.ci-module-wrapper .ci-module-content {
 	width: 250px;
 }
 
-.ci-cfg-module label {
-	float: left;
-	width: 100px;
-	
-}
-
-.ci-cfg-module ul {
-	list-style-type: none;
-	margin: 0px;
-	padding: 0px;
-	padding-left: 10px;
-	padding-right: 10px;
-}
-
-.ci-cfg-module > div > ul > li {
-	margin: 0px;
-	padding: 0px;
-	margin-bottom: 15px;
-}
-
-
-.ci-cfg-module > div > ul > li > ul > li {
-	margin: 0px;
-	padding: 0px;
-	margin-bottom: 4px;
-	
-}

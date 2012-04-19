@@ -120,15 +120,13 @@ CI.Visualizer.left.init = function() {
 		
 		var vars = Entry.getEntryDataVariables();
 		for(var i in vars) {
-			model.clone(true).find('._ci-varname').val(vars[i].varname).end().find('._ci-varsource').val(vars[i].sourcename).trigger('change').end().data('model', model).appendTo(ul);
+			model.clone(true).find('._ci-varname').val(vars[i].varname).end().find('._ci-varsource').val(vars[i].sourcename).trigger('change').end().appendTo(ul);
 		}
 		
 		
 		$("#ci-entrypoint-cfg").html(ul);
 		
-		ul.after($('<div class="ci-cfg-add">+ Add</div>').bind('click', function() {
-			$(this).prev().children(':last').data('model').clone(true).appendTo($(this).prev());
-		}));
+		ul.after(CI.AddButton.clone(true));
 		
 		ul.next().after($('<div class="ci-cfg-save">Save</div>').bind('click', function() {
 			
@@ -136,14 +134,22 @@ CI.Visualizer.left.init = function() {
 			ul.children().each(function() {
 				vars.push({ varname: $(this).find('._ci-varname').val(), sourcename: $(this).find('._ci-varsource').val(), jpath: $(this).find('._ci-varjpath').val()  });
 			});
-			console.log(vars);
+			
 			Entry.setEntryDataVariables(vars);
 		})).next().after('<div class="ci-spacer"></div>');
 	})();
+	
+	$("#ci-left").next().bind('click', function() {
+		$("#ci-left").toggle();	
+	});
 }
 
 
 CI.Visualizer.right = {};
 CI.Visualizer.right.init = function() {
-		
+	
+	$("#ci-right").prev().bind('click', function() {
+		$("#ci-right").toggle();	
+	});	
 }	
+

@@ -46,3 +46,11 @@ webworker.addEventListener('message', function(event) {
 		console.log('Progress: ' + event.data.iterations + ' time: ' + (Date.now() - timeStart));
 	
 })*/
+
+
+CI.AddButton = $('<div class="ci-cfg-add">+ Add</div>').bind('click', function() {
+	$(this).prev().children(':last').clone(true).appendTo($(this).prev());
+});
+
+
+CI.SaveButton = $('<div class="ci-cfg-save">Save</div>');

@@ -71,7 +71,8 @@ CI.Types._jPathToOptions = function(jpath) {
 
 CI.Types.getValueFromJPath = function(jPath, data, array, elId) {
 	
-	if((jPath + "").length == 0)
+	
+	if(jPath == null || (jPath + "").length == 0)
 		return data;
 		
 	if(data.instance && typeof data.instance['valueFromjPath'] == "function")

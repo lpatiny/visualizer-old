@@ -11,7 +11,7 @@
 	"variables": [
 		{
 			"varname": "entry_list",
-			"sourcename": "possibleMF",
+			"sourcename": "list",
 			"jpath": null
 		}
 	]
@@ -48,19 +48,16 @@
 	}
     },
    
-    "dataSend": {
-	
-	"onEntryHover": [
-		{
-			"name": "entry_hovered",
-			"rel": "element",
-			"key": ""	
-		}
-	]
-    },
+    "dataSend": [{
+    		"event": "onSelect",
+		"name": "entry_hovered",
+		"rel": "element",
+		"key": ""	
+    }],
+  
 
     "dataSource": [{
-    	"name": "list",
+    	"name": "entry_list",
     	"rel": "list"
     }]
 }]

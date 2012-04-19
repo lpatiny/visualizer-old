@@ -51,26 +51,21 @@ CI.Module.prototype._types.grid.Controller.prototype = {
 		return {
 
 			events: {
-				onEntryHover: {
-					label: 'mouse over a grid',
-					description: 'When the mouses moves over a cell'
+				onSelect: {
+					label: 'Select a line',
+					description: 'Click on a line to select it'
+				},
+				
+				onHover: {
+					label: 'Hovers a line',
+					description: 'Pass the mouse over a line to select it'
 				}
 			},
 			
 			rels: {
-				'row': {
-					label: 'Selected row',
-					description: 'Returns the selected element in the list'
-				},
-				
-				'col': {
-					label: 'Selected coll',
-					description: 'Returns the selected element in the list'
-				},
-				
-				'interset': {
-					label: 'Selected cell',
-					description: 'Returns the selected element in the list'
+				'element': {
+					label: 'Row',
+					description: 'Returns the selected row in the list'
 				}
 			}
 		}

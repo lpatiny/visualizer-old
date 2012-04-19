@@ -23,7 +23,11 @@ CI.modules = {};
  */
 CI.Module = function(definition) {
 
-	this.definition = $.extend(true, {}, CI.Module.prototype.defaults, definition);
+	//this.definition = $.extend(true, definition, CI.Module.prototype.defaults);
+	// WRONG ! We need to keep the pointer.
+	this.definition = definition;
+	
+	
 	this.cfgModule = $.extend(true, {}, definition.configuration);
 	
 	
@@ -61,13 +65,8 @@ CI.Module = function(definition) {
 		this.model.init();
 		
 		this.dom.find('.ci-configure').bind('click', function(event) {
-			
-			$(document).trigger('onChangeSendCfg', module);
-			$(document).trigger('onChangeReceiveCfg', module);
-			$("#ci-right-accordion").accordion('resize');
-		})
-		
-		
+			$(document).trigger('configModule', module);
+		});
 	}
 	
 	/**
@@ -274,6 +273,15 @@ CI.Module.prototype = {
 	
 	getId: function() {
 		return this.definition.id;
+	},
+	
+	setSourceVars: function(vars) {
+		
+		this.definition.dataSource = vars;
+	},
+	
+	setSendVars: function(vars) {
+		this.definition.dataSend = vars;
 	}
 };
 

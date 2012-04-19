@@ -90,8 +90,9 @@ CI.EntryPoint.prototype = {
 		for(var i in this.data) {
 			CI.dataType.instanciate(this.data[i]);
 			for(var j = 0; j < vars.length; j++)
-				if(vars[j].sourcename == j)
+				if(vars[j].sourcename == i) {
 					CI.API.setSharedVar(vars[j].varname, CI.Types.getValueFromJPath(vars[j].jpath, this.data[i]), true);
+				}
 		}
 		
 		if(typeof this.onLoad == 'function')
@@ -104,9 +105,11 @@ CI.EntryPoint.prototype = {
 	},
 	
 	setEntryDataVariables: function(vars) {
-	
 		this.entryData.variables = vars;
-		console.log(this.structure);		
+	},
+	
+	save: function() {
+		console.log(this.structure);
 	},
 	
 	getDataFromSource: function(child) {
