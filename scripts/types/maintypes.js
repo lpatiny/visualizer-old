@@ -94,9 +94,7 @@ CI.Types._valueFromJPathAndJson = function(jPath, json) {
 		return;
 	
 	try {
-		console.log("var element = json." + jPath + ";");
 		eval("var element = json." + jPath + ";");
-		console.log(element);
 	} catch(e) { console.log(e); return null; }
 	
 	if(typeof element == "undefined")

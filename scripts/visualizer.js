@@ -34,8 +34,6 @@ CI.Visualizer.left.init = function() {
 				moduleName: def.title
 			});
 		}
-	
-		
 		
 		for(var j = 0; j < def.dataSend.length; j++) {
 		
@@ -53,7 +51,6 @@ CI.Visualizer.left.init = function() {
 	var html = [];
 	
 	html.push('<h3><span class="triangle-down"></span>Entry point</h3><div id="ci-entrypoint-cfg">');
-	
 	html.push('</div><h3><span class="triangle-down"></span>Shared variables</h3><div>');
 	for(var i in allSharedVars) {
 		html.push('<li>');
@@ -139,7 +136,7 @@ CI.Visualizer.left.init = function() {
 		
 		ul.after(CI.AddButton.clone(true));
 		
-		ul.next().after($('<div class="ci-cfg-save">Save</div>').bind('click', function() {
+		ul.next().after(CI.SaveButton.clone(true).bind('click', function() {
 			
 			var vars = [];
 			ul.children().each(function() {
@@ -147,6 +144,8 @@ CI.Visualizer.left.init = function() {
 			});
 			
 			Entry.setEntryDataVariables(vars);
+			Entry.save();
+			
 		})).next().after('<div class="ci-spacer"></div>');
 	})();
 	
