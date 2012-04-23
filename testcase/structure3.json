@@ -6,6 +6,12 @@
 	"yHeight": 10
 },
 
+
+"entryPoint": {
+	"variables": [{"varname":"list","sourcename":"possibleMF","jpath":null}]
+},
+
+
 "modules": [
 {
     "id": "12345",	
@@ -45,7 +51,7 @@
     },
 
     "dataSource": [{
-    	"name": "possibleMF",
+    	"name": "list",
     	"rel": "list"
     }]
 }]

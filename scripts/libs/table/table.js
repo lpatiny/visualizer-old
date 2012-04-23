@@ -92,7 +92,10 @@ window[_namespaces['table']].Tables.Table.prototype = {
 			var id = tr.data('element-id');
 			var html = el.children().html();
 			el[html == '+' ? 'addClass' : 'removeClass']('bottom').children().html(html == '+' ? '-' : '+'); 
-			tr.siblings('[data-parent-id="' + id + '"]').toggleClass('ci-table-hidden');
+			tr.siblings('[data-parent-id="' + id + '"]').toggleClass('ci-table-hidden').find('.ci-table-expand').each(function() {
+				if($(this).children().html() == '-')
+					$(this).trigger('click');
+			});
 		})
 		
 		this.dom.on('click', 'th', function() {

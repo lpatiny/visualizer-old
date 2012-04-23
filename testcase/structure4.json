@@ -6,6 +6,10 @@
 	"yHeight": 10
 },
 
+"entryPoint": {
+	"variables": [{"varname":"list","sourcename":"result","jpath":null}]
+},
+
 "modules": [
 {
     "id": "1",	
