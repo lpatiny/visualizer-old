@@ -17,7 +17,7 @@ CI = new Object();
 	$(document).ready(function() {
 		
 		ajaxManager = new CI.Util.AjaxManager();
-		ajaxManager.setProxyUrl('http://localhost:8888/git/visualizer/proxify.php?url=<url>');
+	//	ajaxManager.setProxyUrl('http://localhost:8888/git/visualizer/proxify.php?url=<url>');
 		
 		var dom = $("body");
 		$(dom).mask('Data is loading. Please wait...');
