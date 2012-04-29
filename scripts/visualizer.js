@@ -23,7 +23,8 @@ CI.Visualizer.left.init = function() {
 	for(var i in CI.modules) {
 		var def = CI.modules[i].definition;
 		
-		for(var j = 0; j < def.dataSource.length; j++) {
+	
+		for(var j = 0; def.dataSource && j < def.dataSource.length; j++) {
 			var source = def.dataSource[j];
 			
 			if(typeof allSharedVars[source.name] == "undefined")
@@ -35,7 +36,7 @@ CI.Visualizer.left.init = function() {
 			});
 		}
 		
-		for(var j = 0; j < def.dataSend.length; j++) {
+		for(var j = 0; def.dataSend && j < def.dataSend.length; j++) {
 		
 			if(typeof allSharedVars[def.dataSend[j].name] == "undefined")
 				allSharedVars[def.dataSend[j].name] = {send: [], receive: []};
@@ -87,10 +88,25 @@ CI.Visualizer.left.init = function() {
 			html.push('</ul></div>');
 		
 		html.push('</li>');
-		
-		
 	}
 	html.push('</div>');
+	
+	html.push('<h3><span class="triangle-down"></span>Add a module</h3><div id="ci-addmodule">');
+	
+	
+	for(var i in CI.Module.prototype._types) {
+		
+		var moduleInfos = CI.Module.prototype._types[i].Controller.prototype.getModuleInformations();
+		html.push('<div class="module" data-module="');
+		html.push(i);
+		html.push('">');
+		html.push(moduleInfos.moduleName);
+		html.push('</div>');
+	}
+	
+	html.push('</div>');
+	
+	
 	$("#ci-left").html(html.join(''));
 	
 	
@@ -149,8 +165,31 @@ CI.Visualizer.left.init = function() {
 		})).next().after('<div class="ci-spacer"></div>');
 	})();
 	
+	
 	$("#ci-left").next().bind('click', function() {
 		$("#ci-left").toggle();	
+	});
+	
+	
+	$("#ci-addmodule").on('dblclick', 'div', function() {
+	
+		var moduleId = $(this).data('module');
+		
+		var module = {
+			type: moduleId,
+			title: "Untitled module",
+			position: {
+				left: 1,
+				right: 1	
+			},
+			
+			size: {
+				width: 30,
+				height: 30
+			}
+		};
+		
+		Entry.addModuleFromJSON(module, true);
 	});
 	
 	$("#ci-left").on('click', 'h3', function() {

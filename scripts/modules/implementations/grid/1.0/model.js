@@ -7,8 +7,8 @@
  */
 
 
-if(typeof CI.Module.prototype._types.display_list == 'undefined')
-	CI.Module.prototype._types.display_list = {};
+if(typeof CI.Module.prototype._types.grid == 'undefined')
+	CI.Module.prototype._types.grid = {};
 
 CI.Module.prototype._types.grid.Model = function(module) {
 	

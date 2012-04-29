@@ -135,5 +135,13 @@ CI.Module.prototype._types.canvas_matrix.Controller.prototype = {
 				description: 'Receives the matrix to display'
 			}
 		};
+	},
+	
+	getModuleInformations: function() {
+		
+		return {
+			moduleName: 'Distance matrix'
+			
+		}
 	}
 }

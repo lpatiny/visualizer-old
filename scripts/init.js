@@ -16,6 +16,7 @@ CI = new Object();
 	
 	$(document).ready(function() {
 		
+		CI.WebWorker.create('jsonparser', './scripts/webworker/scripts/jsonparser.js');
 		ajaxManager = new CI.Util.AjaxManager();
 	//	ajaxManager.setProxyUrl('http://localhost:8888/git/visualizer/proxify.php?url=<url>');
 		

@@ -98,6 +98,16 @@ CI.Module.prototype._types.grid.Controller.prototype = {
 				description: 'Any list of displayable element'
 			}
 		}
+	},
+	
+	
+	getModuleInformations: function() {
+		
+		return {
+			moduleName: 'Grid'
+			
+		}
 	}
+
 
 }

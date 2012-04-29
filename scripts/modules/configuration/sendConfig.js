@@ -69,13 +69,15 @@ function buildSendConfig(module) {
 	var wrapper = $("<div />").addClass('ci-send');
 	var html = $("<ul />");
 	
-	for(var i = 0; i < currentCfg.length; i++) {
-		var line = cfg.clone(true);
-		fillLine(currentCfg[i], line);
-		html.append(line);
+	if(currentCfg) {
+		for(var i = 0; i < currentCfg.length; i++) {
+			var line = cfg.clone(true);
+			fillLine(currentCfg[i], line);
+			html.append(line);
+		}
 	}
 	
-	if(currentCfg.length == 0) {
+	if(!currentCfg || currentCfg.length == 0) {
 		var line = cfg.clone(true);
 		html.append(line);
 	}
@@ -141,19 +143,20 @@ function buildReceiveConfig(module) {
 	var wrapper = $("<div />").addClass('ci-receive');
 	var html = $("<ul />");
 	
-	for(var i = 0; i < currentCfg.length; i++) {
+	if(currentCfg)
+		for(var i = 0; i < currentCfg.length; i++) {
+			
+			/*if(!currentCfg[i] instanceof Array)
+				currentCfg[i] = [currentCfg[i]];
+			*/
+			//for(var j = 0; j < currentCfg[i].length; j++) {
+				var line = cfg.clone(true);
+				fillLine(currentCfg[i], line, i);
+				html.append(line);
+			//}
+		}
 		
-		/*if(!currentCfg[i] instanceof Array)
-			currentCfg[i] = [currentCfg[i]];
-		*/
-		//for(var j = 0; j < currentCfg[i].length; j++) {
-			var line = cfg.clone(true);
-			fillLine(currentCfg[i], line, i);
-			html.append(line);
-		//}
-	}
-	
-	if(currentCfg.length == 0) {
+	if(!currentCfg || currentCfg.length == 0) {
 		var line = cfg.clone(true);
 		html.append(line);
 	}

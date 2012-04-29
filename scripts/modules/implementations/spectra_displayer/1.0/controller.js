@@ -41,6 +41,16 @@ CI.Module.prototype._types.spectra_displayer.Controller.prototype = {
 				description: 'The jcamp URL'
 			}
 		}
+	},
+	
+	
+	getModuleInformations: function() {
+		
+		return {
+			moduleName: 'ChemDoodle Spectra'
+			
+		}
 	}
+
 
 }

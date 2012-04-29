@@ -27,7 +27,7 @@ CI.Module = function(definition) {
 	// WRONG ! We need to keep the pointer.
 	this.definition = definition;
 	
-	
+	this.id = ++CI.Module.prototype.lastId;
 	this.cfgModule = $.extend(true, {}, definition.configuration);
 	
 	
@@ -67,6 +67,11 @@ CI.Module = function(definition) {
 		this.dom.find('.ci-configure').bind('click', function(event) {
 			$(document).trigger('configModule', module);
 		});
+		
+		
+		this.dom.find('.ci-remove').bind('click', function(event) {
+			Entry.removeModule(module);
+		});
 	}
 	
 	/**
@@ -86,6 +91,7 @@ CI.Module = function(definition) {
 		html.push('<div class="ci-module-header-toolbar">');
 		html.push('<ul>');
 		html.push('<li class="ci-configure">Configure</li>')
+		html.push('<li class="ci-remove">Remove</li>')
 		html.push('</ul>');
 		html.push('</div>');
 		html.push('</div><div class="ci-module-content"><div class="ci-module-content-overflow">');
@@ -121,6 +127,8 @@ CI.Module.prototype = {
 			left: 0
 		}
 	},
+
+	lastId: 0,
 
 	/**
 	 * Contains the names of all types of module
@@ -282,6 +290,14 @@ CI.Module.prototype = {
 	
 	setSendVars: function(vars) {
 		this.definition.dataSend = vars;
+	},
+	
+	getId: function() {
+		return this.id;
+	},
+	
+	getDefinition: function() {
+		return this.definition;
 	}
 };
 
@@ -309,6 +325,9 @@ CI.Module.prototype._impl = {
 			//loop through the data provided in the definition and copy it into the model as a DataSource
 			var sources = module.definition.dataSource;
 			
+			if(!sources)
+				return;
+				
 			for(var i = 0; i < sources.length; i++) {
 				sourceName = sources[i].name;
 				

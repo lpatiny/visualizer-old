@@ -31,6 +31,7 @@
 	<script src="./scripts/libs/lang/lang.js" type="text/javascript" language="javascript"></script>
 	
 	
+	<script src="./scripts/webworker/workerhandler.js" type="text/javascript" language="javascript"></script>
 	<script src="./scripts/data/datasource.js" type="text/javascript" language="javascript"></script>
 	<script src="./scripts/data/repo.js" type="text/javascript" language="javascript"></script>
 	<script src="./scripts/modules/module.js" type="text/javascript" language="javascript"></script>
@@ -47,11 +48,11 @@
 	<link href="./scripts/modules/implementations/canvas_matrix/1.0/style.css" rel="stylesheet" media="screen, print" />
 	
 	
-	
+	<!--
 	<script src="./scripts/modules/implementations/display_list/1.0/controller.js" type="text/javascript" language="javascript"></script>
 	<script src="./scripts/modules/implementations/display_list/1.0/model.js" type="text/javascript" language="javascript"></script>
 	<script src="./scripts/modules/implementations/display_list/1.0/view.js" type="text/javascript" language="javascript"></script>
-	
+	-->
 	
 	<script src="./scripts/modules/implementations/grid/1.0/controller.js" type="text/javascript" language="javascript"></script>
 	<script src="./scripts/modules/implementations/grid/1.0/model.js" type="text/javascript" language="javascript"></script>
@@ -75,12 +76,12 @@
 	<script src="./scripts/modules/implementations/spectra_displayer/1.0/controller.js" type="text/javascript" language="javascript"></script>
 	<script src="./scripts/modules/implementations/spectra_displayer/1.0/model.js" type="text/javascript" language="javascript"></script>
 	<script src="./scripts/modules/implementations/spectra_displayer/1.0/view.js" type="text/javascript" language="javascript"></script>
-	
+	<!--
 	<script src="./scripts/modules/implementations/datamatrix_intersect/1.0/controller.js" type="text/javascript" language="javascript"></script>
 	<script src="./scripts/modules/implementations/datamatrix_intersect/1.0/model.js" type="text/javascript" language="javascript"></script>
 	<script src="./scripts/modules/implementations/datamatrix_intersect/1.0/view.js" type="text/javascript" language="javascript"></script>
 	<link href="./scripts/modules/implementations/datamatrix_intersect/1.0/style.css" rel="stylesheet" media="screen, print" />
-	
+	-->
 	
 	<script src="./scripts/page/entrypoint.js" type="text/javascript" language="javascript"></script>
 	<script src="./scripts/page/modulegrid.js" type="text/javascript" language="javascript"></script>
@@ -108,15 +109,19 @@
 		for(var i = 0; i < urlStructure.length; i++) {
 			
 			var args = urlStructure[i].split('=');
-			
+			var val = unescape(args[1]);
 			switch(args[0]) {
 				
 				case 'viewURL':
-					_structure = unescape(args[1]);
+					_structure = val;
 				break;
 				
 				case 'dataURL':
-					_data = unescape(args[1]);
+					_data = val;
+				break;
+				
+				case 'saveViewURL':
+					_saveViewUrl = val;
 				break;
 			}
 			

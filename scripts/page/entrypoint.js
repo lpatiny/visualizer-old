@@ -22,12 +22,11 @@ CI.EntryPoint = function(structure, data, options, onLoad) {
 		entryPoint.structure = structure;
 		entryPoint.entryData = structure.entryPoint; 
 		
-		for(var i = 0; i < structure.modules.length; i++) {
-			var Module = new CI.Module(structure.modules[i]); 
-			CI.modules[structure.modules[i].id] = Module;
-			CI.Grid.addModule(Module);
-		}
-		
+		if(structure.modules !== undefined)
+			for(var i = 0; i < structure.modules.length; i++) {
+				entryPoint.addModuleFromJSON(structure.modules[i]);
+			}
+			
 		CI.DataSource.prototype._bindEvent();
 		
 		if(typeof data == "object")
@@ -62,9 +61,11 @@ CI.EntryPoint = function(structure, data, options, onLoad) {
 			url: data,
 			data: {},
 			type: 'get',
-			dataType: 'json',
+			dataType: 'text',
 			success: function(data) {
-				doData(data);
+				CI.WebWorker.send('jsonparser', data, function(data) {
+					doData(data);	
+				})
 			},
 			
 			error: function() {
@@ -110,8 +111,11 @@ CI.EntryPoint.prototype = {
 	},
 	
 	save: function() {
-		
-		$.fancybox('<h3>JSON of the structure</h3><textarea style="width: 500px; height: 300px;">' + JSON.stringify(this.structure) + '</textarea>', { autoSize: false, height: 350, width: 505});
+		var script = JSON.stringify(this.structure);
+		$.post(_saveViewUrl, {content: script}, function() {
+			$("#savedone").html('Visualizer saved !');
+		});
+		$.fancybox('<h3>JSON of the structure</h3><div id="savedone">Your visualizer is currently saving. Please wait...</div><textarea style="width: 500px; height: 300px;">' + script + '</textarea>', { autoSize: false, height: 350, width: 505});
 	},
 	
 	getDataFromSource: function(child) {
@@ -120,5 +124,28 @@ CI.EntryPoint.prototype = {
 			return this.data;
 		else
 			return this.data[child];
+	},
+	
+	addModuleFromJSON: function(json, addToDefinition) {
+		if(addToDefinition) {
+			this.structure.modules.push(json);
+		}
+		var Module = new CI.Module(json);
+		this.addModule(Module); 
+	},
+	
+	addModule: function(Module) {
+		CI.modules[Module.getId()] = Module;
+		CI.Grid.addModule(Module);
+	},
+	
+	removeModule: function(Module) {
+		for(var i = 0; i < this.structure.modules.length; i++) {
+			if(Module.getDefinition() == this.structure.modules[i]) {
+				this.structure.modules.splice(i, 1);
+				break;
+			}
+		}
+		CI.Grid.removeModule(Module);
 	}
 }

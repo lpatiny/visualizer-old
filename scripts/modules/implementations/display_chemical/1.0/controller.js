@@ -62,5 +62,14 @@ CI.Module.prototype._types.display_chemical.Controller.prototype = {
 			
 		}
 	
+	},
+	
+	
+	getModuleInformations: function() {
+		
+		return {
+			moduleName: 'Chemical displayer'
+			
+		}
 	}
 }

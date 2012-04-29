@@ -219,6 +219,7 @@ div.ci-module-header-toolbar ul li {
 	margin: 0;
 	list-style-type: none;
 	line-height: 100%;
+	float: left;
 	padding-top: 3px;
 }
 
@@ -274,5 +275,13 @@ div.ci-module-wrapper .ci-module-content {
 	float: left;
 	width: 100px;
 	font-weight: bold;
+}
+
+#ci-addmodule div {
+	background: #f0f0f0;
+	padding: 3px;
+	text-align: center;
+	margin-bottom: 3px;
+	cursor: pointer;
 }
 	

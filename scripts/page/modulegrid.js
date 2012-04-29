@@ -83,6 +83,14 @@ CI.Grid = {
 		
 		CI.Grid.moduleResize(module);
 	},
+	
+	
+	removeModule: function(module) {
+		
+		module.getDomWrapper().remove().unbind();
+	},
+	
+	
 	/**
 	 * Is called by jQuery UI when a module is resized, to resize the module and allow the module view's contents to update accordingly.
 	 * @param module The module to resize.
