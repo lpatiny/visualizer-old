@@ -112,11 +112,11 @@
 			switch(args[0]) {
 				
 				case 'viewURL':
-					_structure = args[1];
+					_structure = unescape(args[1]);
 				break;
 				
 				case 'dataURL':
-					_data = args[1];
+					_data = unescape(args[1]);
 				break;
 			}
 			

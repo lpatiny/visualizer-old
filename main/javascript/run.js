@@ -37,11 +37,11 @@
 			saveViewURL = url + escape(visualizer.replace("action=LoadFile","action=SaveFile"));
 		}
 		
-		var url = ["http://lpatiny.github.com/visualizer/index.html?viewURL=", viewURL, "&dataURL=", dataURL, "&saveViewURL=", saveViewURL].join('');
+		var urlTotal = ["http://lpatiny.github.com/visualizer/index.html?viewURL=", viewURL, "&dataURL=", dataURL, "&saveViewURL=", saveViewURL].join('');
 		if(newWindow)
-			window.open(url);
+			window.open(urlTotal);
 		else
-			window.document.location.href = url;
+			window.document.location.href = urlTotal;
 	}
 	
 	/*
