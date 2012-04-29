@@ -199,10 +199,17 @@ CI.Module.prototype = {
 		throw "The module has not been loaded yet";
 	},
 	
+	/**
+	 * Returns the configuration of the module
+	 */
 	getConfiguration: function() {
 		return this.cfgModule;
 	},
 	
+	
+	/**
+	 * Returns all accepted types defined in the controller
+	 */
 	getAcceptedTypes: function(rel) {
 		
 		var accept = this.controller.getConfigurationReceive();
