@@ -129,6 +129,7 @@
 	</script>
 	<!-- Done loading visualizer scripts -->
 </head>
+
 <body>
 	
 	<table id="ci-viewport" cellpadding="0" cellspacing="0">
@@ -140,25 +141,16 @@
 			</td>
 		</tr>
 		<tr>
-			<td id="ci-left">
-				<div id="ci-left-accordion">
-					<h3><a href="#">All shared variables</a></h3>
-					<div id="ci-cfg-shared"></div>
-				</div>
+			<td id="ci-left" class="ci-cfg">
+				
 			</td>
-			<td class="ci-expand" id="ci-expand-left">...</td>
+			<td class="ci-expand" id="ci-expand-left">.<br />.<br />.</td>
 			<td id="ci-center">
 				<div id="ci-modules-grid"></div>
 			</td>
-			<td class="ci-expand" id="ci-expand-right">...</td>
-			<td id="ci-right">
-				<div id="ci-right-moduleselected">No module selected</div>
-				<div id="ci-right-accordion">
-					<h3><a href="#">Data source</a></h3>
-					<div id="ci-cfg-receive" class="ci-cfg-module"></div>
-					<h3><a href="#">Data to send</a></h3>
-					<div id="ci-cfg-send" class="ci-cfg-module"></div>
-				</div>
+			<td class="ci-expand" id="ci-expand-right">.<br />.<br />.</td>
+			<td id="ci-right" class="ci-cfg">
+				<div class="ci-message-grey">Click on a module to configure it</div>
 			</td>
 		</tr>
 		
