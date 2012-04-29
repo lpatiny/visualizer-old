@@ -91,6 +91,7 @@ CI.EntryPoint.prototype = {
 			CI.dataType.instanciate(this.data[i]);
 			for(var j = 0; j < vars.length; j++)
 				if(vars[j].sourcename == i) {
+					
 					CI.API.setSharedVar(vars[j].varname, CI.Types.getValueFromJPath(vars[j].jpath, this.data[i]), true);
 				}
 		}

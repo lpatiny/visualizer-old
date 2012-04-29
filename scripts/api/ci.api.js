@@ -38,6 +38,5 @@ CI.API.getModulesFromSharedVar = function(varName) {
 		}
 	}
 	
-	
 	return allModules;
 }
