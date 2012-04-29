@@ -1,4 +1,5 @@
 
+
 var url = 'http://script.epfl.ch/servletScript/JavaScriptServlet';
 var result;
 var help = {};
@@ -32,8 +33,8 @@ function openVisualizer(newWindow) {
 	}
 	
 	if(visualizer != null) {
-		viewURL = escape(visualizer);
-		saveViewURL = escape(visualizer.replace("action=LoadFile","action=SaveFile"));
+		viewURL = url + escape(visualizer);
+		saveViewURL = url + escape(visualizer.replace("action=LoadFile","action=SaveFile"));
 	}
 	
 	var url = ["http://lpatiny.github.com/visualizer/index.html?viewURL=", viewURL, "&dataURL=", dataURL, "&saveViewURL=", saveViewURL].join('');

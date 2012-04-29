@@ -104,11 +104,24 @@
 	<script language="javascript" type="text/javascript">
 		<!--
 		
-		console.log(window.document.location);
-		
-		
-		_structure = 'testcase/chemicaltable.json';
-		_data = './data/json/chemical/chemicalTable.json';
+		var urlStructure = window.document.location.search.substring(1).split('&');
+		for(var i = 0; i < urlStructure.length; i++) {
+			
+			var args = urlStructure[i].split('=');
+			
+			switch(args[0]) {
+				
+				case 'viewURL':
+					_structure = args[1];
+				break;
+				
+				case 'dataURL':
+					_data = args[1];
+				break;
+			}
+			
+			
+		}
 		
 	//	_data = window.opener.getData();
 		
