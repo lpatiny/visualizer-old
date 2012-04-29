@@ -13,18 +13,16 @@
 }
 
 .FileBrowser {
-   
     /* These determine how the FileBrowser actually looks */
     width:          280px;
-    height:         500px;
-  
+    height:         100%;
     float:          left;
     cursor:         default;
 }
 
 .FileBrowser ul.folderSelected > div.foldername_label {
     text-decoration:underline; 
-    background-color: #EEEEEE;
+    
 }
 
 .FileBrowser li.fileSelected {
@@ -34,7 +32,7 @@
 }
 
 .FileBrowser ul {
-    background-color: #FFFFFF;
+    
     color:            #000000;
     font-family:	Helvetica Neue, Helvetica, Arial;
     font-size:      13.3333px;
@@ -51,7 +49,7 @@
 }
 
 .FileBrowser li {
-    background-color: #FFFFFF;
+    
     color:            #000000;
     font-family:	Helvetica Neue, Helvetica, Arial;
     
