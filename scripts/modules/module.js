@@ -241,20 +241,7 @@ CI.Module.prototype = {
 			this.model.inDom();
 		
 	},
-	// Useless
-	/*
-	getKeysByRel: function(rel, sent) {
-		
-		if(!sent) {
-			var data = this.getDataFromRel(rel);
-			if(typeof data == "undefined")
-				return false;
-			return data.getDataKeys();
-		} else {
-			return this.model.getKeysFromRel(rel);
-		}
-	},
-	*/
+	
 	/** 
 	 * Returns the data for the module's model
 	 */
@@ -298,6 +285,15 @@ CI.Module.prototype = {
 	
 	getDefinition: function() {
 		return this.definition;
+	},
+	
+	getTitle: function() {
+		
+		return this.definition.title;
+	},
+	
+	setTitle: function(title) {
+		this.definition.title = title;
 	}
 };
 

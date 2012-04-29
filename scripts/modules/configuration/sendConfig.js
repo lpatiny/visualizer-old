@@ -2,15 +2,33 @@
 
 
 $(document).bind('configModule', function(event, module) {
-
 	$("#ci-right").html('');
-
+	buildGeneralConfig(module);
 	buildSendConfig(module);
 	buildReceiveConfig(module);
-
-	
 });
 
+
+function buildGeneralConfig(module) {
+	
+	var html = [];
+	html.push('<div><ul>');
+	
+	html.push('<li><label>Module name</label><input type="text" name="modulename" value="');
+	html.push(module.getTitle());
+	html.push('"></li>');
+	html.push('</ul></div>');
+	
+	var html = $(html.join(''));
+	
+	html.append(CI.SaveButton.clone(true).bind('click', function() {
+		module.setTitle($("input[name=modulename]").val());
+		Entry.save();
+	}).after('<div class="ci-spacer"></div>'));
+	
+	
+	$("#ci-right").append('<h3><span class="triangle-down"></span>General Configuration</h3>').append(html);
+}
 
 function buildSendConfig(module) {
 	
@@ -69,14 +87,13 @@ function buildSendConfig(module) {
 	var wrapper = $("<div />").addClass('ci-send');
 	var html = $("<ul />");
 	
-	if(currentCfg) {
-		for(var i = 0; i < currentCfg.length; i++) {
-			var line = cfg.clone(true);
-			fillLine(currentCfg[i], line);
-			html.append(line);
-		}
-	}
 	
+	for(var i = 0; currentCfg && i < currentCfg.length; i++) {
+		var line = cfg.clone(true);
+		fillLine(currentCfg[i], line);
+		html.append(line);
+	}
+
 	if(!currentCfg || currentCfg.length == 0) {
 		var line = cfg.clone(true);
 		html.append(line);
