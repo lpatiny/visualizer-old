@@ -81,7 +81,7 @@ function buildSendConfig(module) {
 		line.find('select._eventrel').val(currentCfg.rel);
 		line.find('select._eventrel').trigger('change');
 		line.find('input._eventvarname').val(currentCfg.name);
-		line.find('select._eventkeys').val(currentCfg.keys);
+		line.find('select._eventkeys').val(currentCfg.jpath);
 	}
 	
 	var wrapper = $("<div />").addClass('ci-send');
@@ -182,7 +182,7 @@ function buildReceiveConfig(module) {
 		
 		var vars = [];
 		$(".ci-receive").children('ul').children('li').each(function() {
-			vars.push({ name: $(this).find('._eventvarname').val(), rel: $(this).find('._eventrel') });
+			vars.push({ name: $(this).find('._eventvarname').val(), rel: $(this).find('._eventrel').val() });
 		});
 		
 		module.setSourceVars(vars);

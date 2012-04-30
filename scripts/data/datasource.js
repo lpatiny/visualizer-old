@@ -83,6 +83,10 @@ CI.DataSource.prototype = {
 		return this.data;
 	},
 	
+	forceSetData: function(data) {
+		this.data = data;
+	},
+	
 	getDataKeys: function() {
 		
 		if(typeof this.data != 'object')

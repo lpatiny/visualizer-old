@@ -113,6 +113,9 @@ window[_namespaces['table']].Tables.Table.prototype = {
 		
 		this.dom.children('tbody').on('mouseenter', 'tr', function() {
 			
+			if($(this).hasClass('ci-table-pagination'))
+				return;
+			
 			if(typeof inst.options.onLineHover == "function")
 				inst.options.onLineHover(inst.content.getElementById($(this).data('element-id')));
 		});
@@ -148,8 +151,10 @@ window[_namespaces['table']].Tables.Table.prototype = {
 	},
 	
 	commitContent: function() {
+		
 		this.body.html(this.content.build());
 		this.addPagination();
+		
 	},
 	
 	init: function(dom) {
@@ -185,12 +190,11 @@ window[_namespaces['table']].Tables.Table.prototype = {
 		
 		html.push('</td></tr>');
 		
-		var top = $(html.join('')).on('click', 'span', function() {
+		var bottom = $(html.join('')).on('click', 'span', function() {
 			
 			inst.setPage($(this).data('page'));
 		});
 		
-		var bottom = top.clone(true);
 		this.body/*.prepend(top).*/.append(bottom);
 	}
 }

@@ -87,14 +87,22 @@ CI.Types.getValueFromJPath = function(jPath, data, array, elId) {
 	}
 }
 
+CI.Types.jPathRegex = new RegExp('^((?:\\.|\\[|\]){0,2}([a-zA-Z0-9]*))');
 CI.Types._valueFromJPathAndJson = function(jPath, json) {
 
-
-	if(!new RegExp('^([a-zA-Z0-9]*((\.[a-zA-Z0-9])|(\[[0-9]+]))?)*$').test(jPath))
-		return;
+	var element = $.extend({}, json);
+	var regex = CI.Types.jPathRegex;
 	
+	var i = 0;
+	while((result = regex.exec(jPath))[2].length > 0) {
+		element = element[result[2]];
+		jPath = jPath.slice(result[1].length);		
+	}
+
 	try {
-		eval("var element = json." + jPath + ";");
+	//	eval("var element = json." + jPath + ";");
+		//var element ='sa';
+		return element;
 	} catch(e) { console.log(e); return null; }
 	
 	if(typeof element == "undefined")
@@ -185,6 +193,19 @@ CI.Types.image.prototype = {
 		return jpaths;
 	}
 }
+
+CI.Types.mf = {	
+	getjPath: function(jpaths) {
+		return jpaths;
+	}
+};
+
+
+CI.Types.mf = {	
+	getjPath: function(jpaths) {
+		return jpaths;
+	}
+};
 
 
 CI.Types.chemical = function(source, url) {

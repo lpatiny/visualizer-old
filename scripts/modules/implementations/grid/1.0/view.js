@@ -29,7 +29,7 @@ CI.Module.prototype._types.grid.View.prototype = {
 	},
 	
 	update: function() {
-
+		
 		var moduleValue;
 		var view = this;
 		
@@ -61,28 +61,33 @@ CI.Module.prototype._types.grid.View.prototype = {
 		
 		var Content = new CI.Tables.Content();
 		var elements = [];
+		console.time('wrap');
 		this.buildElement(this.list, elements, jpaths);
-		
+		console.timeEnd('wrap');
 		for(var i = 0, length = elements.length; i < length; i++)
 			Content.addElement(elements[i]);
 		
 		Table.setContent(Content);
 		Table.init(this.dom);
+		
+		
 	},
 	
 
 	buildElement: function(source, arrayToPush, jpaths) {
-		
+		var jpath;
 		for(var i = 0, length = source.length; i < length; i++) {
 			var element = {};
 			element.data = {};
 			for(var j in jpaths) {
-				var jpath = jpaths[j];
+				jpath = jpaths[j];
 				if(jpath.jpath)
 					jpath = jpath.jpath;
 					
 				element.data[j] = CI.dataType.toScreen(CI.Types.getValueFromJPath(jpath, source[i], element.data, j), this);
 			}
+			
+			
 			if(source[i].children) {
 				element.children  = [];
 				this.buildElement(source[i].children, element.children, jpaths);

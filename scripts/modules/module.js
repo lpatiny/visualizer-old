@@ -152,9 +152,9 @@ CI.Module.prototype = {
 	/**
 	 * Called to update the view (normally after a change of data)
 	 */
-	updateView: function() {
+	updateView: function(argument) {
 		if(typeof this.view.update == 'function')
-			return this.view.update();
+			return this.view.update(argument);
 			
 		throw "The module has no update capability";
 	},
@@ -227,6 +227,10 @@ CI.Module.prototype = {
 			if(this.definition.dataSource[i].rel == rel)
 				return this.model.data[this.definition.dataSource[i].name];
 		return;
+	},
+	
+	getData: function() {
+		return this.model.data;
 	},
 	
 	getDataRelFromName: function(name) {

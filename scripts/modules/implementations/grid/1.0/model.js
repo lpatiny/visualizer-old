@@ -42,7 +42,7 @@ CI.Module.prototype._types.grid.Model.prototype = {
 		
 		/* Here you can transform the data coming from the DAO */
 		this.dataValue[dataName] = this.data[dataName].getData();
-		console.log(this.dataValue);
+		
 		var jpath;
 		if(jpath = this.data[dataName].getjPath()) {
 			for(var i = 0; i < this.dataValue[dataName].length; i++) {

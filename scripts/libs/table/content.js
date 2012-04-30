@@ -114,7 +114,6 @@ window[_namespaces['table']].Tables.Content.prototype = {
 	
 	setPage: function(page) {
 		this.page = page;
-		
 	},
 	
 	setSearch: function(search) {
