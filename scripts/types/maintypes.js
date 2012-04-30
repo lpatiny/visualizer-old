@@ -95,6 +95,7 @@ CI.Types._valueFromJPathAndJson = function(jPath, json) {
 	
 	var i = 0;
 	while((result = regex.exec(jPath))[2].length > 0) {
+		if(!element)return;
 		element = element[result[2]];
 		jPath = jPath.slice(result[1].length);		
 	}
