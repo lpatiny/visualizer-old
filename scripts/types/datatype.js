@@ -3,6 +3,9 @@ CI.dataType = {
 	
 	getType: function(data) {
 		
+		if(data == undefined)
+			return;
+			
 		var type = typeof data;
 		
 		if(type == 'object') {
@@ -16,8 +19,11 @@ CI.dataType = {
 				return data.type;
 		}
 
-		if(type == "undefined")
+		if(type == "undefined") {
+			console.log(data);
 			throw {notify: true, display: false, message: "The type cannot be undefined"};
+				
+		}
 			
 		if(type == "function")
 			throw {notify: true, display: false, message: "The type cannot be a function"};
@@ -97,5 +103,9 @@ CI.dataType.implToScreen = {
 	
 	asObject: function(val) {
 		return '--object--';
+	},
+	
+	asMf: function(val) {
+		return val;
 	}
 }

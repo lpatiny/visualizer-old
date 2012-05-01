@@ -88,7 +88,7 @@ CI.Module.prototype._types.chemexper_exactmass.Model.prototype = {
 			
 			inst.dataValue[dataName] = data;
 			inst.data[dataName].forceSetData(data);
-			
+			CI.dataType.instanciate(data);
 			if(inst._callbacks) {
 				for(var k = 0; k < inst._callbacks.length; k++) {
 					inst._callbacks[k](data);

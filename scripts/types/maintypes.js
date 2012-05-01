@@ -3,9 +3,13 @@ CI.Types = {};
 
 CI.Types._getjPath = function(data, jpaths, ext) { // ext serves to fech a children. Don't use from outside this scope
 	var constructor = CI.Types[CI.dataType.getType(data)];
+	
+	if(!constructor)
+		return jpaths;
+		
 	if(typeof constructor == 'function') {
 		//var el = new constructor(data);
-		var el = data.instance;
+		var el = CI.Types.getInstance(data);
 		return el.getjPath(jpaths/*typeof ext !== "undefined" ? jpaths[ext] : jpaths*/);
 	} else {
 		
@@ -13,6 +17,12 @@ CI.Types._getjPath = function(data, jpaths, ext) { // ext serves to fech a child
 	}
 }
 
+CI.Types.getInstance = function(data) {
+	
+	if(!data.instance)
+		CI.dataType.instanciate(data);
+	return data.instance;
+}
 CI.Types._jPathToOptions = function(jpath) {
 	
 	var options = [];
@@ -93,14 +103,15 @@ CI.Types._valueFromJPathAndJson = function(jPath, json) {
 	var element = $.extend({}, json);
 	var regex = CI.Types.jPathRegex;
 	
-	var i = 0;
-	while((result = regex.exec(jPath))[2].length > 0) {
-		if(!element)return;
-		element = element[result[2]];
-		jPath = jPath.slice(result[1].length);		
-	}
-
 	try {
+		var i = 0;
+		while((result = regex.exec(jPath))[2].length > 0) {
+			if(!element) 
+				return;
+			element = element[result[2]];
+			jPath = jPath.slice(result[1].length);		
+		}
+	
 	//	eval("var element = json." + jPath + ";");
 		//var element ='sa';
 		return element;

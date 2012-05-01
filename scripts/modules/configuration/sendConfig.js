@@ -3,9 +3,34 @@
 
 $(document).bind('configModule', function(event, module) {
 	$("#ci-right").html('');
-	buildGeneralConfig(module);
-	buildSendConfig(module);
-	buildReceiveConfig(module);
+	
+	try {
+		buildGeneralConfig(module);	
+	} catch(e) {
+		console.log(e);
+		//CI.ErrorHandler.handle(e)
+	}
+	
+	
+	
+	try {
+		buildSendConfig(module);	
+	} catch(e) {
+		console.log(e);
+		//CI.ErrorHandler.handle(e)
+	}
+	
+	
+	
+	try {
+		buildReceiveConfig(module);	
+	} catch(e) {
+		console.log(e);
+		//CI.ErrorHandler.handle(e)
+	}
+	
+	
+	
 });
 
 
