@@ -209,12 +209,6 @@ CI.Types.image.prototype = {
 CI.Types.gif = {};
 CI.Types.gif.prototype = new CI.Types.image();
 
-CI.Types.mf = {	
-	getjPath: function(jpaths) {
-		return jpaths;
-	}
-};
-
 
 CI.Types.mf = {	
 	getjPath: function(jpaths) {
@@ -276,7 +270,7 @@ CI.Types.chemical.prototype = {
 	},
 	
 	getMF: function() {
-		return this.valueFromjPath('mf[0].value');
+		return this.valueFromjPath('mf[0].value.value');
 	},
 	
 	getDensity: function() {
@@ -284,7 +278,7 @@ CI.Types.chemical.prototype = {
 	},
 	
 	getImageUrl: function() {
-		return this.valueFromjPath('mol[0].url');
+		return this.valueFromjPath('mol[0].gif.url');
 	},
 	
 	doCallbacks: function() {

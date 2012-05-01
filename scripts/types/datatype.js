@@ -108,6 +108,7 @@ CI.dataType.implToScreen = {
 	},
 	
 	asMf: function(val) {
+		console.log(val);
 		return val;
 	}
 }
