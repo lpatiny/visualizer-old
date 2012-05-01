@@ -51,6 +51,7 @@ CI.Module.prototype._types.display_chemical.View.prototype = {
 	typeToScreen: {
 		
 		asChemical: function(data) {
+			
 			return $('<div class="ci-displaylist-list">').each(function(i) {
 					var div = $(this);
 					

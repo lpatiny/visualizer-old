@@ -35,13 +35,15 @@ CI.dataType = {
 	instanciate: function(data) {
 	
 		var type = CI.dataType.getType(data);
-		
+		if(!CI.Types[type]) {
+			return;
+		}
 		if(!(typeof CI.Types[type] == "function"))
 			if(typeof CI.Types[type].instanciate == "function")
 				return CI.Types[type].instanciate(data);
 			else
 				return;
-				
+			
 		return data.instance = new CI.Types[type](data.value, data.url);		
 	},
 	

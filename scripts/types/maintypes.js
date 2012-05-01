@@ -206,6 +206,9 @@ CI.Types.image.prototype = {
 	}
 }
 
+CI.Types.gif = {};
+CI.Types.gif.prototype = new CI.Types.image();
+
 CI.Types.mf = {	
 	getjPath: function(jpaths) {
 		return jpaths;
@@ -216,7 +219,11 @@ CI.Types.mf = {
 CI.Types.mf = {	
 	getjPath: function(jpaths) {
 		return jpaths;
-	}
+	},
+	
+	instanciate: function(data) {
+		
+	},
 };
 
 
@@ -225,7 +232,7 @@ CI.Types.chemical = function(source, url) {
 	this.url = url;
 	this.loaded = true;
 	this.callbacks = [];
-	
+	CI.dataType.instanciate(source);
 	this.jsonLoader = new CI.Util.JsonLoader(url, this);
 }
 
@@ -261,23 +268,23 @@ CI.Types.chemical.prototype = {
 	},
 	
 	getIUPAC: function(fct, pos) {
-		return this.valueFromjPath('entry.iupac[0].value');
+		return this.valueFromjPath('iupac[0].value');
 	},
 	
 	getMW: function(fct) {
-		return this.valueFromjPath('entry.mf.mw');	
+		return this.valueFromjPath('mf.mw');	
 	},
 	
 	getMF: function() {
-		return this.valueFromjPath('entry.mf.value');
+		return this.valueFromjPath('mf.value');
 	},
 	
 	getDensity: function() {
-		return this.valueFromjPath('entry.density.low');
+		return this.valueFromjPath('density.low');
 	},
 	
 	getImageUrl: function() {
-		return this.valueFromjPath('entry.mol.url');
+		return this.valueFromjPath('mol.url');
 	},
 	
 	doCallbacks: function() {
@@ -308,3 +315,16 @@ CI.Types.matrix.prototype = {
 		return CI.Types._valueFromJPathAndJson(jPath, this.source);	
 	}
 }
+
+CI.Types.molfile2D = {
+	
+	
+}
+
+
+CI.Types.molfile3D = {
+	
+	
+}
+
+
