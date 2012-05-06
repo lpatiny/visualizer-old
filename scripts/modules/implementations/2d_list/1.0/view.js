@@ -59,12 +59,12 @@ CI.Module.prototype._types['2d_list'].View.prototype = {
 			html += '>';
 			html += CI.dataType.toScreen(CI.Types.getValueFromJPath(valJpath, this.list[i], this.list, i, this), this);
 			html += '</td>';
-			if(colId == 4)
+			if(colId == cols)
 				html += '</tr>';
 		}
 		
-		if(i % 4 != 0) {
-			while(i % 4 != 0) {
+		if(i % cols != 0) {
+			while(i % cols != 0) {
 				html += '<td></td>';
 				i++;
 			}
