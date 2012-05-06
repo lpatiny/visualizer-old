@@ -7,7 +7,8 @@ _namespaces = {
 	table: 'CI',
 	lang: 'CI',
 	util: 'CI',
-	visualizer: 'CI'
+	visualizer: 'CI',
+	buttons: 'CI'
 };
 
 CI = new Object();
@@ -26,8 +27,9 @@ CI = new Object();
 		window.Entry = new CI.EntryPoint(_structure, _data, {}, function() {
 			$(dom).unmask();
 			
-			CI.Visualizer.left.init();
-			CI.Visualizer.right.init();
+			CI.ConfigVisualizer();
+			
+			
 		});
 	});
 }) (jQuery);

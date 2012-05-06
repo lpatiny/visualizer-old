@@ -12,7 +12,8 @@ CI.Types._getjPath = function(data, jpaths, ext) { // ext serves to fech a child
 		var el = CI.Types.getInstance(data);
 		return el.getjPath(jpaths/*typeof ext !== "undefined" ? jpaths[ext] : jpaths*/);
 	} else {
-		
+		if(!constructor.getjPath)
+			console.log(CI.dataType.getType(data));
 		return constructor.getjPath(data, jpaths/*typeof ext !== "undefined" ? jpaths[ext] : jpaths, data*/);
 	}
 }
@@ -25,16 +26,24 @@ CI.Types.getInstance = function(data) {
 }
 CI.Types._jPathToOptions = function(jpath) {
 	
+	
 	var options = [];
 	
-	function addOption(str, val, lvl) {
-		var padding = lvl * 10;
-		options.push(['<option style="padding-left:', padding, 'px" value="', str, '">', val, '</option>'].join(''));
+	function addOption(str, val, options) {
+		
+		var newOptions = [];
+		options.push({
+			title: val,
+			key: str,
+			children: newOptions
+		});
+		
+		return newOptions;
 	}
 	
-	addOption("", "Do not specify", 0);
+	addOption("", "Full object", options);
 	
-	var fracjPath = function(jpath, base, lvl) {
+	var fracjPath = function(jpath, base, options) {
 		
 		var val;
 		
@@ -50,8 +59,8 @@ CI.Types._jPathToOptions = function(jpath) {
 					str = base + (base.length > 0 ? "." : '') + val;
 				}
 				
-				addOption(str, val, lvl);
-				fracjPath(jpath[i], str, lvl+1);
+				var options2 = addOption(str, val, options);
+				fracjPath(jpath[i], str, options2);
 			}
 		
 		//} else if(typeof jpath == 'object') {
@@ -69,14 +78,14 @@ CI.Types._jPathToOptions = function(jpath) {
 		} else if(typeof jpath != "boolean"){
 			str = base + jpath;
 			val = jpath;
-			addOption(str, val, lvl);
+			addOption(str, val, options);
 		}
 			
 	}
 	
-	fracjPath(jpath, "", 0);
+	fracjPath(jpath, "", options);
 	
-	return options.join('');
+	return options;
 }
 
 
@@ -91,7 +100,6 @@ CI.Types.getValueFromJPath = function(jPath, data, array, elId) {
 		return data.instance.valueFromjPath(jPath, array, elId);
 	else {
 		var constructor = CI.Types[CI.dataType.getType(data)];
-		
 		if(typeof constructor['valueFromjPath'] == "function")
 			return constructor.valueFromjPath(jPath, data, array, elId);
 	}
@@ -172,6 +180,7 @@ CI.Types.array = {
 	},
 	
 	instanciate: function(data) {
+		var data = CI.Util.getValue(data);
 		for(var i = 0; i < data.length; i++)
 			CI.dataType.instanciate(data[i]);
 	}
@@ -206,7 +215,9 @@ CI.Types.image.prototype = {
 	}
 }
 
-CI.Types.gif = {};
+CI.Types.gif = function(source) {
+	
+};
 CI.Types.gif.prototype = new CI.Types.image();
 
 
@@ -254,7 +265,8 @@ CI.Types.chemical.prototype = {
 	},
 	
 	valueFromjPath: function(jPath, array, elId) {
-		
+		console.log(jPath);
+		console.log(this.source);
 		if(!this.loaded)
 			return CI.Types.addCallbackLoader(jPath, this, array, elId);
 			
@@ -312,6 +324,9 @@ CI.Types.matrix.prototype = {
 
 CI.Types.molfile2D = {
 	
+	getjPath: function(jpaths) {
+		return jpaths;
+	}
 	
 }
 
@@ -319,6 +334,9 @@ CI.Types.molfile2D = {
 CI.Types.molfile3D = {
 	
 	
+	getjPath: function(jpaths) {
+		return jpaths;
+	}
 }
 
 

@@ -108,7 +108,20 @@ CI.dataType.implToScreen = {
 	},
 	
 	asMf: function(val) {
-		console.log(val);
 		return val;
+	},
+	
+	asMol2D: function(val) {
+		
+		// Load here chemdoodle
+		
+		
+	},
+	
+	asMol3D: function(val) {
+		
+		// Load here chemdoodle
+		
 	}
+	
 }

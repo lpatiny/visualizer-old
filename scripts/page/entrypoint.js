@@ -20,7 +20,14 @@ CI.EntryPoint = function(structure, data, options, onLoad) {
 		CI.Grid.init(structure.grid);
 		
 		entryPoint.structure = structure;
-		entryPoint.entryData = structure.entryPoint; 
+		
+		if(!structure.entryPoint) 
+			structure.entryPoint = { variables: {} };
+		
+		if(!structure.modules)
+			structure.modules = [];
+			
+		entryPoint.entryData = structure.entryPoint;
 		
 		if(structure.modules !== undefined)
 			for(var i = 0; i < structure.modules.length; i++) {
@@ -80,34 +87,43 @@ CI.EntryPoint = function(structure, data, options, onLoad) {
 
 CI.EntryPoint.prototype = {
 
-	loaded: function(data) {
+	loaded: function(data, doNotCallback) {
 		
 		this.data = data;
+		console.log(this.entryData);
+		if(this.entryData && this.entryData.variables) {
 		
-		var vars = this.entryData.variables;
-		if(!vars)
-			return;
-		
-		for(var i in this.data) {
-			CI.dataType.instanciate(this.data[i]);
-			for(var j = 0; j < vars.length; j++)
-				if(vars[j].sourcename == i) {
-					
-					CI.API.setSharedVar(vars[j].varname, CI.Types.getValueFromJPath(vars[j].jpath, this.data[i]), true);
-				}
+			var vars = this.entryData.variables;
+			if(!vars)
+				return;
+			
+			for(var i in this.data) {
+				CI.dataType.instanciate(this.data[i]);
+				for(var j = 0; j < vars.length; j++)
+					if(vars[j].sourcename == i) {
+						
+						CI.API.setSharedVar(vars[j].varname, CI.Types.getValueFromJPath(vars[j].jpath, this.data[i]), true);
+					}
+			}
 		}
 		
+		if(doNotCallback)
+			return;
+			
 		if(typeof this.onLoad == 'function')
 			this.onLoad(this, this.data);
 	},
 	
 	getEntryDataVariables: function() {
+		
+		
 		return this.entryData.variables;		
 		
 	},
 	
 	setEntryDataVariables: function(vars) {
 		this.entryData.variables = vars;
+		this.loaded(this.data, false);
 	},
 	
 	save: function() {

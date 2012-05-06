@@ -1,0 +1,112 @@
+
+
+
+if(!BI.Forms.Fields.Table)
+	BI.Forms.Fields.Table = {};
+	
+
+BI.Forms.Fields.Table.Combo = function(main) {
+
+	this.main = main;
+	this.treeLoaded = false;
+	this.divs = [];
+	
+	this.optionsIndexed = [];
+	this.options;
+	
+	this._loadedCallback = [];
+}
+
+BI.Forms.Fields.Table.Combo.prototype = new BI.Forms.Fields.Combo();
+
+
+
+BI.Forms.Fields.Table.Combo.prototype.buildHtml = function() {
+
+}
+
+
+BI.Forms.Fields.Table.Combo.prototype.initHtml = function() {
+
+	var field = this;
+	if(typeof this.options != "undefined")
+		this.loadTree();
+};
+
+
+BI.Forms.Fields.Table.Combo.prototype.setText = function(index, text) {
+		this.main.fieldContainer.children().eq(index).html(text);
+};
+	
+
+BI.Forms.Fields.Table.Combo.prototype.setText = function(index, value) {
+	
+	this.divs[index].html(value);
+//	this.main.changeValue(index, value);
+}
+
+
+
+BI.Forms.Fields.Table.Combo.prototype.setValue = function(index, value) {
+	var index2 = index;
+	var field = this;
+	
+	this._loadedCallback.push(function() {
+		field.currentIndex = index2;
+		var tree, node;
+		tree = field.main.domExpander.children().dynatree("getTree");
+		
+		if(tree.getNodeByKey && (node = tree.getNodeByKey(value))) {
+			node.activate();
+			node.deactivate();
+		}
+	});
+	
+	this.doValCallback();
+	
+	
+}
+	
+BI.Forms.Fields.Table.Combo.prototype.addField = function(position) {
+	
+	
+	this._loadedCallback = [];
+	
+	var inst = this;
+	var div = $("<div></div>").bind('click', function(event) {
+		event.stopPropagation();
+		var position = $(this).parent().parent().index();
+		
+		inst.currentIndex = position;
+		inst.main.toggleExpander(position);
+	});
+	
+	this.divs.splice(position, 0, div)
+	return { field: div, html: div, index: position };
+}
+
+BI.Forms.Fields.Table.Combo.prototype.removeField = function(position) {
+	this.divs.splice(position, 1)[0].remove();
+}
+
+BI.Forms.Fields.Table.Combo.prototype.startEditing = function(position) {
+/*	this.divs[position].hide().after(this.input.val(this.main.getValue(position)));
+	this.input.focus();*/
+};
+
+BI.Forms.Fields.Table.Combo.prototype.stopEditing = function(position) {
+/*	this.divs[position].show().html(this.input.val());
+	this.input.remove();*/
+	//this.main.changeValue(position, this.input.val());
+	
+	this.main.hideExpander();
+}
+
+
+BI.Forms.Fields.Table.Combo.prototype.expanderShowed = function(index) {
+	
+	if(this.optionsIndexed[index] !== undefined) {
+		this.loadTree(index);
+	}
+	
+}

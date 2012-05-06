@@ -2,32 +2,188 @@
 
 
 $(document).bind('configModule', function(event, module) {
-	$("#ci-right").html('');
 	
-	try {
-		buildGeneralConfig(module);	
-	} catch(e) {
-		console.log(e);
-		//CI.ErrorHandler.handle(e)
-	}
+	$.fancybox('<div id="cfgModule"></div>', { autoSize: false, width: 700, height: 1000 });
 	
+	$("#cfgModule").biForm({}, function() {
+		
+		var inst = this;
+		
+		// General configuration	
+		var section = new BI.Forms.Section('general', { multiple: false });
+		this.addSection(section);
+		section.setTitle(new CI.Title('General Configuration'));
+		
+		var groupfield = new BI.Forms.GroupFields.List('general');
+		section.addFieldGroup(groupfield);
+		
+		var field = groupfield.addField({
+			type: 'Text',
+			name: 'moduletitle'
+		});
+		field.setTitle(new CI.Title('Module title'));
+		
+		
+		
+		// Self configuration
+		var section = new BI.Forms.Section('module', { multiple: false });
+		section.setTitle(new CI.Title('Module Configuration'));
+		this.addSection(section);
+		
+		if(typeof module.controller.doConfiguration == "function")
+			module.controller.doConfiguration(section);
+				
+		// Send configuration
+		
+		
+		var availCfg = module.controller.getConfigurationSend();
+		
+		var sendjpaths = [];
+		for(var i in availCfg.rels)
+			sendjpaths[i] = CI.Types._jPathToOptions(module.model.getjPath(i));
+			
+		var allEvents = [];
+		for(var i in availCfg.events)
+			allEvents.push({title: availCfg.events[i].label, key: i});
+		
+		var allRels = [];
+		for(var i in availCfg.rels)
+			allRels.push({ title: availCfg.rels[i].label, key: i})
 	
+		var section = new BI.Forms.Section('send', { multiple: false });
+		this.addSection(section);
+		section.setTitle(new CI.Title('Variables sent'));
+		
+		var groupfield = new BI.Forms.GroupFields.Table('sentvars');
+		section.addFieldGroup(groupfield);
+		
+		var field = groupfield.addField({
+			type: 'Combo',
+			name: 'event'
+		});
+		field.implementation.setOptions(allEvents);
+		field.setTitle(new CI.Title('Event'));
+		
+		var field = groupfield.addField({
+			type: 'Combo',
+			name: 'rel'
+		});
+		field.implementation.setOptions(allRels);
+		field.onChange(function(index) {
+			var value = this.getValue(index);
+			this.group.getField('jpath').implementation.setOptions(sendjpaths[value], index);
+		});
+		
+		
+		field.setTitle(new CI.Title('Internal reference'));
+		
+		var field = groupfield.addField({
+			type: 'Combo',
+			name: 'jpath'
+		});
+		field.setTitle(new CI.Title('jPath'));
+		
+		var field = groupfield.addField({
+			type: 'Text',
+			name: 'name'
+		});
+		field.setTitle(new CI.Title('Variable to store in'));
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		// Receive configuration
+		var availCfg = module.controller.getConfigurationReceive();
+		
+		var allRels = [];
+		for(var i in availCfg)
+			allRels.push({ key: i, title: availCfg[i].label });
+		
+		
+		var section = new BI.Forms.Section('receive', { multiple: false });
+		this.addSection(section);
+		section.setTitle(new CI.Title('Variables received'));
+		
+		var groupfield = new BI.Forms.GroupFields.Table('receivedvars');
+		section.addFieldGroup(groupfield);
+		
+		
+		var field = groupfield.addField({
+			type: 'Combo',
+			name: 'rel'
+		});
+		field.implementation.setOptions(allRels);
+		field.setTitle(new CI.Title('Internal reference'));
+		
+		
+		var field = groupfield.addField({
+			type: 'Text',
+			name: 'name'
+		});
+		field.setTitle(new CI.Title('Stored in variable'));
+		
+		
+		var save = new CI.Buttons.Button('Save', function() {
+			var value = inst.getValue();
+			
+			module.setTitle(value.general[0].general[0].moduletitle[0]);
+			module.setSendVars(value.send[0].sentvars[0]);
+			module.setSourceVars(value.receive[0].receivedvars[0]);
+			
+			module.controller.doSaveConfiguration(value.module);
+			
+			Entry.save();
+		});
+		
+		
+		save.setColor('blue');
+		this.addButtonZone().addButton(save);
+		
+		
+			
+	}, function() {
+		
+		var sentVars = { event: [], rel: [], jpath: [], name: []};
+		var currentCfg = module.definition.dataSend;
+		
+		if(currentCfg) {
+			for(var i = 0; i < currentCfg.length; i++) {
+				sentVars.event.push(currentCfg[i].event);
+				sentVars.rel.push(currentCfg[i].rel);
+				sentVars.jpath.push(currentCfg[i].jpath);
+				sentVars.name.push(currentCfg[i].name);
+			}
+		}
+		
+		
+		var receivedVars = { rel: [], name: []};
+		var currentCfg = module.definition.dataSource;
+		if(currentCfg) {
+			for(var i = 0; i < currentCfg.length; i++) {
+				receivedVars.rel.push(currentCfg[i].rel);
+				receivedVars.name.push(currentCfg[i].name);
+			}
+		}
+		
+		var fill = {
+			sections: {
+				general: [ { groups: { general: [{ moduletitle: [module.getTitle()] }] } } ],
+				send: [ { groups: {sentvars: [sentVars]}} ],
+				receive: [ { groups: {receivedvars: [receivedVars]}} ]
+			}
+		}
+		this.fillJson(fill);
+		
+		
+		CI.API.resendAllVars();
+		module.updateView();
+	});
 	
-	try {
-		buildSendConfig(module);	
-	} catch(e) {
-		console.log(e);
-		//CI.ErrorHandler.handle(e)
-	}
-	
-	
-	
-	try {
-		buildReceiveConfig(module);	
-	} catch(e) {
-		console.log(e);
-		//CI.ErrorHandler.handle(e)
-	}
 	
 	
 	

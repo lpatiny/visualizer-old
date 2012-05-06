@@ -1,13 +1,6 @@
+CI.ConfigVisualizer = function() {
 
-CI.Visualizer = {};
-
-CI.Visualizer.left = {};
-
-CI.Visualizer.left.init = function() {
-		
 	var allSharedVars = [];
-	
-	
 	var vars = Entry.getEntryDataVariables();
 	
 	for(var i = 0; i < vars.length; i++) {
@@ -51,7 +44,18 @@ CI.Visualizer.left.init = function() {
 		
 	var html = [];
 	
-	html.push('<h3><span class="triangle-down"></span>Entry point</h3><div id="ci-entrypoint-cfg">');
+	html.push('<h3><span class="triangle-down"></span>Entry point</h3>');
+	
+	var btn = new CI.Buttons.Button('Configure entry point', function() {
+		configureEntryPoint();
+	});
+	
+	var btnzone = new CI.Buttons.Zone();
+	btnzone.addButton(btn);
+	
+	html.push(btnzone.render());
+	
+	
 	html.push('</div><h3><span class="triangle-down"></span>Shared variables</h3><div>');
 	for(var i in allSharedVars) {
 		html.push('<li>');
@@ -109,7 +113,7 @@ CI.Visualizer.left.init = function() {
 	
 	$("#ci-left").html(html.join(''));
 	
-	
+	/*
 	(function() {
 	
 		var vars = Entry.getEntryDataVariables();
@@ -165,6 +169,14 @@ CI.Visualizer.left.init = function() {
 		})).next().after('<div class="ci-spacer"></div>');
 	})();
 	
+	*/
+	
+	
+	$("#ci-entrypoint-cfg").bind('click', function() {
+		configureEntryPoint();
+	});
+	
+	
 	
 	$("#ci-left").next().bind('click', function() {
 		$("#ci-left").toggle();	
@@ -197,20 +209,108 @@ CI.Visualizer.left.init = function() {
 		h3.next().toggle();
 		h3.children('span').toggleClass('triangle-down triangle-right');
 	});
+	
+	
+	
+	
+	
+	function configureEntryPoint() {
+		
+		$.fancybox($("<div />").attr('id', 'formEntryPoint'), { width: 700, height: 500, autoSize: false });
+		
+		$("#formEntryPoint").biForm({}, function() {
+			
+			var inst = this;			
+			var section = new BI.Forms.Section('cfg', { multiple: false });
+			this.addSection(section);
+			var title = new CI.Title();
+			title.setLabel('Entry variables');
+			section.setTitle(title);
+			
+			var groupfield = new BI.Forms.GroupFields.Table('tablevars');
+			section.addFieldGroup(groupfield);
+			
+			var field = groupfield.addField({
+				type: 'Text',
+				name: 'varname'
+			});
+			field.setTitle(new CI.Title('Variable name'));
+			
+			var options = [];
+			var data = Entry.getDataFromSource();
+			for(var i in data)
+				options.push({title: i, key: i});	
+			var field = groupfield.addField({
+				type: 'Combo',
+				name: 'sourcename'
+			});
+			field.setTitle(new CI.Title('Source name'));
+			field.implementation.setOptions(options);
+			field.onChange(function(index) {
+				var fieldIndex = index;
+				var value = this.getValue(fieldIndex);
+				
+				var data = Entry.getDataFromSource(value);
+				var jpath = {};
+				CI.Types._getjPath(data, jpath);
+				
+				var field = this.group.getField('jpath')
+				
+				
+				this.group.getField('jpath').implementation.setOptions(CI.Types._jPathToOptions(jpath), index);
+			});
+			
+			var field = groupfield.addField({
+				type: 'Combo',
+				name: 'jpath'
+			});
+			field.setTitle(new CI.Title('JPath'));
+			
+			
+		
+			var save = new CI.Buttons.Button('Save', function() {
+				var value = inst.getValue();
+				var data = value.cfg[0].tablevars[0];
+				Entry.setEntryDataVariables(data);
+				Entry.save();
+			});
+			
+			
+			save.setColor('blue');
+			this.addButtonZone().addButton(save);
+			
+		}, function() {
+			
+			
+			var vars = { varname: [], jpath: [], sourcename: [] };
+			var entryVars = Entry.getEntryDataVariables();
+			
+			for(var i = 0; i < entryVars.length; i++) {
+				vars.varname.push(entryVars[i].varname);
+				vars.sourcename.push(entryVars[i].sourcename);
+				vars.jpath.push(entryVars[i].jpath);
+				
+			}
+				
+			var fill = { 
+				sections: {
+					cfg: [
+						{
+							groups: {
+								tablevars: [vars]
+							}
+						}
+					]
+				}
+			};
+			
+			this.fillJson(fill);
+			
+		
+			
+		});
+	}
+
 }
 
-
-CI.Visualizer.right = {};
-CI.Visualizer.right.init = function() {
-	
-	$("#ci-right").prev().bind('click', function() {
-		$("#ci-right").toggle();	
-	});	
-	
-	$("#ci-right").on('click', 'h3', function() {
-		var h3 = $(this);
-		h3.next().toggle();
-		h3.children('span').toggleClass('triangle-down triangle-right');
-	});
-}	
 
