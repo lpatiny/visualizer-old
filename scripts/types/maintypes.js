@@ -90,18 +90,18 @@ CI.Types._jPathToOptions = function(jpath) {
 
 
 
-CI.Types.getValueFromJPath = function(jPath, data, array, elId) {
+CI.Types.getValueFromJPath = function(jPath, data, array, elId, view) {
 	
 	
 	if(jPath == null || (jPath + "").length == 0)
 		return data;
 		
 	if(data.instance && typeof data.instance['valueFromjPath'] == "function")
-		return data.instance.valueFromjPath(jPath, array, elId);
+		return data.instance.valueFromjPath(jPath, array, elId, view);
 	else {
 		var constructor = CI.Types[CI.dataType.getType(data)];
 		if(typeof constructor['valueFromjPath'] == "function")
-			return constructor.valueFromjPath(jPath, data, array, elId);
+			return constructor.valueFromjPath(jPath, data, array, elId, view);
 	}
 }
 
@@ -122,6 +122,8 @@ CI.Types._valueFromJPathAndJson = function(jPath, json) {
 	
 	//	eval("var element = json." + jPath + ";");
 		//var element ='sa';
+		
+		
 		return element;
 	} catch(e) { console.log(e); return null; }
 	
@@ -242,7 +244,7 @@ CI.Types.chemical = function(source, url) {
 }
 
 CI.Types.lastIdCallback = 0;
-CI.Types.addCallbackLoader = function(path, object, array, elId) {
+CI.Types.addCallbackLoader = function(path, object, array, elId, view) {
 	var id = ++CI.Types.lastIdCallback;
 	
 	object.callbacks.push(function() {
@@ -252,11 +254,24 @@ CI.Types.addCallbackLoader = function(path, object, array, elId) {
 		if(array && elId) {
 			array[elId] = val;
 		}
-		$('#callback-load-' + id).html(val);
+		$(document).trigger('checkAsyncLoad', [ $('#callback-load-' + id).html(CI.dataType.toScreen(val, view)) ]);
 	});
+	
+	
 	return '<span id="callback-load-' + id + '"></span>';
 }
 
+
+$(document).bind('checkAsyncLoad', function(event, dom) {
+console.log("here");
+console.log(dom);
+	$(dom).find('.load-async').each(function() {
+		var loadType = $(this).data('async-type');
+		var fct = CI.dataType.asyncLoading[loadType];
+		if(typeof fct == "function")
+			fct($(this));
+	});
+});
 
 CI.Types.chemical.prototype = {
 	
@@ -264,13 +279,11 @@ CI.Types.chemical.prototype = {
 		return CI.Types.jPathFromJson(this.source, jpaths, "");
 	},
 	
-	valueFromjPath: function(jPath, array, elId) {
-		console.log(jPath);
-		console.log(this.source);
+	valueFromjPath: function(jPath, array, elId, view) {
+		
 		if(!this.loaded)
-			return CI.Types.addCallbackLoader(jPath, this, array, elId);
-			
-		return CI.Types._valueFromJPathAndJson(jPath, this.source)	
+			return CI.Types.addCallbackLoader(jPath, this, array, elId, view);
+		return CI.Types._valueFromJPathAndJson(jPath, this.source);	
 	},
 	
 	getIUPAC: function(fct, pos) {

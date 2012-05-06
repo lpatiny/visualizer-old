@@ -20,7 +20,7 @@ CI.dataType = {
 		}
 
 		if(type == "undefined") {
-			console.log(data);
+			
 			throw {notify: true, display: false, message: "The type cannot be undefined"};
 				
 		}
@@ -48,6 +48,7 @@ CI.dataType = {
 	},
 	
 	toScreen: function(val, view) {
+		
 		var repoFuncs = typeof view.typeToScreen == 'object' ? view.typeToScreen : {}; 
 		return CI.dataType.typeToScreen(val, repoFuncs);	
 	},
@@ -59,7 +60,6 @@ CI.dataType = {
 			return;
 		
 		var type = CI.dataType.getType(value);
-		
 		var toFunc = value;
 /*		if(typeof value.type !== "undefined")
 			toFunc = typeof value.url != "undefined" ? value.url : value.value;
@@ -76,6 +76,7 @@ CI.dataType = {
 	}
 }
 
+CI.dataType._mol2did = 0;
 
 CI.dataType.implToScreen = {
 	
@@ -111,17 +112,39 @@ CI.dataType.implToScreen = {
 		return val;
 	},
 	
-	asMol2D: function(val) {
-		
-		// Load here chemdoodle
-		
-		
+	asMolfile2D: function(val) {
+		return '<canvas class="load-async" data-async-type="molfile2D" data-value="' + escape(val.value) + '"></canvas>';
 	},
 	
 	asMol3D: function(val) {
 		
 		// Load here chemdoodle
 		
+	}
+	
+}
+
+CI.dataType.asyncLoading = {
+	
+	
+	molfile2D: function(dom) {
+		
+		
+		var mol = unescape(dom.data('value'));
+		console.log(mol);
+		dom.attr('id', 'mol2d_' + (++CI.dataType._mol2did));
+		
+		var canvas = new ChemDoodle.ViewerCanvas('mol2d_' + (CI.dataType._mol2did), 100, 100);
+		canvas.specs.bonds_width_2D = .6;
+		canvas.specs.bonds_saturationWidth_2D = .18;
+		canvas.specs.bonds_hashSpacing_2D = 2.5;
+		canvas.specs.atoms_font_size_2D = 10;
+		canvas.specs.atoms_font_families_2D = ['Helvetica', 'Arial', 'sans-serif'];
+		canvas.specs.atoms_displayTerminalCarbonLabels_2D = true;
+		
+		var molLoaded = ChemDoodle.readMOL(mol);
+		molLoaded.scaleToAverageBondLength(14.4);
+		canvas.loadMolecule(molLoaded);
 	}
 	
 }

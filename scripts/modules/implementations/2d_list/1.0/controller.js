@@ -108,11 +108,29 @@ CI.Module.prototype._types['2d_list'].Controller.prototype = {
 			type: 'Combo',
 			name: 'colorjPath'
 		});
+		options.unshift({ title: 'None', key: 'none'});
 		field.implementation.setOptions(options);
 		field.setTitle(new CI.Title('Color jPath'));
 		
 		return true;
 	},
+	
+	doFillConfiguration: function() {
+		
+		var valJpath = this.module.getConfiguration().valjpath || "";
+		var colorJpath = this.module.getConfiguration().colorjpath || "none";
+		var cols = this.module.getConfiguration().colnumber || 4;
+		
+		return {
+			module: [{
+				colnumber: [cols],
+				valjPath: [valJpath],
+				colorjPath: [colorJpath]
+			}]
+		}
+		
+	},
+	
 	
 	doSaveConfiguration: function(confSection) {
 		

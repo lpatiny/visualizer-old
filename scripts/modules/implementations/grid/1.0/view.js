@@ -61,9 +61,7 @@ CI.Module.prototype._types.grid.View.prototype = {
 		
 		var Content = new CI.Tables.Content();
 		var elements = [];
-		console.time('wrap');
 		this.buildElement(this.list, elements, jpaths);
-		console.timeEnd('wrap');
 		for(var i = 0, length = elements.length; i < length; i++)
 			Content.addElement(elements[i]);
 		

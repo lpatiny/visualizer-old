@@ -11,6 +11,8 @@ BI.Forms.Fields.List.Combo = function(main) {
 	
 	this.optionsIndexed = [];
 	this.options;
+	
+	this._loadedCallback = [];
 }
 
 BI.Forms.Fields.List.Combo.prototype = new BI.Forms.Fields.Combo();
@@ -52,11 +54,24 @@ $.extend(BI.Forms.Fields.List.Combo.prototype, {
 		this.main.fields[index].field.html(text);
 	},
 	
-	setValue: function(value) {
-		dom.children('input').val(value);
-		this.main.valueChanged(value);
+	setValue: function(index, value) {
+		var index2 = index;
+		var field = this;
+		
+		this._loadedCallback.push(function() {
+			field.currentIndex = index2;
+			var tree, node;
+			tree = field.main.domExpander.children().dynatree("getTree");
+			
+			if(tree.getNodeByKey && (node = tree.getNodeByKey(value))) {
+				node.activate();
+				node.deactivate();
+			}
+		});
+		
+		this.doValCallback();
 	},
-	
+
 	addField: BI.Forms.FieldGeneric.addField,
 	removeField: BI.Forms.FieldGeneric.removeField	
 });

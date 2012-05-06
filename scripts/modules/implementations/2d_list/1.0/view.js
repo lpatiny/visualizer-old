@@ -46,12 +46,12 @@ CI.Module.prototype._types['2d_list'].View.prototype = {
 		var html = '<table cellpadding="3" cellspacing="0">';
 		for(var i = 0; i < this.list.length; i++) {
 			colId = i % cols;
-			if(colId == '1')
+			if(colId == 0)
 				html += '<tr>';
 			html += '<td>';
-			html += CI.dataType.toScreen(CI.Types.getValueFromJPath(valJpath, this.list[i], this.list, i), this);
+			html += CI.dataType.toScreen(CI.Types.getValueFromJPath(valJpath, this.list[i], this.list, i, this), this);
 			html += '</td>';
-			if(colId == '4')
+			if(colId == 4)
 				html += '</tr>';
 		}
 		
@@ -63,8 +63,9 @@ CI.Module.prototype._types['2d_list'].View.prototype = {
 			html += '</tr>';
 		}
 		html += '</table>';
-		
 		this.dom.html(html);
+		
+		$(document).trigger('checkAsyncLoad', [ this.dom ]);
 	},
 	
 

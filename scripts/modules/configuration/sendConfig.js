@@ -130,13 +130,10 @@ $(document).bind('configModule', function(event, module) {
 		
 		var save = new CI.Buttons.Button('Save', function() {
 			var value = inst.getValue();
-			
 			module.setTitle(value.general[0].general[0].moduletitle[0]);
 			module.setSendVars(value.send[0].sentvars[0]);
 			module.setSourceVars(value.receive[0].receivedvars[0]);
-			
 			module.controller.doSaveConfiguration(value.module);
-			
 			Entry.save();
 		});
 		
@@ -173,10 +170,14 @@ $(document).bind('configModule', function(event, module) {
 		var fill = {
 			sections: {
 				general: [ { groups: { general: [{ moduletitle: [module.getTitle()] }] } } ],
+				module: [ { groups: module.controller.doFillConfiguration() } ],
 				send: [ { groups: {sentvars: [sentVars]}} ],
 				receive: [ { groups: {receivedvars: [receivedVars]}} ]
 			}
 		}
+		
+		console.log(fill);
+		
 		this.fillJson(fill);
 		
 		

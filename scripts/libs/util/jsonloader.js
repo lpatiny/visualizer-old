@@ -9,7 +9,7 @@ window[_namespaces['util']].Util.JsonLoader = function(url, element) {
 			url: url,
 			dataType: 'json',
 			success: function(data) {
-				console.log(data);
+				
 				element.source = data;
 				element.loaded = true;
 				element.doCallbacks();
