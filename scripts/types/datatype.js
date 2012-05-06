@@ -131,10 +131,11 @@ CI.dataType.asyncLoading = {
 		
 		
 		var mol = unescape(dom.data('value'));
-		console.log(mol);
+		
 		dom.attr('id', 'mol2d_' + (++CI.dataType._mol2did));
 		
 		var canvas = new ChemDoodle.ViewerCanvas('mol2d_' + (CI.dataType._mol2did), 100, 100);
+		canvas.specs.backgroundColor = "transparent";
 		canvas.specs.bonds_width_2D = .6;
 		canvas.specs.bonds_saturationWidth_2D = .18;
 		canvas.specs.bonds_hashSpacing_2D = 2.5;
