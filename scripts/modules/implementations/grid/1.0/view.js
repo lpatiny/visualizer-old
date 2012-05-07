@@ -69,6 +69,7 @@ CI.Module.prototype._types.grid.View.prototype = {
 		Table.init(this.dom);
 		
 		
+		$(document).trigger('checkAsyncLoad', [ this.dom ]);
 	},
 	
 
