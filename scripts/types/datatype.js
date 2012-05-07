@@ -112,6 +112,11 @@ CI.dataType.implToScreen = {
 		return val;
 	},
 	
+	asGif: function(val) {
+		var url = val.url;
+		return CI.dataType.implToScreen.asImage(url);
+	},
+	
 	asMolfile2D: function(val) {
 		return '<canvas class="load-async" data-async-type="molfile2D" data-value="' + escape(val.value) + '"></canvas>';
 	},

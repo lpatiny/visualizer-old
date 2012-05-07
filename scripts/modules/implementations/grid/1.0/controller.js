@@ -98,7 +98,78 @@ CI.Module.prototype._types.grid.Controller.prototype = {
 	
 	moduleInformations: {
 		moduleName: 'Grid'
+	},
+	
+	
+	
+	
+	doConfiguration: function(section) {
+		
+		var groupfield = new BI.Forms.GroupFields.Table('cols');
+		section.addFieldGroup(groupfield);
+		
+		var field = groupfield.addField({
+			type: 'Text',
+			name: 'coltitle'
+		});
+		field.setTitle(new CI.Title('Columns title'));
+		
+		var options = CI.Types._jPathToOptions(this.module.model.getjPath('list'));
+		var field = groupfield.addField({
+			type: 'Combo',
+			name: 'coljpath'
+		});
+		field.implementation.setOptions(options);
+		field.setTitle(new CI.Title('Value jPath'));
+		
+		return true;
+	},
+	
+	doFillConfiguration: function() {
+		
+		var cols = this.module.getConfiguration().colsjPaths;
+		var titles = [];
+		var jpaths = [];
+		for(var i in cols) {
+			titles.push(i);
+			jpaths.push(cols[i].jpath);
+		}
+
+
+		return {
+			cols: [{
+				coltitle: titles,
+				coljpath: jpaths
+			}]
+		}
+		
+	},
+	
+	
+	doSaveConfiguration: function(confSection) {
+		
+		var group = confSection[0].cols[0];
+		
+		var cols = {};
+		for(var i = 0; i < group.length; i++)
+			cols[group[i].coltitle] = { jpath: group[i].coljpath };
+		
+		this.module.getConfiguration().colsjPaths = cols;
+		
+		/*var coltitle = group.colnumber;
+		var coljpath = group.valjPath;
+		
+		
+		this.module.definition.configuration = {
+			colnumber: colnumber,
+			valjpath: valjpath,
+			colorjpath: colorjpath
+		};*/
 	}
+	
+	
+
+
 
 
 }

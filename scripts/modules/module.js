@@ -28,7 +28,10 @@ CI.Module = function(definition) {
 	this.definition = definition;
 	
 	this.id = ++CI.Module.prototype.lastId;
-	this.cfgModule = $.extend(true, {}, definition.configuration);
+	
+	if(!definition.configuration)
+		definition.configuration = {};
+	this.cfgModule = definition.configuration;
 	
 	
 	/**
@@ -203,6 +206,7 @@ CI.Module.prototype = {
 	 * Returns the configuration of the module
 	 */
 	getConfiguration: function() {
+		
 		return this.cfgModule;
 	},
 	
