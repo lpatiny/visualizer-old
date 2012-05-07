@@ -23,7 +23,7 @@ CI.Grid = {
 	 */
 	defaults: {
 		xWidth: 20,
-		xHeight: 20
+		yHeight: 20
 	},
 	
 	/**
@@ -71,6 +71,10 @@ CI.Grid = {
 			
 			stop: function() {
 				var position = $(this).position();
+				
+				console.log(position);
+				console.log(CI.Grid.definition);
+				
 				module.getPosition().left = position.left / CI.Grid.definition.xWidth;
 				module.getPosition().top = position.top / CI.Grid.definition.yHeight;
 			}
