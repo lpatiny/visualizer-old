@@ -215,10 +215,10 @@ CI.ConfigVisualizer = function() {
 	
 	
 	function configureEntryPoint() {
-		console.log('sdfsdfsdfsdf');
-		$.fancybox($("<div />").attr('id', 'formEntryPoint'), { width: 700, height: 500, autoSize: false });
-		console.log($("#formEntryPoint"));
-		$("#formEntryPoint").biForm({}, function() {
+		var now = Date.now();
+		$.fancybox($("<div />").attr('id', 'formEntryPoint-' + now), { width: 700, height: 500, autoSize: false });
+		
+		$("#formEntryPoint-" + now).biForm({}, function() {
 			
 			var inst = this;			
 			var section = new BI.Forms.Section('cfg', { multiple: false });
