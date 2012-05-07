@@ -263,8 +263,7 @@ CI.Types.addCallbackLoader = function(path, object, array, elId, view) {
 
 
 $(document).bind('checkAsyncLoad', function(event, dom) {
-console.log("here");
-console.log(dom);
+
 	$(dom).find('.load-async').each(function() {
 		var loadType = $(this).data('async-type');
 		var fct = CI.dataType.asyncLoading[loadType];

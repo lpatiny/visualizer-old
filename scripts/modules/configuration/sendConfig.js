@@ -137,12 +137,14 @@ $(document).bind('configModule', function(event, module) {
 				module.controller.doSaveConfiguration(value.module);
 				
 			Entry.save();
+				
+			CI.API.resendAllVars();
+			module.updateView();
 		});
 		
 		
 		save.setColor('blue');
 		this.addButtonZone().addButton(save);
-		
 		
 			
 	}, function() {
@@ -181,8 +183,7 @@ $(document).bind('configModule', function(event, module) {
 		}
 		
 		this.fillJson(fill);
-		CI.API.resendAllVars();
-		module.updateView();
+		
 	});
 	
 	

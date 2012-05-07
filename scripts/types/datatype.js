@@ -109,6 +109,7 @@ CI.dataType.implToScreen = {
 	},
 	
 	asMf: function(val) {
+		var val = CI.Util.getValue(val);
 		return val;
 	},
 	
