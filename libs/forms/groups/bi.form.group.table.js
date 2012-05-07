@@ -123,7 +123,7 @@ BI.Forms.GroupFields.Table.prototype = {
 		});
 		
 		$(document).bind('click', function(event) {
-			if($(event.target).parents().andSelf().filter('.dom-expander').length == 0)
+			if($(event.target).parents().andSelf().filter('.bi-formfield-expand').length == 0)
 				inst.stopEditing();
 		})
 		
