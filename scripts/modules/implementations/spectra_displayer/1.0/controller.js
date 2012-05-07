@@ -20,37 +20,27 @@ CI.Module.prototype._types.spectra_displayer.Controller.prototype = {
 	init: function() {
 	},
 	
-	getConfigurationSend: function() {
+	configurationSend: {
 		
-		return {
-
-			events: {
-			},
+		events: {
+		},
+		
+		rels: {
 			
-			rels: {
-				
-			}
 		}
 	},
 	
-	getConfigurationReceive: function() {
-		return {
-			jcamp: {
-				type: 'string',
-				label: 'Jcamp URL',
-				description: 'The jcamp URL'
-			}
+	configurationReceive: {
+		jcamp: {
+			type: 'string',
+			label: 'Jcamp URL',
+			description: 'The jcamp URL'
 		}
 	},
 	
 	
-	getModuleInformations: function() {
-		
-		return {
-			moduleName: 'ChemDoodle Spectra'
-			
-		}
+	moduleInformations: {
+		moduleName: 'ChemDoodle Spectra'
 	}
-
 
 }

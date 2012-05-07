@@ -90,8 +90,8 @@ CI.Module = function(definition) {
 		html.push('</div>');
 		html.push('<div class="ci-module-header-toolbar">');
 		html.push('<ul>');
-		html.push('<li class="ci-configure">Configure</li>')
-		html.push('<li class="ci-remove">Remove</li>')
+		html.push('<li class="ci-configure">Config</li>')
+		html.push('<li class="ci-remove">X</li>')
 		html.push('</ul>');
 		html.push('</div>');
 		html.push('</div><div class="ci-module-content"><div class="ci-module-content-overflow">');
@@ -212,7 +212,7 @@ CI.Module.prototype = {
 	 */
 	getAcceptedTypes: function(rel) {
 		
-		var accept = this.controller.getConfigurationReceive();
+		var accept = this.controller.configurationReceive;
 		
 		if(accept[rel])
 			return accept[rel];
@@ -243,14 +243,12 @@ CI.Module.prototype = {
 	},
 	
 	inDom: function() {
-		
 		if(typeof this.view.inDom == "function")
 			this.view.inDom();
 		if(typeof this.controller.inDom == "function")
 			this.controller.inDom();
 		if(typeof this.model.inDom == "function")
 			this.model.inDom();
-		
 	},
 	
 	/** 
@@ -267,6 +265,9 @@ CI.Module.prototype = {
 	 * Returns the current position of the module
 	 */
 	getPosition: function() {
+		
+		if(!this.definition.position)
+			this.definition.position = { left: 0, right: 0};
 		return this.definition.position;
 	},
 	
@@ -274,6 +275,10 @@ CI.Module.prototype = {
 	 * Returns the current size of the module
 	 */
 	getSize: function() {
+		
+		if(!this.definition.size)
+			this.definition.size = { width: 20, height: 20};
+			
 		return this.definition.size;
 	},
 	
@@ -305,6 +310,7 @@ CI.Module.prototype = {
 	
 	setTitle: function(title) {
 		this.definition.title = title;
+		this.domHeader.find('.ci-module-header-title').text(title);
 	}
 };
 

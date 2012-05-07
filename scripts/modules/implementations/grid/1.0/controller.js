@@ -64,48 +64,40 @@ CI.Module.prototype._types.grid.Controller.prototype = {
 		
 	},
 	
-	getConfigurationSend: function() {
-		
-		return {
+	configurationSend: {
 
-			events: {
-				onSelect: {
-					label: 'Select a line',
-					description: 'Click on a line to select it'
-				},
-				
-				onHover: {
-					label: 'Hovers a line',
-					description: 'Pass the mouse over a line to select it'
-				}
+		events: {
+			onSelect: {
+				label: 'Select a line',
+				description: 'Click on a line to select it'
 			},
 			
-			rels: {
-				'element': {
-					label: 'Row',
-					description: 'Returns the selected row in the list'
-				}
+			onHover: {
+				label: 'Hovers a line',
+				description: 'Pass the mouse over a line to select it'
 			}
-		}
-	},
-	
-	getConfigurationReceive: function() {
-		return {
-			list: {
-				type: 'array',
-				label: 'List',
-				description: 'Any list of displayable element'
-			}
-		}
-	},
-	
-	
-	getModuleInformations: function() {
+		},
 		
-		return {
-			moduleName: 'Grid'
-			
+		rels: {
+			'element': {
+				label: 'Row',
+				description: 'Returns the selected row in the list'
+			}
 		}
+		
+	},
+	
+	configurationReceive: {
+		list: {
+			type: 'array',
+			label: 'List',
+			description: 'Any list of displayable element'
+		}		
+	},
+	
+	
+	moduleInformations: {
+		moduleName: 'Grid'
 	}
 
 

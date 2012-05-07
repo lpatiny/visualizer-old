@@ -88,60 +88,50 @@ CI.Module.prototype._types.canvas_matrix.Controller.prototype = {
 		// do something if you want !
 	},
 	
-	getConfigurationSend: function() {
-		
-		return {
+	configurationSend: {
 
-			events: {
-				onPixelHover: {
-					label: 'mouse hover pixel',
-					description: 'When the mouses moves over a new pixel of the data matrix'
-				},
-				onPixelClick: {
-					label: 'click on a pixel',
-					description: 'When the users click on any pixel'
-				},
-				onPixelDblClick: {
-					label: 'double click on a pixel',
-					description: 'When the user double clics on any pixel'
-				}
+		events: {
+			onPixelHover: {
+				label: 'mouse hover pixel',
+				description: 'When the mouses moves over a new pixel of the data matrix'
+			},
+			onPixelClick: {
+				label: 'click on a pixel',
+				description: 'When the users click on any pixel'
+			},
+			onPixelDblClick: {
+				label: 'double click on a pixel',
+				description: 'When the user double clics on any pixel'
+			}
+		},
+		
+		rels: {
+			'row': {
+				label: 'Row',
+				description: 'Sends the information description the row'
 			},
 			
-			rels: {
-				'row': {
-					label: 'Row',
-					description: 'Sends the information description the row'
-				},
-				
-				'col': {
-					label: 'Column',
-					description: 'Sends the information description the column'
-				},
-				
-				'intersect': {
-					label: 'Intersection',
-					description: 'Sends the information description the intersection where the mouse is located'
-				}
-			}
-		}
-	},
-	
-	getConfigurationReceive: function() {
-		
-		return {
-			'matrix': {
-				accepts: 'matrix',
-				label: 'Matrix',
-				description: 'Receives the matrix to display'
-			}
-		};
-	},
-	
-	getModuleInformations: function() {
-		
-		return {
-			moduleName: 'Distance matrix'
+			'col': {
+				label: 'Column',
+				description: 'Sends the information description the column'
+			},
 			
+			'intersect': {
+				label: 'Intersection',
+				description: 'Sends the information description the intersection where the mouse is located'
+			}
 		}
+	},
+	
+	configurationReceive: {
+		'matrix': {
+			accepts: 'matrix',
+			label: 'Matrix',
+			description: 'Receives the matrix to display'
+		}
+	},
+	
+	moduleInformations: {
+		moduleName: 'Distance matrix'
 	}
 }

@@ -70,8 +70,8 @@ BI.Forms.GroupFields.Table.prototype = {
 	stopEditing: function(hasNew) {
 		
 		if(this.trEditing !== undefined && this.tdEditing !== undefined) {
-			
 			this.fields[this.tdEditing].implementation.stopEditing(this.trEditing, hasNew);
+			this.tableBody.children().eq(this.trEditing).children().eq(this.tdEditing + 1).removeClass('bi-has-focus');
 			this.tdEditing = undefined;
 			this.trEditing = undefined;
 		}
@@ -99,17 +99,20 @@ BI.Forms.GroupFields.Table.prototype = {
 		});
 		
 		this.tableBody.on('click', 'td', function(event) {
+			
 			event.stopPropagation();
-			var td = $(this);
-
+			
+			var td = $(this).addClass('bi-has-focus');
 			var tdIndex = td.index();
 		
 			if(!inst.fields[tdIndex - 1])
 				return;
 			
 			var trIndex = td.parent().index();
-			if((inst.trEditing !== undefined && inst.tdEditing !== undefined && inst.trEditing == trIndex && inst.tdEditing == (tdIndex - 1)))
+			if((inst.trEditing !== undefined && inst.tdEditing !== undefined && inst.trEditing == trIndex && inst.tdEditing == (tdIndex - 1))) {
+				inst.stopEditing();
 				return;
+			}
 			
 			
 			inst.stopEditing(true);

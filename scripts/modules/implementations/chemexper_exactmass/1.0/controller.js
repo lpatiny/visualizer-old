@@ -43,56 +43,47 @@ CI.Module.prototype._types.chemexper_exactmass.Controller.prototype = {
 		
 	},
 	
-	getConfigurationSend: function() {
+	configurationSend: {
 		
-		return {
-
-			events: {
-				onQueryReturn: {
-					label: 'when a query returns',
-					description: 'Triggers the event when the query is back'
-				}
+		events: {
+			onQueryReturn: {
+				label: 'when a query returns',
+				description: 'Triggers the event when the query is back'
+			}
+		},
+		
+		rels: {
+			'list': {
+				label: 'List of chemicals',
+				description: 'Return the list of the chemicals'
 			},
 			
-			rels: {
-				'list': {
-					label: 'List of chemicals',
-					description: 'Return the list of the chemicals'
-				},
-				
-				'best': {
-					label: 'Best match',
-					description: 'Returns the best chemical'
-				}
-				
+			'best': {
+				label: 'Best match',
+				description: 'Returns the best chemical'
 			}
+			
+		
 		}
 	},
 	
-	getConfigurationReceive: function() {
+	configurationReceive: {
 		
-		return {
-			
-			exactmass: {
-				type: 'number',
-				label: 'Exact mass',
-				description: 'The exact mass of a chemical to look for'
-			},
-			
-			majormass: {
-				type: 'number',
-				label: 'Major mass',
-				description: 'The major mass of the product (accouting for isotopes)'
-			}
+		exactmass: {
+			type: 'number',
+			label: 'Exact mass',
+			description: 'The exact mass of a chemical to look for'
+		},
+		
+		majormass: {
+			type: 'number',
+			label: 'Major mass',
+			description: 'The major mass of the product (accouting for isotopes)'
 		}
 	},
 	
 	
-	getModuleInformations: function() {
-		
-		return {
-			moduleName: 'Chemexper mass lookup'
-
-		}
+	moduleInformations: {
+		moduleName: 'Chemexper mass lookup'
 	}
 }

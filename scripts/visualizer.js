@@ -100,7 +100,7 @@ CI.ConfigVisualizer = function() {
 	
 	for(var i in CI.Module.prototype._types) {
 		
-		var moduleInfos = CI.Module.prototype._types[i].Controller.prototype.getModuleInformations();
+		var moduleInfos = CI.Module.prototype._types[i].Controller.prototype.moduleInformations;
 		html.push('<div class="module" data-module="');
 		html.push(i);
 		html.push('">');

@@ -48,10 +48,8 @@ BI.Forms.Table.Field.prototype.showExpander = function(index) {
 	var height = input.innerHeight();
 	
 	this.domExpander.css({top: pos.top + height, width: width}).slideDown(100);
+	//this.group.stopEditing();
 	
-	
-	
-		
 	this.domExpander.show().css({
 		width: this.group.fieldsWidth + 1,
 		marginLeft: 20

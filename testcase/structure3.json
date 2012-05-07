@@ -18,18 +18,6 @@
     "type": "grid",
     "title": "Chemicals available",
 
-    "position": {
-    	"left": 1,
-    	"top": 1
-    },
-    
-
-    "size": {
-    	"width": 60,
-    	"height": 50
-    },
-
-
     "configuration": {
     	"colsjPaths": {
 		"Molecular Formula": "mf",

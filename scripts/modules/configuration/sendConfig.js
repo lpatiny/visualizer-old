@@ -35,8 +35,7 @@ $(document).bind('configModule', function(event, module) {
 				
 		// Send configuration
 		
-		
-		var availCfg = module.controller.getConfigurationSend();
+		var availCfg = module.controller.configurationSend;
 		
 		var sendjpaths = [];
 		for(var i in availCfg.rels)
@@ -98,7 +97,7 @@ $(document).bind('configModule', function(event, module) {
 		
 		
 		// Receive configuration
-		var availCfg = module.controller.getConfigurationReceive();
+		var availCfg = module.controller.configurationReceive;
 		
 		var allRels = [];
 		for(var i in availCfg)
@@ -133,7 +132,10 @@ $(document).bind('configModule', function(event, module) {
 			module.setTitle(value.general[0].general[0].moduletitle[0]);
 			module.setSendVars(value.send[0].sentvars[0]);
 			module.setSourceVars(value.receive[0].receivedvars[0]);
-			module.controller.doSaveConfiguration(value.module);
+			
+			if(module.controller.doSaveConfiguration) 
+				module.controller.doSaveConfiguration(value.module);
+				
 			Entry.save();
 		});
 		
@@ -146,9 +148,9 @@ $(document).bind('configModule', function(event, module) {
 	}, function() {
 		
 		var sentVars = { event: [], rel: [], jpath: [], name: []};
-		var currentCfg = module.definition.dataSend;
 		
-		if(currentCfg) {
+		if(module.definition.dataSend) {
+			var currentCfg = module.definition.dataSend;
 			for(var i = 0; i < currentCfg.length; i++) {
 				sentVars.event.push(currentCfg[i].event);
 				sentVars.rel.push(currentCfg[i].rel);
@@ -159,28 +161,26 @@ $(document).bind('configModule', function(event, module) {
 		
 		
 		var receivedVars = { rel: [], name: []};
-		var currentCfg = module.definition.dataSource;
-		if(currentCfg) {
+		
+		if(module.definition.dataSource) {
+			var currentCfg = module.definition.dataSource;
 			for(var i = 0; i < currentCfg.length; i++) {
 				receivedVars.rel.push(currentCfg[i].rel);
 				receivedVars.name.push(currentCfg[i].name);
 			}
 		}
 		
+		
 		var fill = {
 			sections: {
 				general: [ { groups: { general: [{ moduletitle: [module.getTitle()] }] } } ],
-				module: [ { groups: module.controller.doFillConfiguration() } ],
+				module: [ { groups: module.controller.doFillConfiguration ? module.controller.doFillConfiguration() : [] } ],
 				send: [ { groups: {sentvars: [sentVars]}} ],
 				receive: [ { groups: {receivedvars: [receivedVars]}} ]
 			}
 		}
 		
-		console.log(fill);
-		
 		this.fillJson(fill);
-		
-		
 		CI.API.resendAllVars();
 		module.updateView();
 	});

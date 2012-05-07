@@ -44,9 +44,7 @@ CI.Module.prototype._types['2d_list'].Controller.prototype = {
 		
 	},
 	
-	getConfigurationSend: function() {
-		
-		return {
+	configurationSend:  {
 
 			events: {
 				
@@ -62,26 +60,19 @@ CI.Module.prototype._types['2d_list'].Controller.prototype = {
 					description: 'Returns the selected cell element'
 				}
 			}
-		}
 	},
 	
-	getConfigurationReceive: function() {
-		return {
-			list: {
-				type: 'array',
-				label: 'List',
-				description: 'Any list of displayable element'
-			}
-		}
-	},
-	
-	
-	getModuleInformations: function() {
+	configurationReceive: {
+		list: {
+			type: 'array',
+			label: 'List',
+			description: 'Any list of displayable element'
 		
-		return {
-			moduleName: '2D list'
-			
 		}
+	},
+	
+	moduleInformations: {
+			moduleName: '2D list'
 	},
 	
 	doConfiguration: function(section) {

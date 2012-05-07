@@ -29,47 +29,34 @@ CI.Module.prototype._types.display_chemical.Controller.prototype = {
 		// do something if you want !
 	},
 	
-	getConfigurationSend: function() {
-		
-		return {
+	configurationSend: {
 
-			events: {
-				onEntryHover: {
-					label: 'mouse over a chemical',
-					description: 'When the mouses moves over a new entry in the array'
-				}
-			},
-			
-			rels: {
-				'listelement': {
-					label: 'Element in the list',
-					description: 'Returns the selected element in the list'
-				}
+		events: {
+			onEntryHover: {
+				label: 'mouse over a chemical',
+				description: 'When the mouses moves over a new entry in the array'
 			}
-		}
-	},
-	
-	getConfigurationReceive: function() {
+		},
 		
-		
-		return {
-			
-			chemical: {
-				type: 'chemical',
-				label: 'Chemical',
-				description: 'Receives any chemical'
+		rels: {
+			'listelement': {
+				label: 'Element in the list',
+				description: 'Returns the selected element in the list'
 			}
-			
 		}
 	
 	},
 	
-	
-	getModuleInformations: function() {
-		
-		return {
-			moduleName: 'Chemical displayer'
-			
+	configurationReceive: {
+		chemical: {
+			type: 'chemical',
+			label: 'Chemical',
+			description: 'Receives any chemical'
 		}
+	},
+	
+	
+	moduleInformations: {
+		moduleName: 'Chemical displayer'
 	}
 }

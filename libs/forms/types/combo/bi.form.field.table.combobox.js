@@ -73,13 +73,7 @@ BI.Forms.Fields.Table.Combo.prototype.addField = function(position) {
 	this._loadedCallback = [];
 	
 	var inst = this;
-	var div = $("<div></div>").bind('click', function(event) {
-		event.stopPropagation();
-		var position = $(this).parent().parent().index();
-		
-		inst.currentIndex = position;
-		inst.main.toggleExpander(position);
-	});
+	var div = $("<div></div>");
 	
 	this.divs.splice(position, 0, div)
 	return { field: div, html: div, index: position };
@@ -92,6 +86,9 @@ BI.Forms.Fields.Table.Combo.prototype.removeField = function(position) {
 BI.Forms.Fields.Table.Combo.prototype.startEditing = function(position) {
 /*	this.divs[position].hide().after(this.input.val(this.main.getValue(position)));
 	this.input.focus();*/
+	
+	this.currentIndex = position;
+	this.main.toggleExpander(position);
 };
 
 BI.Forms.Fields.Table.Combo.prototype.stopEditing = function(position) {
@@ -109,4 +106,16 @@ BI.Forms.Fields.Table.Combo.prototype.expanderShowed = function(index) {
 		this.loadTree(index);
 	}
 	
+	
+	tree = this.main.domExpander.children().dynatree("getTree");
+	if(!tree.getActiveNode)
+		return;
+		
+	var node;
+	if((node = tree.getActiveNode()) != null)
+		node.deactivate();
+		
+	if(tree.getNodeByKey && (node = tree.getNodeByKey(this.main.getValue(index)))) {
+		node.activateSilently();
+	}
 }

@@ -218,6 +218,9 @@ div.ci-module-header-toolbar ul {
 div.ci-module-header-toolbar ul li {
 	margin: 0;
 	list-style-type: none;
+	margin-left: 10px;
+	cursor: pointer;
+	color: #666666;
 	line-height: 100%;
 	float: left;
 	padding-top: 3px;
