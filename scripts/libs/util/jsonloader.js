@@ -12,6 +12,10 @@ window[_namespaces['util']].Util.JsonLoader = function(url, element, isText) {
 				
 				element.source = data;
 				element.value = data;
+				
+				if(element.parent)
+					element.parent.value = data;
+					
 				element.loaded = true;
 				element.doCallbacks();
 				CI.dataType.instanciate(data);

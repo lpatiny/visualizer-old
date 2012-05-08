@@ -45,7 +45,7 @@ CI.dataType = {
 			else
 				return;
 		
-		return data.instance = new CI.Types[type](data.value, data.url);		
+		return data.instance = new CI.Types[type](data.value, data.url, data);		
 	},
 	
 	toScreen: function(val, view) {

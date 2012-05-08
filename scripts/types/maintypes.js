@@ -98,9 +98,6 @@ CI.Types.getValueFromJPath = function(jPath, data, array, elId, view, selfIsNull
 	if(data.instance && typeof data.instance['valueFromjPath'] == "function") {	
 		return data.instance.valueFromjPath(jPath, array, elId, view);
 	} else {
-		
-		
-
 		var constructor = CI.Types[CI.dataType.getType(data)];
 		if(typeof constructor['valueFromjPath'] == "function")
 			return constructor.valueFromjPath(jPath, data, array, elId, view);
@@ -360,9 +357,11 @@ CI.Types.molfile3D = {
 
 
 
-CI.Types.jcamp = function(source, url) {
+CI.Types.jcamp = function(source, url, parent) {
 	this.source = source;
+	this.value = source;
 	this.url = url;
+	this.parent = parent;
 	this.loaded = false;
 	this.callbacks = [];
 	CI.dataType.instanciate(source);
