@@ -90,15 +90,17 @@ CI.Types._jPathToOptions = function(jpath) {
 
 
 
-CI.Types.getValueFromJPath = function(jPath, data, array, elId, view) {
+CI.Types.getValueFromJPath = function(jPath, data, array, elId, view, selfIsNull) {
 	
-	
-	if(jPath == null || (jPath + "").length == 0)
+	if(selfIsNull && (jPath == null || (jPath + "").length == 0))
 		return data;
-		
-	if(data.instance && typeof data.instance['valueFromjPath'] == "function")
+	
+	if(data.instance && typeof data.instance['valueFromjPath'] == "function") {	
 		return data.instance.valueFromjPath(jPath, array, elId, view);
-	else {
+	} else {
+		
+		
+
 		var constructor = CI.Types[CI.dataType.getType(data)];
 		if(typeof constructor['valueFromjPath'] == "function")
 			return constructor.valueFromjPath(jPath, data, array, elId, view);
@@ -110,7 +112,9 @@ CI.Types._valueFromJPathAndJson = function(jPath, json) {
 
 	var element = $.extend({}, json);
 	var regex = CI.Types.jPathRegex;
-	
+	if(typeof json == "string")
+		return json;
+		
 	try {
 		var i = 0;
 		while((result = regex.exec(jPath))[2].length > 0) {
@@ -234,14 +238,17 @@ CI.Types.mf = {
 };
 
 
-CI.Types.chemical = function(source, url) {
-	this.source = source;
-	this.url = url;
-	this.loaded = true;
-	this.callbacks = [];
-	CI.dataType.instanciate(source);
-	this.jsonLoader = new CI.Util.JsonLoader(url, this);
-}
+$(document).bind('checkAsyncLoad', function(event, dom) {
+
+	$(dom).find('.load-async').each(function() {
+		var loadType = $(this).data('async-type');
+		var fct = CI.dataType.asyncLoading[loadType];
+		if(typeof fct == "function")
+			fct($(this));
+	});
+});
+
+
 
 CI.Types.lastIdCallback = 0;
 CI.Types.addCallbackLoader = function(path, object, array, elId, view) {
@@ -254,7 +261,8 @@ CI.Types.addCallbackLoader = function(path, object, array, elId, view) {
 		if(array && elId) {
 			array[elId] = val;
 		}
-		$(document).trigger('checkAsyncLoad', [ $('#callback-load-' + id).html(CI.dataType.toScreen(val, view)) ]);
+		
+		$(document).trigger('checkAsyncLoad', [ $('#callback-load-' + id).html(CI.dataType.toScreen(object, view)) ]);
 	});
 	
 	
@@ -262,15 +270,16 @@ CI.Types.addCallbackLoader = function(path, object, array, elId, view) {
 }
 
 
-$(document).bind('checkAsyncLoad', function(event, dom) {
 
-	$(dom).find('.load-async').each(function() {
-		var loadType = $(this).data('async-type');
-		var fct = CI.dataType.asyncLoading[loadType];
-		if(typeof fct == "function")
-			fct($(this));
-	});
-});
+CI.Types.chemical = function(source, url) {
+	this.source = source;
+	this.url = url;
+	this.loaded = true;
+	this.callbacks = [];
+	CI.dataType.instanciate(source);
+	this.jsonLoader = new CI.Util.JsonLoader(url, this);
+}
+
 
 CI.Types.chemical.prototype = {
 	
@@ -279,7 +288,6 @@ CI.Types.chemical.prototype = {
 	},
 	
 	valueFromjPath: function(jPath, array, elId, view) {
-		
 		if(!this.loaded)
 			return CI.Types.addCallbackLoader(jPath, this, array, elId, view);
 		return CI.Types._valueFromJPathAndJson(jPath, this.source);	
@@ -306,11 +314,8 @@ CI.Types.chemical.prototype = {
 	},
 	
 	doCallbacks: function() {
-		
-		for(var i = 0; i < this.callbacks.length; i++) {
-			
+		for(var i = 0; i < this.callbacks.length; i++)
 			this.callbacks[i].call(this);
-		}
 	}
 }
 
@@ -351,4 +356,42 @@ CI.Types.molfile3D = {
 	}
 }
 
+
+
+
+
+CI.Types.jcamp = function(source, url) {
+	this.source = source;
+	this.url = url;
+	this.loaded = false;
+	this.callbacks = [];
+	CI.dataType.instanciate(source);
+	this.type = "jcamp";
+	
+	this.jsonLoader = new CI.Util.JsonLoader(url, this, true);
+}
+
+
+CI.Types.jcamp.prototype = {
+	
+	getjPath: function(jpaths) {
+		return jpaths;
+	},
+	
+	valueFromjPath: function(jPath, array, elId, view) {
+		
+		
+		if(!this.loaded) {
+	
+			return CI.Types.addCallbackLoader(jPath, this, array, elId, view);
+			
+		}
+		return CI.Types._valueFromJPathAndJson(jPath, this.source);
+	},	
+	
+	doCallbacks: function() {
+		for(var i = 0; i < this.callbacks.length; i++)
+			this.callbacks[i].call(this);
+	}
+}
 

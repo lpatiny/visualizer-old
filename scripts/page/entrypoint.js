@@ -102,7 +102,7 @@ CI.EntryPoint.prototype = {
 				for(var j = 0; j < vars.length; j++)
 					if(vars[j].sourcename == i) {
 						
-						CI.API.setSharedVar(vars[j].varname, CI.Types.getValueFromJPath(vars[j].jpath, this.data[i]), true);
+						CI.API.setSharedVar(vars[j].varname, CI.Types.getValueFromJPath(vars[j].jpath, this.data[i], [], null, null, true), true);
 					}
 			}
 		}

@@ -32,9 +32,9 @@ CI.Module.prototype._types.spectra_displayer.Controller.prototype = {
 	
 	configurationReceive: {
 		jcamp: {
-			type: 'string',
-			label: 'Jcamp URL',
-			description: 'The jcamp URL'
+			type: 'jcamp',
+			label: 'Jcamp',
+			description: 'The jcamp object'
 		}
 	},
 	

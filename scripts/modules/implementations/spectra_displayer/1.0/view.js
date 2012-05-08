@@ -21,21 +21,20 @@ CI.Module.prototype._types.spectra_displayer.View.prototype = {
 		html.push('<div class="ci-canvas-jcamp"></div>');
 		
 		this.dom = $(html.join(''));
-		this.canvasid = 'spectra_displayer_' + this.module.getId();
-		this.canvas = $("<canvas />").attr('id', this.canvasid).appendTo(this.dom);
+		
 		this.module.getDomContent().html(this.dom);
 		
 	},
 	
 	inDom: function() {
-		this.spectra = new ChemDoodle.PerspectiveCanvas(this.canvasid, '0', '0');
-		this.spectra.specs.plots_showYAxis = true;
-		this.spectra.specs.plots_flipXAxis = false;
+	
+
 	},
 	
 	onResize: function(width, height) {
-		
-		this.spectra.resize(width, height);
+		var data;
+		if((data = this.dom.find('canvas').data('spectra')) != undefined) 
+			data.resize(width, height);
 	},
 	
 	update: function() {
@@ -45,7 +44,7 @@ CI.Module.prototype._types.spectra_displayer.View.prototype = {
 		
 		if(!(moduleValue = this.module.getDataFromRel('jcamp').getData()))
 			return;
-			
+			/*
 		var url = moduleValue;
 		var query = new CI.Util.AjaxQuery({
 			url: url,
@@ -56,6 +55,10 @@ CI.Module.prototype._types.spectra_displayer.View.prototype = {
 		  		view.spectra.loadSpectrum(spectra);
 			}
 		});
+		*/
+		
+		this.dom.html(CI.dataType.toScreen(CI.Types.getValueFromJPath('', moduleValue, [], null, this), this));
+		$(document).trigger('checkAsyncLoad', [ this.dom ]);
 		
 			
 	},

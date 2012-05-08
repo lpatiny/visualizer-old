@@ -35,6 +35,7 @@ CI.dataType = {
 	instanciate: function(data) {
 	
 		var type = CI.dataType.getType(data);
+		
 		if(!CI.Types[type]) {
 			return;
 		}
@@ -43,7 +44,7 @@ CI.dataType = {
 				return CI.Types[type].instanciate(data);
 			else
 				return;
-			
+		
 		return data.instance = new CI.Types[type](data.value, data.url);		
 	},
 	
@@ -60,6 +61,7 @@ CI.dataType = {
 			return;
 		
 		var type = CI.dataType.getType(value);
+		
 		var toFunc = value;
 /*		if(typeof value.type !== "undefined")
 			toFunc = typeof value.url != "undefined" ? value.url : value.value;
@@ -77,6 +79,7 @@ CI.dataType = {
 }
 
 CI.dataType._mol2did = 0;
+CI.dataType._jcampid = 0;
 
 CI.dataType.implToScreen = {
 	
@@ -122,6 +125,10 @@ CI.dataType.implToScreen = {
 		return '<canvas class="load-async" data-async-type="molfile2D" data-value="' + escape(val.value) + '"></canvas>';
 	},
 	
+	asJcamp: function(val) {
+		return '<canvas class="load-async" data-async-type="jcamp" data-value="' + escape(val.value) + '"></canvas>';
+	},
+	
 	asMol3D: function(val) {
 		
 		// Load here chemdoodle
@@ -152,6 +159,22 @@ CI.dataType.asyncLoading = {
 		var molLoaded = ChemDoodle.readMOL(mol);
 		molLoaded.scaleToAverageBondLength(14.4);
 		canvas.loadMolecule(molLoaded);
+	},
+	
+	
+	
+	
+	jcamp: function(dom) {
+		var data = unescape(dom.data('value'));
+		dom.attr('id', 'jcamp_' + (++CI.dataType._jcampid));
+		var spectra = new ChemDoodle.PerspectiveCanvas('jcamp_' + (CI.dataType._jcampid), '100', '100');
+		dom.data('spectra', spectra);
+		spectra.specs.plots_showYAxis = true;
+		spectra.specs.plots_flipXAxis = false;
+		var jcampLoaded = ChemDoodle.readJCAMP(data);
+		
+  		spectra.loadSpectrum(jcampLoaded);
 	}
+	
 	
 }
