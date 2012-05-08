@@ -57,7 +57,7 @@ CI.Module.prototype._types.spectra_displayer.View.prototype = {
 		});
 		*/
 		
-		this.dom.html(CI.dataType.toScreen(CI.Types.getValueFromJPath('', moduleValue, [], null, this), this));
+		this.dom.html(CI.dataType.toScreen(CI.Types.getValueFromJPath('', moduleValue, [], null, this, true), this));
 		$(document).trigger('checkAsyncLoad', [ this.dom ]);
 		
 			
