@@ -56,10 +56,10 @@ CI.Module.prototype._types.spectra_displayer.View.prototype = {
 			}
 		});
 		*/
-		console.log(CI.Types.getValueFromJPath('', moduleValue, [], null, this, true));
+		
 		this.dom.html(CI.dataType.toScreen(CI.Types.getValueFromJPath('', moduleValue, [], null, this, true), this));
 		$(document).trigger('checkAsyncLoad', [ this.dom ]);
-		
+		CI.Grid.moduleResize(this.module);
 			
 	},
 	
