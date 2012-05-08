@@ -14,8 +14,8 @@
 CI.API = {};
 
 CI.API.setSharedVar = function(varName, varData) {
-	/*console.log("Store var : " + varName + " Variable Type : " + CI.dataType.getType(varData));
-	console.log(varData);*/
+	console.log("Store var : " + varName + " Variable Type : " + CI.dataType.getType(varData));
+	console.log(varData);
 	CI.sharedData[varName] = varData;
 	$(document).trigger('sharedDataChanged', [varName, varData]);
 }

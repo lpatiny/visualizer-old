@@ -82,7 +82,7 @@ CI.Module.prototype._types.grid.View.prototype = {
 				jpath = jpaths[j];
 				if(jpath.jpath)
 					jpath = jpath.jpath;
-					
+				
 				element.data[j] = CI.dataType.toScreen(CI.Types.getValueFromJPath(jpath, source[i], element.data, j, this), this);
 			}
 			

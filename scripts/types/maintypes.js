@@ -92,6 +92,7 @@ CI.Types._jPathToOptions = function(jpath) {
 
 CI.Types.getValueFromJPath = function(jPath, data, array, elId, view, selfIsNull) {
 	
+	
 	if(selfIsNull && (jPath == null || (jPath + "").length == 0))
 		return data;
 	
@@ -108,6 +109,7 @@ CI.Types.jPathRegex = new RegExp('^((?:\\.|\\[|\]){0,2}([a-zA-Z0-9]*))');
 CI.Types._valueFromJPathAndJson = function(jPath, json) {
 
 	var element = $.extend({}, json);
+	
 	var regex = CI.Types.jPathRegex;
 	if(typeof json == "string")
 		return json;
@@ -115,9 +117,24 @@ CI.Types._valueFromJPathAndJson = function(jPath, json) {
 	try {
 		var i = 0;
 		while((result = regex.exec(jPath))[2].length > 0) {
+			
 			if(!element) 
 				return;
+				
+			if(element.instance) {	
+				element = element.instance;
+				return CI.Types._valueFromJPathAndJson(result[2], element.value)
+			}
+				
+				
 			element = element[result[2]];
+			
+			if(element.instance) {	
+				element = element.instance;
+				return CI.Types._valueFromJPathAndJson(result[2], element.value)
+			}
+				
+				
 			jPath = jPath.slice(result[1].length);		
 		}
 	
@@ -184,6 +201,7 @@ CI.Types.array = {
 	
 	instanciate: function(data) {
 		var data = CI.Util.getValue(data);
+		
 		for(var i = 0; i < data.length; i++)
 			CI.dataType.instanciate(data[i]);
 	}
@@ -268,9 +286,10 @@ CI.Types.addCallbackLoader = function(path, object, array, elId, view) {
 
 
 
-CI.Types.chemical = function(source, url) {
+CI.Types.chemical = function(source, url, parent) {
 	this.source = source;
 	this.url = url;
+	this.parent = parent;
 	this.loaded = true;
 	this.callbacks = [];
 	CI.dataType.instanciate(source);
@@ -285,6 +304,7 @@ CI.Types.chemical.prototype = {
 	},
 	
 	valueFromjPath: function(jPath, array, elId, view) {
+		
 		if(!this.loaded)
 			return CI.Types.addCallbackLoader(jPath, this, array, elId, view);
 		return CI.Types._valueFromJPathAndJson(jPath, this.source);	
