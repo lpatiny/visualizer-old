@@ -139,14 +139,14 @@ CI.Module.prototype._types.canvas_matrix.View.prototype = {
 			return;
 		
 		if(moduleValue.xLabel && moduleValue.yLabel) {
-			this.colNumber = moduleValue.xLabel.length;
-			this.rowNumber = moduleValue.yLabel.length;
+			this.colNumber = moduleValue.value.xLabel.length;
+			this.rowNumber = moduleValue.value.yLabel.length;
 		} else {
-			this.rowNumber = moduleValue.value.length;
-			this.colNumber = moduleValue.value[0].length;
+			this.rowNumber = moduleValue.value.data.length;
+			this.colNumber = moduleValue.value.data[0].length;
 			
 		}
-		this.dataMatrix = moduleValue.value;
+		this.dataMatrix = moduleValue.value.data;
 				
 		/*this._domTitle.innerHTML = "Luc tell me where you want to put the title";//;
 		if ( typeof moduleValue.data.title != 'undefined')
