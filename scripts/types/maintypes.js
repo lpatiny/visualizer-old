@@ -1,256 +1,5 @@
 
-CI.Types = {};
-
-CI.Types._getjPath = function(data, jpaths, ext) { // ext serves to fech a children. Don't use from outside this scope
-	var constructor = CI.Types[CI.dataType.getType(data)];
-	
-	if(!constructor)
-		return jpaths;
-		
-	if(typeof constructor == 'function') {
-		//var el = new constructor(data);
-		var el = CI.Types.getInstance(data);
-		return el.getjPath(jpaths/*typeof ext !== "undefined" ? jpaths[ext] : jpaths*/);
-	} else {
-		if(!constructor.getjPath)
-			console.log(CI.dataType.getType(data));
-		return constructor.getjPath(data, jpaths/*typeof ext !== "undefined" ? jpaths[ext] : jpaths, data*/);
-	}
-}
-
-CI.Types.getInstance = function(data) {
-	
-	if(!data.instance)
-		CI.dataType.instanciate(data);
-	return data.instance;
-}
-CI.Types._jPathToOptions = function(jpath) {
-	
-	
-	var options = [];
-	
-	function addOption(str, val, options) {
-		
-		var newOptions = [];
-		options.push({
-			title: val,
-			key: str,
-			children: newOptions
-		});
-		
-		return newOptions;
-	}
-	
-	addOption("", "Full object", options);
-	
-	var fracjPath = function(jpath, base, options) {
-		
-		var val;
-		
-		//if(jpath instanceof Array) {
-		if(typeof jpath == 'object') {
-			for(var i in jpath) {//}= 0; i < jpath.length; i++) {
-				
-				if(typeof i == "number" || !isNaN(parseInt(i))) {
-					val = "[" + i + "]";
-					str = base + val;
-				} else {
-					val = i;				
-					str = base + (base.length > 0 ? "." : '') + val;
-				}
-				
-				var options2 = addOption(str, val, options);
-				fracjPath(jpath[i], str, options2);
-			}
-		
-		//} else if(typeof jpath == 'object') {
-		/*	console.log('doobject');
-			for(var i in jpath) {
-				val = i;
-				str = base + (base.length > 0 ? "." : '') + val;
-				addOption(str, val, lvl);
-				
-				console.log('do fetch children');
-
-				fracjPath(jpath[i], str, lvl+5);
-				console.log('fuction started');
-			}*/
-		} else if(typeof jpath != "boolean"){
-			str = base + jpath;
-			val = jpath;
-			addOption(str, val, options);
-		}
-			
-	}
-	
-	fracjPath(jpath, "", options);
-	
-	return options;
-}
-
-
-
-CI.Types.getValueFromJPath = function(jPath, data, array, elId, view, selfIsNull) {
-	
-	
-	if(selfIsNull && (jPath == null || (jPath + "").length == 0))
-		return data;
-	
-	if(data.instance && typeof data.instance['valueFromjPath'] == "function") {	
-		return data.instance.valueFromjPath(jPath, array, elId, view);
-	} else {
-		var constructor = CI.Types[CI.dataType.getType(data)];
-		if(typeof constructor['valueFromjPath'] == "function")
-			return constructor.valueFromjPath(jPath, data, array, elId, view);
-	}
-}
-
-CI.Types.jPathRegex = new RegExp('^((?:\\.|\\[|\]){0,2}([a-zA-Z0-9]*))');
-CI.Types._valueFromJPathAndJson = function(jPath, json) {
-
-	var element = $.extend({}, json);
-	
-	var regex = CI.Types.jPathRegex;
-	if(typeof json == "string")
-		return json;
-		
-	try {
-		var i = 0;
-		while((result = regex.exec(jPath))[2].length > 0) {
-			
-			if(!element) 
-				return;
-				
-			if(element.instance) {	
-				element = element.instance;
-				return CI.Types._valueFromJPathAndJson(result[2], element.value)
-			}
-				
-				
-			element = element[result[2]];
-			
-			if(element.instance) {	
-				element = element.instance;
-				return CI.Types._valueFromJPathAndJson(result[2], element.value)
-			}
-				
-				
-			jPath = jPath.slice(result[1].length);		
-		}
-	
-	//	eval("var element = json." + jPath + ";");
-		//var element ='sa';
-		
-		
-		return element;
-	} catch(e) { console.log(e); return null; }
-	
-	if(typeof element == "undefined")
-		return null;
-		
-	return element;
-}
-
-
-
-CI.Types.jPathFromJson = function(source, jpaths) {
-	
-	if(source instanceof Array)
-		for(var i = 0; i < source.length; i++) {
-			jpaths[i] = [];
-			this._getjPath(source[i], jpaths[i]);
-		}
-	else if (typeof source == 'object') {
-		for(var i in source) {
-			jpaths[i] = {};
-			this._getjPath(source[i], jpaths[i]);
-		}
-	} else {
-		// Not much to do here
-	}
-	
-//	console.log(jpaths);
-}
-
-
-CI.Types.string = {
-	
-	getjPath: function(data, jpaths) {
-		return jpaths;
-	}
-	
-};
-
-CI.Types.number = {
-	
-	getjPath: function(data, jpaths) {
-		return jpaths;
-	}
-	
-};
-
-CI.Types.array = {
-	
-	getjPath: function(data, jpaths) {
-		return CI.Types.jPathFromJson(data, jpaths);
-	},
-	
-	valueFromjPath: function(jPath, data) {
-		return CI.Types._valueFromJPathAndJson(jPath, data);
-	},
-	
-	instanciate: function(data) {
-		var data = CI.Util.getValue(data);
-		
-		for(var i = 0; i < data.length; i++)
-			CI.dataType.instanciate(data[i]);
-	}
-	
-};
-
-CI.Types.object = {
-	
-	getjPath: function(data, jpaths) {
-		return CI.Types.jPathFromJson(data, jpaths);
-	},
-	
-	instanciate: function(data) {
-		for(var i in data)
-			CI.dataType.instanciate(data[i]);
-	},
-	
-	valueFromjPath: function(jPath, data) {
-		
-		return CI.Types._valueFromJPathAndJson(jPath, data);
-	}
-}
-
-CI.Types.image = function(source) {
-	
-}
-
-CI.Types.image.prototype = {
-	
-	getjPath: function(jpaths) {
-		return jpaths;
-	}
-}
-
-CI.Types.gif = function(source) {
-	
-};
-CI.Types.gif.prototype = new CI.Types.image();
-
-
-CI.Types.mf = {	
-	getjPath: function(jpaths) {
-		return jpaths;
-	},
-	
-	instanciate: function(data) {
-		
-	},
-};
+CI.DataType = {};
 
 
 $(document).bind('checkAsyncLoad', function(event, dom) {
@@ -265,25 +14,438 @@ $(document).bind('checkAsyncLoad', function(event, dom) {
 
 
 
-CI.Types.lastIdCallback = 0;
-CI.Types.addCallbackLoader = function(path, object, array, elId, view) {
-	var id = ++CI.Types.lastIdCallback;
+CI.DataType.Structures = {
 	
-	object.callbacks.push(function() {
-		
-		var val = object.valueFromjPath(path);
-		
-		if(array && elId) {
-			array[elId] = val;
+	'mol2D': "string",
+	'chemical': {
+		"type": "object",
+		"elements": {
+			"entryID": "int",
+			"supplierName": "string",
+			"iupac": {
+				"type": "array",
+				"elements": {
+					"type": "object",
+					"elements": {
+						"value": "string",
+						"language": "string"	
+					}
+				}
+			},
+			
+			"mf": {
+				"type": "array",
+				"elements": {
+					"type": "object",
+					"elements": {
+						"value": "mf",
+						"mw": "int",
+						"exactMass": "int" 
+					}
+				}
+			},
+			
+			"mol": {
+				"type": "array",
+				"elements": {
+					"type": "object",
+					"elements": {
+						"value": "molfile2D",
+						"gif": "gif"
+					}
+				}
+			},
+			
+			"rn": {
+				"type": "array",
+				"elements": {
+					"type": "object",
+					"elements": {
+						"value": "int"
+					}
+				}
+			},
+			
+			"bachID": "string",
+			"catalogID": "string"
 		}
-		
-		$(document).trigger('checkAsyncLoad', [ $('#callback-load-' + id).html(CI.dataType.toScreen(object, view)) ]);
-	});
-	
-	
-	return '<span id="callback-load-' + id + '"></span>';
+	}
 }
 
+
+CI.DataType.getType = function(element) {
+	
+	if(!element)
+		return;
+		
+	var type = typeof element;
+	if(type == 'object') {
+		if(element instanceof Array)
+			return 'array';
+		if(typeof element.type == "undefined")
+			return 'object';
+		else
+			return element.type;
+	}
+	/*if(type == "undefined")		
+		throw {notify: true, display: false, message: "The type cannot be undefined"};
+	if(type == "function")
+		throw {notify: true, display: false, message: "The type cannot be a function"};*/
+	return type;	
+}
+
+
+CI.DataType.SubElements = {
+	
+	"chemical": {
+		"Molecular formula": { "type": "mf", "jpath": "mf.0.value" },
+		"Molecular mass": { "type": "int", "jpath": "mf.0.mw" }
+	}
+}
+	
+
+CI.DataType.getValueIfNeeded = function(element) {
+	if(element.value && element.type)
+		return element.value;
+	
+	if(element.url && element.type) {
+		element.value = undefined;
+		return element.value;
+	}
+	
+	return element;
+}
+
+
+CI.DataType.fetchElementIfNeeded = function(element, callback) {
+	
+	if(!element)
+		return;
+		
+	var type = element.type, ajaxType;
+	if(!element.value && element.url) {
+		
+		ajaxType = typeof CI.DataType.Structures[type] != "object" ? 'json' : 'text';
+		$.ajax({
+			url: element.url,
+			dataType: ajaxType,
+			type: "get",
+			timeout: 120000,
+			success: function(data) {
+				element.value = data;
+				callback(element);
+			}
+		});
+	} else {
+		callback(element);
+		return element;
+	}
+}
+
+
+CI.DataType.getValueFromJPath = function(element, jpath, callback) {
+	
+	if(!jpath.split)
+		jpath = '';
+		
+	var jpath2 = jpath.split('.');
+	jpath2.shift();
+	CI.DataType._getValueFromJPath(element, jpath2, callback);
+}
+
+CI.DataType._getValueFromJPath = function(element, jpath, callback) {
+	var el = element;
+	var type;
+	var jpathElement = jpath.shift();
+	
+	if(!jpathElement)
+		callback(element);
+		
+	el = element[jpathElement];
+	CI.DataType.fetchElementIfNeeded(el, function(elChildren) {
+		var element = CI.DataType.getValueIfNeeded(elChildren);
+		CI.DataType._getValueFromJPath(element, jpath, callback);
+	});
+}
+
+CI.DataType.getJPathsFromStructure = function(structure, jpathspool, keystr) {
+
+	if(!structure)
+		return;
+
+	if(!keystr)
+		keystr = "element";
+
+	switch(structure.type) {
+		
+		case 'object':
+			
+			for(var i in structure.elements) {
+				var jpathpoolchild = [];
+				var keystr2 = keystr + "." + i;
+				jpathspool.push({ title: i, children: jpathpoolchild, key: keystr2 });
+				CI.DataType.getJPathsFromStructure(structure.elements[i], jpathpoolchild, keystr2);
+			}
+			
+		break;
+		
+		case 'array':
+			var jpathpoolchild = [];
+			var keystr2 = keystr + ".0";
+			jpathspool.title =  "n-th element";
+			jpathspool.children = jpathpoolchild;
+			jpathspool.key = keystr2;
+			CI.DataType.getJPathsFromStructure(structure.elements, jpathpoolchild, keystr2);
+		break;
+	}	
+}
+
+
+CI.DataType.getStructureFromElement = function(element, structure) {
+	
+	if(!element)
+		return;
+		
+	if(element.value && element.type)
+		element = element.value;
+	
+	if(element instanceof Array) {
+		var element = element[0];
+		structure.type = "array";
+		structure.elements = {};
+		//structure.isFolder = true;
+		
+		if(typeof element != "object")
+			structure.elements = typeof element;
+		else
+			CI.DataType.getStructureFromElement(element, structure.elements);
+		
+	} else if(typeof element == "object") {
+		
+		structure.type = "object";	
+		//structure.isFolder = true;
+		structure.elements = {};
+		
+		for(var i in element) {
+			structure.elements[i] = {};
+			if(typeof element[i] != "object")
+				structure.elements[i] = typeof element[i];
+			else
+				CI.DataType.getStructureFromElement(element[i], structure.elements[i]);
+		}
+	} else 
+		structure = typeof element;
+}
+
+CI.DataType.getJPathsFromElement = function(element, jpaths) {
+	
+	if(!element)
+		return;
+		
+	// We know the dynamic structure
+	// Apply to typed elements + to js objects
+	if(element.structure)
+		CI.DataType.getJPathsFromStructure(element.structure, jpaths);	
+	else if(element.type && CI.DataType.Structures[element.type])
+		CI.DataType.getJPathsFromStructure(CI.DataType.Structures[element.type], jpaths);
+	else {
+		
+		switch(typeof element) {
+			case 'object':
+				var structure = {};
+				CI.DataType.getStructureFromElement(element, structure);
+				CI.DataType.getJPathsFromStructure(structure, jpaths);
+			break;
+			
+			default:
+				return;
+			break;
+		}
+	}
+	/*
+	// Typed element
+	if(element.type && element.value) {
+		
+		var type = element.type;
+		// We know the structure
+		if(element.structure) {
+			
+	
+	*/
+}
+
+
+
+
+CI.DataType._doFetchElementAttributeCallback = function(element, box, asyncId, attribute) {
+	CI.DataType.fetchElementIfNeeded(element, function(val) {
+		CI.DataType._valueToScreen(element, box, function(val) {
+			$("#" + asyncId).attr(attribute, val);
+		});
+	});
+}
+
+
+
+CI.DataType._doFetchElementHTMLCallback = function(element, box, asyncId) {
+	CI.DataType.fetchElementIfNeeded(element, function(val) {
+		CI.DataType._valueToScreen(element, box, function(val) {
+			$("#" + asyncId).html(val);
+		});
+	});
+}
+
+
+CI.DataType.asyncToScreenAttribute = function(element, attribute, box) {
+	
+	// Needs fetching
+	if(!element.value && element.url) {
+		
+		var elementId = "";
+		elementId += "callbck-load-";
+		elementId += ++CI.DataType.asyncId;
+		
+		CI.DataType._doFetchElementAttributeCallback(element, box, CI.DataType.asyncId, attribute);
+		 
+		return elementId;
+	} else
+		// returns element.value if fetched
+		return CI.DataType._toScreen(element, box);
+		
+	
+}
+
+
+CI.DataType.asyncToScreenHtml = function(element, box) {
+	
+	// Needs fetching
+	if(element.type && !element.value && element.url) {
+		var html = "";
+		html += '<span id="callback-load-';
+		html += ++CI.DataType.asyncId;
+		html += ' class="loading">Loading...</span>';
+		
+		CI.DataType._doFetchElementHTMLCallback(element, box, CI.DataType.asyncId);
+		  
+		return html;
+	} else
+		// returns element.value if fetched
+		return CI.DataType._toScreen(element, box);
+		
+}
+
+
+CI.DataType._toScreen = function(element, box, callback) {
+	
+	var value = CI.DataType.getValueIfNeeded(element);
+	return CI.DataType._valueToScreen(CI.DataType.fetchElementIfNeeded(element, function(val) {
+		CI.DataType._valueToScreen(val, box, callback);
+	}), box, callback);
+}
+
+CI.DataType._valueToScreen = function(value, box, callback) {
+	
+	var repoFuncs = box.view.typeToScreen;
+	var type = CI.DataType.getType(value);
+
+	if(!type)
+		return;
+		
+	if(typeof repoFuncs[type] == 'function') {
+		if(callback)
+			callback(repoFuncs[type](value));
+		return repoFuncs[type](value);
+		
+	}
+	
+	if(typeof CI.Type[type].toScreen == 'function') {
+		if(callback)
+			callback(CI.Type[type].toScreen(value));
+			
+		return CI.Type[type].toScreen(value);
+	}
+	
+	
+	if(callback)
+		callack("__unimplemented");	
+}
+	
+
+
+CI.Type = {
+	
+	string: {
+		
+		toScreen: function(val) { return val; }
+	},
+	
+	number: {
+		
+		toScreen: function(val) { return val + ""; }	
+	},
+	
+	chemical: {
+		
+		getIUPAC: function(source, clbk) {
+			return CI.DataType.getValueFromJPath(source, "iupac[0].value", clbk);
+		}
+		
+	},
+	
+	
+	
+	molfile2D: {
+	
+		toScreen: function(molfile) {
+			
+			var mol = unescape(dom.data('value'));
+			
+			dom.attr('id', 'mol2d_' + (++CI.dataType._mol2did));
+			
+			var canvas = new ChemDoodle.ViewerCanvas('mol2d_' + (CI.dataType._mol2did), 100, 100);
+			canvas.specs.backgroundColor = "transparent";
+			canvas.specs.bonds_width_2D = .6;
+			canvas.specs.bonds_saturationWidth_2D = .18;
+			canvas.specs.bonds_hashSpacing_2D = 2.5;
+			canvas.specs.atoms_font_size_2D = 10;
+			canvas.specs.atoms_font_families_2D = ['Helvetica', 'Arial', 'sans-serif'];
+			canvas.specs.atoms_displayTerminalCarbonLabels_2D = true;
+			
+			var molLoaded = ChemDoodle.readMOL(mol);
+			molLoaded.scaleToAverageBondLength(14.4);
+			canvas.loadMolecule(molLoaded);
+		}
+	},
+	
+	jcamp: function(dom) {
+		var data = unescape(dom.data('value'));
+		dom.attr('id', 'jcamp_' + (++CI.dataType._jcampid));
+		var spectra = new ChemDoodle.PerspectiveCanvas('jcamp_' + (CI.dataType._jcampid), '100', '100');
+		dom.data('spectra', spectra);
+		spectra.specs.plots_showYAxis = true;
+		spectra.specs.plots_flipXAxis = false;
+		var jcampLoaded = ChemDoodle.readJCAMP(data);
+		
+  		spectra.loadSpectrum(jcampLoaded);
+	}
+	
+	
+	
+	
+	
+	
+}
+
+/*
+CI.Types.mf = {	
+	getjPath: function(jpaths) {
+		return jpaths;
+	},
+	
+	instanciate: function(data) {
+		
+	},
+};
 
 
 CI.Types.chemical = function(source, url, parent) {
@@ -311,7 +473,7 @@ CI.Types.chemical.prototype = {
 	},
 	
 	getIUPAC: function(fct, pos) {
-		return this.valueFromjPath('iupac[0].value');
+		return this.valueFromjPath('');
 	},
 	
 	getMW: function(fct) {
@@ -413,4 +575,6 @@ CI.Types.jcamp.prototype = {
 			this.callbacks[i].call(this);
 	}
 }
+
+*/
 

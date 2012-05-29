@@ -230,7 +230,7 @@ CI.Module.prototype = {
 		for(var i in this.definition.dataSource)
 			if(this.definition.dataSource[i].rel == rel)
 				return this.model.data[this.definition.dataSource[i].name];
-		return;
+		return false;
 	},
 	
 	getData: function() {

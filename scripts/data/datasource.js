@@ -30,17 +30,17 @@ CI.DataSource.prototype = {
 		$(document).bind('sharedDataChanged', function(event, varName, varVal) {
 			
 			var allSources = CI.DataSource.prototype._dataSources[varName];
-			
 			if(typeof allSources == "undefined")
 				return;
 			for(var i = 0; i < allSources.length; i++)
-				allSources[i].setData(varVal)
+				allSources[i].setData(varVal);
 		});
 	},
 	
 	_dataSources: [],
 	
 	setData: function(data) {
+		
 		
 		if(this.buildData(data))
 			return this.module.model.onDataChange(this.sourceName);
@@ -53,18 +53,19 @@ CI.DataSource.prototype = {
 		var dataRebuilt = {};
 		if(!(this.sourceAccepts.type instanceof Array))
 			this.sourceAccepts.type = [this.sourceAccepts.type];
-		
+		console.log(this.sourceAccepts);
 		var mustRebuild = false;
 		var asObject = typeof this.sourceAccepts.asObject != "undefined" && this.sourceAccepts.asObject;
 		
 		for(var i = 0; i < this.sourceAccepts.type.length; i++) {
-			
-			if(this.sourceAccepts.type[i] == CI.dataType.getType(data))
+			console.log(CI.DataType.getType(data));
+			console.log(this.sourceAccepts.type[i]);
+			if(this.sourceAccepts.type[i] == CI.DataType.getType(data))
 				return this.data = data;
-			else if(asObject && CI.dataType.getType(data) == 'object') {
+			else if(asObject && CI.DataType.getType(data) == 'object') {
 				
 				for(var j in data) {
-					if(CI.dataType.getType(data[j]) == this.sourceAccepts.type[i]) {
+					if(CI.DataType.getType(data[j]) == this.sourceAccepts.type[i]) {
 						dataRebuilt[j] = data[j];
 						mustRebuild = true;
 					}

@@ -90,7 +90,7 @@ CI.EntryPoint.prototype = {
 	loaded: function(data, doNotCallback) {
 		
 		this.data = data;
-		console.log(this.entryData);
+	
 		if(this.entryData && this.entryData.variables) {
 		
 			var vars = this.entryData.variables;
@@ -98,12 +98,16 @@ CI.EntryPoint.prototype = {
 				return;
 			
 			for(var i in this.data) {
-				CI.dataType.instanciate(this.data[i]);
+			//	CI.dataType.instanciate(this.data[i]);
 				
-				for(var j = 0; j < vars.length; j++)
+				for(var j = 0; j < vars.length; j++) {
+					
 					if(vars[j].sourcename == i) {
-						CI.API.setSharedVar(vars[j].varname, CI.Types.getValueFromJPath(vars[j].jpath, this.data[i], [], null, null, true), true);
+						CI.DataType.getValueFromJPath(this.data[i], vars[j].jpath, function(val) {
+							CI.API.setSharedVar(vars[j].varname, val);	
+						});
 					}
+				}
 			}
 		}
 		

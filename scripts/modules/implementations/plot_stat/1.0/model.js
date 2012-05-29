@@ -7,10 +7,10 @@
  */
 
 
-if(typeof CI.Module.prototype._types.grid == 'undefined')
-	CI.Module.prototype._types.grid = {};
+if(typeof CI.Module.prototype._types.plot_stat == 'undefined')
+	CI.Module.prototype._types.plot_stat = {};
 
-CI.Module.prototype._types.grid.Model = function(module) {
+CI.Module.prototype._types.plot_stat.Model = function(module) {
 	
 	/*
 	 * Sets
@@ -22,7 +22,7 @@ CI.Module.prototype._types.grid.Model = function(module) {
 	// Call anything else if you want. The prototyped init() function can also be used.
 }
 
-CI.Module.prototype._types.grid.Model.prototype = {
+CI.Module.prototype._types.plot_stat.Model.prototype = {
 	
 	
 	// Usually you don't really to init a model. But who knows. Please leave it.
@@ -50,6 +50,7 @@ CI.Module.prototype._types.grid.Model.prototype = {
 			}
 		}
 		
+		this.lastDataName = dataName;
 		/* Triggers a module update */
 		this.module.updateView();
 	},
@@ -61,22 +62,6 @@ CI.Module.prototype._types.grid.Model.prototype = {
 	
 	getjPath: function(rel) {
 		
-		function getjPath(data) {
-			var jpaths = [];
-			
-			for(var i = 0; i < data.length; i++) 
-				CI.DataType.getJPathsFromElement(data[i], jpaths);
-			return jpaths;
-		}
-		
-		var data = this.module.getDataFromRel('list');
-		
-		if(!data || data == null)
-			return;
-		data = data.getData();
-		
-		if(data == null)
-			return;
-		return getjPath(data);
+		return [];
 	}
 }

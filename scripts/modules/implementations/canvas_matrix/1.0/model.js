@@ -50,32 +50,6 @@ CI.Module.prototype._types.canvas_matrix.Model.prototype = {
 		return this.dataValue;
 	},
 	
-	getKeysFromRel: function(rel) {
-		
-		function getKeys(el) {
-			var keys = [];
-			for(var i in el)
-				keys.push(i);
-			return keys;	
-		}
-		
-		var matrixData = this.module.getDataFromRel('matrix').getData();
-		
-		switch(rel) {
-			case 'row':
-				return getKeys(matrixData.yLabel[0])
-			break;
-			
-			case 'col':
-				return getKeys(matrixData.xLabel[0])
-			break;
-			
-			case 'intersect':
-				return false
-			break;
-		}
-		
-	},
 	
 	getjPath: function(rel, accepts) {
 		
@@ -92,7 +66,9 @@ CI.Module.prototype._types.canvas_matrix.Model.prototype = {
 			return;
 		
 		data = data.getData();
-		
+		if(!data)
+			return;
+			
 		switch(rel) {
 			case 'row':
 				var data = data.yLabel;

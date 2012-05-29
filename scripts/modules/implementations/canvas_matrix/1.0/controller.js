@@ -125,7 +125,7 @@ CI.Module.prototype._types.canvas_matrix.Controller.prototype = {
 	
 	configurationReceive: {
 		'matrix': {
-			accepts: 'matrix',
+			type: 'matrix',
 			label: 'Matrix',
 			description: 'Receives the matrix to display'
 		}

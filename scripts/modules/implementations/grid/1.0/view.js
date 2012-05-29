@@ -64,7 +64,7 @@ CI.Module.prototype._types.grid.View.prototype = {
 		this.buildElement(this.list, elements, jpaths);
 		for(var i = 0, length = elements.length; i < length; i++)
 			Content.addElement(elements[i]);
-		
+		console.log(elements);
 		Table.setContent(Content);
 		Table.init(this.dom);
 		
@@ -75,6 +75,8 @@ CI.Module.prototype._types.grid.View.prototype = {
 
 	buildElement: function(source, arrayToPush, jpaths) {
 		var jpath;
+		var box = this.module;
+		
 		for(var i = 0, length = source.length; i < length; i++) {
 			var element = {};
 			element.data = {};
@@ -82,8 +84,14 @@ CI.Module.prototype._types.grid.View.prototype = {
 				jpath = jpaths[j];
 				if(jpath.jpath)
 					jpath = jpath.jpath;
+
+
+				CI.DataType.getValueFromJPath(source[i], jpath, function(data) {
+					if(i < 10)
+						console.log(CI.DataType.asyncToScreenHtml(data, box));
+					element.data[j] = CI.DataType.asyncToScreenHtml(data, box);
+				});
 				
-				element.data[j] = CI.dataType.toScreen(CI.Types.getValueFromJPath(jpath, source[i], element.data, j, this), this);
 			}
 			
 			
@@ -105,11 +113,7 @@ CI.Module.prototype._types.grid.View.prototype = {
 	
 	typeToScreen: {
 		
-		
-		asString: function(val) {
-			return val;
-		}
-		
+	
 	}
 }
 

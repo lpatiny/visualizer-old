@@ -249,15 +249,12 @@ CI.ConfigVisualizer = function() {
 			field.onChange(function(index) {
 				var fieldIndex = index;
 				var value = this.getValue(fieldIndex);
-				
 				var data = Entry.getDataFromSource(value);
-				var jpath = {};
-				CI.Types._getjPath(data, jpath);
-				
+				var jpath = [];
+				CI.DataType.getJPathsFromElement(data, jpath);
 				var field = this.group.getField('jpath')
 				
-				
-				this.group.getField('jpath').implementation.setOptions(CI.Types._jPathToOptions(jpath), index);
+				this.group.getField('jpath').implementation.setOptions(jpath, index);
 			});
 			
 			var field = groupfield.addField({

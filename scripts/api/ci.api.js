@@ -14,8 +14,7 @@
 CI.API = {};
 
 CI.API.setSharedVar = function(varName, varData) {
-	console.log("Store var : " + varName + " Variable Type : " + CI.dataType.getType(varData));
-	console.log(varData);
+	
 	CI.sharedData[varName] = varData;
 	$(document).trigger('sharedDataChanged', [varName, varData]);
 }
@@ -31,7 +30,7 @@ CI.API.getModulesFromSharedVar = function(varName) {
 	
 	for(var i in CI.modules) {
 		source = CI.modules[i].definition.dataSource;
-	
+	console.log(source);
 		for(var j = 0; j < source.length; j++) {
 			if(source[j].name == varName) {
 				allModules[i] = CI.modules[i]
@@ -39,7 +38,8 @@ CI.API.getModulesFromSharedVar = function(varName) {
 			}
 		}
 	}
-	
+	console.log(varName);
+	console.log(allModules);
 	return allModules;
 }
 

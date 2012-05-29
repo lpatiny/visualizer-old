@@ -115,7 +115,9 @@ CI.Module.prototype._types.grid.Controller.prototype = {
 		});
 		field.setTitle(new CI.Title('Columns title'));
 		
-		var options = CI.Types._jPathToOptions(this.module.model.getjPath('list'));
+		var options = [];
+		CI.DataType.getJPathsFromElement(this.module.getDataFromRel('list').getData()[0], options);
+		
 		var field = groupfield.addField({
 			type: 'Combo',
 			name: 'coljpath'

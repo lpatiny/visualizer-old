@@ -1,4 +1,4 @@
-
+/*
 CI.dataType = {
 	
 	getType: function(data) {
@@ -63,9 +63,9 @@ CI.dataType = {
 		var type = CI.dataType.getType(value);
 		
 		var toFunc = value;
-/*		if(typeof value.type !== "undefined")
+		if(typeof value.type !== "undefined")
 			toFunc = typeof value.url != "undefined" ? value.url : value.value;
-			*/
+			
 	    	var method = ['as', type.charAt(0).toUpperCase(), type.substr(1)].join('');
 
 		if(typeof repoFuncs[method] == 'function')
@@ -77,13 +77,16 @@ CI.dataType = {
 		throw "The variable type \"" + type + "\" is not supported";		
 	}
 }
+*/
+
+/*
 
 CI.dataType._mol2did = 0;
 CI.dataType._jcampid = 0;
 
 CI.dataType.implToScreen = {
 	
-	/* Primitive types */
+	
 	asNumber: function(val) {
 		
 		return val + "";
@@ -97,12 +100,12 @@ CI.dataType.implToScreen = {
 		return val.join();
 	},
 	
-	/* Implement other types */
+	
 	asImage: function(img) {
 		return '<img src="' + img + '" />';
 	},
 	
-	/* Implement other types */
+	
 	asUrl: function(val) {
 		return ['<a href="', val.url, '">', val.label, '</a>'].join('');
 	},
@@ -140,41 +143,6 @@ CI.dataType.implToScreen = {
 CI.dataType.asyncLoading = {
 	
 	
-	molfile2D: function(dom) {
-		
-		
-		var mol = unescape(dom.data('value'));
-		
-		dom.attr('id', 'mol2d_' + (++CI.dataType._mol2did));
-		
-		var canvas = new ChemDoodle.ViewerCanvas('mol2d_' + (CI.dataType._mol2did), 100, 100);
-		canvas.specs.backgroundColor = "transparent";
-		canvas.specs.bonds_width_2D = .6;
-		canvas.specs.bonds_saturationWidth_2D = .18;
-		canvas.specs.bonds_hashSpacing_2D = 2.5;
-		canvas.specs.atoms_font_size_2D = 10;
-		canvas.specs.atoms_font_families_2D = ['Helvetica', 'Arial', 'sans-serif'];
-		canvas.specs.atoms_displayTerminalCarbonLabels_2D = true;
-		
-		var molLoaded = ChemDoodle.readMOL(mol);
-		molLoaded.scaleToAverageBondLength(14.4);
-		canvas.loadMolecule(molLoaded);
-	},
-	
-	
-	
-	
-	jcamp: function(dom) {
-		var data = unescape(dom.data('value'));
-		dom.attr('id', 'jcamp_' + (++CI.dataType._jcampid));
-		var spectra = new ChemDoodle.PerspectiveCanvas('jcamp_' + (CI.dataType._jcampid), '100', '100');
-		dom.data('spectra', spectra);
-		spectra.specs.plots_showYAxis = true;
-		spectra.specs.plots_flipXAxis = false;
-		var jcampLoaded = ChemDoodle.readJCAMP(data);
-		
-  		spectra.loadSpectrum(jcampLoaded);
-	}
-	
-	
 }
+
+*/
