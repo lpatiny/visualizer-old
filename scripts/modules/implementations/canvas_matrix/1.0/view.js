@@ -183,7 +183,7 @@ CI.Module.prototype._types.canvas_matrix.View.prototype = {
 				
 				//first generate only the visible part of the grid
 				this.worker.postMessage({
-					gridData: moduleValue.value,
+					gridData: moduleValue.value.data,
 					gridImageData: this.gridImage,
 					startCol: Math.floor(Math.max(0,(this.gridImage.width)*this.moduleCenterX - this.canvas.width*0.5 )/this.cellWidth),
 					startRow: Math.floor(Math.max(0,(this.gridImage.height)*this.moduleCenterY - this.canvas.height*0.5)/this.cellHeight),
@@ -195,7 +195,7 @@ CI.Module.prototype._types.canvas_matrix.View.prototype = {
 				
 				//then afterwards generate the whole thing
 				this.worker.postMessage({
-					gridData: moduleValue.value,
+					gridData: moduleValue.value.data,
 					gridImageData: this.gridImage,
 					startCol: 0,
 					startRow: 0,
