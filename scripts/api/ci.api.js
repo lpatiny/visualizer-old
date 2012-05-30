@@ -30,7 +30,7 @@ CI.API.getModulesFromSharedVar = function(varName) {
 	
 	for(var i in CI.modules) {
 		source = CI.modules[i].definition.dataSource;
-	console.log(source);
+	
 		for(var j = 0; j < source.length; j++) {
 			if(source[j].name == varName) {
 				allModules[i] = CI.modules[i]
@@ -38,8 +38,7 @@ CI.API.getModulesFromSharedVar = function(varName) {
 			}
 		}
 	}
-	console.log(varName);
-	console.log(allModules);
+	
 	return allModules;
 }
 

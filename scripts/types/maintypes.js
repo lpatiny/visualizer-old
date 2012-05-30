@@ -76,10 +76,184 @@ CI.DataType.Structures = {
 		"type": "object",
 		"elements": {
 			"_entryID": "int",
-			"supplierName": "string"
+			"supplierName": "string",
+			"iupac": {
+				"type": "array",
+				"elements": {
+					"type": "object",
+					"elements": {
+						"value": "string",
+						"language": "string"	
+					}
+				}
+			},
+			
+			"mf": {
+				"type": "array",
+				"elements": {
+					"type": "object",
+					"elements": {
+						"value": "mf",
+						"mw": "int",
+						"exactMass": "int" 
+					}
+				}
+			},
+			
+			"mol": {
+				"type": "array",
+				"elements": {
+					"type": "object",
+					"elements": {
+						"value": "molfile2D",
+						"gif": "gif"
+					}
+				}
+			},
+			
+			"rn": {
+				"type": "array",
+				"elements": {
+					"type": "object",
+					"elements": {
+						"value": "int"
+					}
+				}
+			},
+			
+			"bachID": "string",
+			"catalogID": "string",
+			
+			"bp": {
+				
+				"type": "array",
+				"elements": {
+					"type": "object",
+					"elements": {
+						"pressure": "number",
+						"high": "number",
+						"low": "number"
+					}
+				}
+				
+			},
+			
+			"mp": {
+				"type": "array",
+				"elements": {
+					"type": "object",
+					"elements": {
+						"pressure": "number",
+						"high": "number",
+						"low": "number"
+					}
+				}
+				
+			},
+			
+			"rn": {
+				
+				"type": "array",
+				"elements": {
+					"type": "object",
+					"elements": {
+						"value": "number"
+					}
+				}
+				
+			},
+			
+			"density": {
+				
+				"type": "array",
+				"elements": {
+					"type": "object",
+					"elements": {
+						"high": "number",
+						"low": "number",
+						"temperature": "number",
+					}
+				}
+				
+			},
+			
+			"mol3d": {
+				"type": "array",
+				"elements": "molfile3d"
+			},
+			
+			"ir": {
+				"type": "array",
+				"elements": {
+					"type": "object",
+					"elements": {
+						"conditions": "string",
+						"solvent": "string",
+						"jcamp": "jcamp",
+						"view": {
+							"type": "object",
+							"elements": {
+								"description": "string",
+								"value": "string",
+								"url": "string",
+								"pdf": "string"
+							}
+						}
+						
+					}
+					
+				}
+				
+			},
+			
+			
+			"nmr": {
+				"type": "array",
+				"elements": {
+					"type": "object",
+					"elements": {
+						"pressure": "string",
+						"solvent": "string",
+						"experiment": "string",
+						"frequency": "number",
+						"nucleus": "string",
+						"temperature": "string",
+						"jcamp": "jcamp",
+						"view": {
+							"type": "object",
+							"elements": {
+								"description": "string",
+								"value": "string",
+								"url": "string",
+								"pdf": "string"
+							}
+						}
+						
+					}
+					
+				}
+				
+			},
+			
+			
+			
+			"mass": {
+				"type": "array",
+				"elements": {
+					"type": "object",
+					"elements": {
+						"experiment": "string",
+						"jcamp": "jcamp"
+					}
+					
+				}
+				
+			}
+			
 		}
 	}
-}
+};
+
 
 
 CI.DataType.getType = function(element) {
