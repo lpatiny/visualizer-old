@@ -62,10 +62,10 @@ CI.Module.prototype._types['2d_list'].Model.prototype = {
 	getjPath: function(rel) {
 		
 		function getjPath(data) {
-			var jpaths = {};
+			var jpaths = [];
 			
 			for(var i = 0; i < data.length; i++) 
-				CI.Types._getjPath(data[i], jpaths);
+				CI.DataType.getJPathsFromElement(data[i], jpaths);
 			return jpaths;
 		}
 		

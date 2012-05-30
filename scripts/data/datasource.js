@@ -58,10 +58,10 @@ CI.DataSource.prototype = {
 		var asObject = typeof this.sourceAccepts.asObject != "undefined" && this.sourceAccepts.asObject;
 		
 		for(var i = 0; i < this.sourceAccepts.type.length; i++) {
-			console.log(CI.DataType.getType(data));
-			console.log(this.sourceAccepts.type[i]);
+			
 			if(this.sourceAccepts.type[i] == CI.DataType.getType(data))
 				return this.data = data;
+				
 			else if(asObject && CI.DataType.getType(data) == 'object') {
 				
 				for(var j in data) {

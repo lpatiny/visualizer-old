@@ -20,7 +20,7 @@ CI.DataType.Structures = {
 	'chemical': {
 		"type": "object",
 		"elements": {
-			"entryID": "int",
+			"_entryID": "int",
 			"supplierName": "string",
 			"iupac": {
 				"type": "array",
@@ -150,7 +150,8 @@ CI.DataType.getValueFromJPath = function(element, jpath, callback) {
 		
 	var jpath2 = jpath.split('.');
 	jpath2.shift();
-	CI.DataType._getValueFromJPath(element, jpath2, callback);
+
+	CI.DataType._getValueFromJPath(CI.DataType.getValueIfNeeded(element), jpath2, callback);
 }
 
 CI.DataType._getValueFromJPath = function(element, jpath, callback) {
@@ -343,6 +344,8 @@ CI.DataType._toScreen = function(element, box, callback) {
 	}), box, callback);
 }
 
+CI.DataType.toScreen = CI.DataType._toScreen;
+
 CI.DataType._valueToScreen = function(value, box, callback) {
 	
 	var repoFuncs = box.view.typeToScreen;
@@ -358,7 +361,7 @@ CI.DataType._valueToScreen = function(value, box, callback) {
 		
 	}
 	
-	if(typeof CI.Type[type].toScreen == 'function') {
+	if(CI.Type[type] && typeof CI.Type[type].toScreen == 'function') {
 		if(callback)
 			callback(CI.Type[type].toScreen(value));
 			

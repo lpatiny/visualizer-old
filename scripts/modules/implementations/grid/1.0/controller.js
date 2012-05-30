@@ -55,7 +55,7 @@ CI.Module.prototype._types.grid.Controller.prototype = {
 		for(var i = 0; i < actions.length; i++) {
 			
 			if(actions[i].event == "onHover") {
-				var toSend = CI.Types.getValueFromJPath(actions[i].jpath, element, null, null, this, true);
+				var toSend = CI.DataType.getValueFromJPath(actions[i].jpath, element, null, null, this, true);
 				
 				if(toSend != null)
 					CI.API.setSharedVar(actions[i].name, toSend);
@@ -90,7 +90,7 @@ CI.Module.prototype._types.grid.Controller.prototype = {
 	
 	configurationReceive: {
 		list: {
-			type: 'array',
+			type: ['array'],
 			label: 'List',
 			description: 'Any list of displayable element'
 		}		
@@ -116,7 +116,10 @@ CI.Module.prototype._types.grid.Controller.prototype = {
 		field.setTitle(new CI.Title('Columns title'));
 		
 		var options = [];
-		CI.DataType.getJPathsFromElement(this.module.getDataFromRel('list').getData()[0], options);
+		var data = this.module.getDataFromRel('list').getData();
+		
+		if(data != null)
+			CI.DataType.getJPathsFromElement(data[0], options);
 		
 		var field = groupfield.addField({
 			type: 'Combo',
