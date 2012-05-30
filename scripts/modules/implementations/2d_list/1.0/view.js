@@ -93,7 +93,6 @@ CI.Module.prototype._types['2d_list'].View.prototype = {
 				
 			CI.DataType.getValueFromJPath(this.list[i], valJpath, function(val) {
 				var val = CI.DataType.toScreen(val, view.module);
-				console.log(view.dom);
 				view.dom.children('table').children('tbody').children().find('.col-id-' + j).html(val);	
 			});
 		}

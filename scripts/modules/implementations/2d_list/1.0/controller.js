@@ -41,10 +41,12 @@ CI.Module.prototype._types['2d_list'].Controller.prototype = {
 						return;
 					var value = CI.Util.getValue(moduleValue);
 					var k = j;
+					
 					CI.DataType.getValueFromJPath(value[elementId], actions[j].jpath, function(toSend) {
+					
 						if(toSend != null)
 							CI.API.setSharedVar(actions[k].name, toSend);
-					}, true);
+					});
 					
 				});
 				

@@ -150,9 +150,8 @@ CI.DataType.getValueFromJPath = function(element, jpath, callback, wholeObject) 
 		
 	var jpath2 = jpath.split('.');
 	jpath2.shift();
-	
 
-	CI.DataType._getValueFromJPath(CI.DataType.getValueIfNeeded(element), jpath2, callback, wholeObject ? element : false);
+	return CI.DataType._getValueFromJPath(element, jpath2, callback);
 }
 
 CI.DataType._getValueFromJPath = function(element, jpath, callback) {
@@ -160,11 +159,11 @@ CI.DataType._getValueFromJPath = function(element, jpath, callback) {
 	var type;
 	var jpathElement = jpath.shift();
 	
-	if(!jpathElement)
+	if(jpathElement == undefined && callback)
 		callback(element);
 		
-	el = element[jpathElement];
-	CI.DataType.fetchElementIfNeeded(el, function(elChildren) {
+	el = el[jpathElement];
+	return CI.DataType.fetchElementIfNeeded(el, function(elChildren) {
 		CI.DataType._getValueFromJPath(elChildren, jpath, callback);
 	});
 }
@@ -370,22 +369,16 @@ CI.DataType._valueToScreen = function(value, box, callback) {
 		return;
 		
 	if(typeof repoFuncs[type] == 'function') {
-		if(callback)
-			callback(repoFuncs[type](valueToDisplay));
-		else
-			return repoFuncs[type](valueToDisplay);
-		
+		return repoFuncs[type](valueToDisplay, callback);
 	}	
+	
 	if(CI.Type[type] && typeof CI.Type[type].toScreen == 'function') {
-		if(callback)
-			callback(CI.Type[type].toScreen(valueToDisplay, callback));
-		else
-			return CI.Type[type].toScreen(valueToDisplay);
+		return CI.Type[type].toScreen(valueToDisplay, callback)
 	}
 	
 	
 	if(callback)
-		callack("__unimplemented");	
+		callback("__unimplemented");	
 }
 	
 
@@ -394,12 +387,12 @@ CI.Type = {
 	
 	string: {
 		
-		toScreen: function(val) { return val; }
+		toScreen: function(val, callback) { if(callback) callback(val); else return val; }
 	},
 	
 	number: {
 		
-		toScreen: function(val) { return val + ""; }	
+		toScreen: function(val, callback) { if(callback) callback(val); else return val; }
 	},
 	
 	chemical: {
@@ -409,10 +402,7 @@ CI.Type = {
 		},
 		
 		toScreen: function(val, callback) {
-			CI.Type.chemical.getIUPAC(val, function(val) {
-				callback(val);
-			})
-			
+			return CI.Type.chemical.getIUPAC(val, callback);
 		}
 		
 	},
