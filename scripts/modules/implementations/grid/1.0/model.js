@@ -62,19 +62,29 @@ CI.Module.prototype._types.grid.Model.prototype = {
 	getjPath: function(rel) {
 		
 		function getjPath(data) {
-			var jpaths = [];
-			
-			for(var i = 0; i < data.length; i++) 
-				CI.DataType.getJPathsFromElement(data[i], jpaths);
+			// It's an array of equivalent elements
+			// Don't need to merge a list
+			// It's like that since the data is typed and we know the structure
+			var data = data[0];
+			var jpaths = []; 
+			CI.DataType.getJPathsFromElement(data, jpaths);
 			return jpaths;
 		}
 		
-		var data = this.module.getDataFromRel('list');
+		
+		switch(rel) {
+			
+			case 'element':
+				rel = 'list';
+			break;
+			
+		}
+		var data = this.module.getDataFromRel(rel);
 		
 		if(!data || data == null)
 			return;
+			
 		data = data.getData();
-		
 		if(data == null)
 			return;
 		return getjPath(data);

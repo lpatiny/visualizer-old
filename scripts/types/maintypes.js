@@ -67,7 +67,16 @@ CI.DataType.Structures = {
 			},
 			
 			"bachID": "string",
-			"catalogID": "string"
+			"catalogID": "string",
+			"entryDetails": "chemicalDetails"
+		}
+	},
+	
+	"chemicalDetails": {
+		"type": "object",
+		"elements": {
+			"_entryID": "int",
+			"supplierName": "string"
 		}
 	}
 }
@@ -125,7 +134,7 @@ CI.DataType.fetchElementIfNeeded = function(element, callback) {
 	var type = element.type, ajaxType;
 	if(!element.value && element.url) {
 		
-		ajaxType = typeof CI.DataType.Structures[type] != "object" ? 'json' : 'text';
+		ajaxType = typeof CI.DataType.Structures[type] == "object" ? 'json' : 'text';
 		$.ajax({
 			url: element.url,
 			dataType: ajaxType,
@@ -174,16 +183,18 @@ CI.DataType.getJPathsFromStructure = function(structure, title, jpathspool, keys
  	if(!structure)
 		return;
 
-	if(!keystr)
+	if(!keystr || keystr == null) {
 		keystr = "element";
-	else
+		title = keystr;
+	} else
 		keystr = keystr + "." + title;
 		
 	var children = [];
-	jpathspool.push({ title: title, children: children, key: keystr });
 	
 	if(structure.elements) {
 		
+		jpathspool.push({ title: title, children: children, key: keystr });
+	
 		switch(structure.type) {
 			
 			case 'object':
@@ -206,6 +217,19 @@ CI.DataType.getJPathsFromStructure = function(structure, title, jpathspool, keys
 				CI.DataType.getJPathsFromStructure(structure.elements, jpathpoolchild, keystr2);*/
 			break;
 		}		
+	} else {
+		
+		// Pretyped structures
+		// Like chemical: "chemical"
+		if(CI.DataType.Structures[structure]) {
+			
+			CI.DataType.getJPathsFromStructure(CI.DataType.Structures[structure], title, jpathspool, keystr);
+			
+			
+		} else {
+			jpathspool.push({ title: title, children: children, key: keystr });
+	
+		}
 	}
 	
 }

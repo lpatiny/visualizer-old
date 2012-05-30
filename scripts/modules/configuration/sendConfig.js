@@ -38,9 +38,13 @@ $(document).bind('configModule', function(event, module) {
 		var availCfg = module.controller.configurationSend;
 		
 		var sendjpaths = [];
-		for(var i in availCfg.rels)
-			sendjpaths[i] = CI.DataType.getJPathsFromElement(module.model.getjPath(i));
+		for(var i in availCfg.rels) {
 			
+			sendjpaths[i] = module.model.getjPath(i)
+		}
+		
+		
+		
 		var allEvents = [];
 		for(var i in availCfg.events)
 			allEvents.push({title: availCfg.events[i].label, key: i});
