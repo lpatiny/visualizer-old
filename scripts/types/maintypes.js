@@ -150,6 +150,7 @@ CI.DataType.getValueFromJPath = function(element, jpath, callback, wholeObject) 
 		
 	var jpath2 = jpath.split('.');
 	jpath2.shift();
+	
 
 	CI.DataType._getValueFromJPath(CI.DataType.getValueIfNeeded(element), jpath2, callback, wholeObject ? element : false);
 }
@@ -363,9 +364,9 @@ CI.DataType._valueToScreen = function(value, box, callback) {
 	
 	if(CI.Type[type] && typeof CI.Type[type].toScreen == 'function') {
 		if(callback)
-			callback(CI.Type[type].toScreen(value));
+			callback(CI.Type[type].toScreen(value, callback));
 			
-		return CI.Type[type].toScreen(value);
+		return CI.Type[type].toScreen(value, callback);
 	}
 	
 	
@@ -390,7 +391,14 @@ CI.Type = {
 	chemical: {
 		
 		getIUPAC: function(source, clbk) {
-			return CI.DataType.getValueFromJPath(source, "iupac[0].value", clbk);
+			return CI.DataType.getValueFromJPath(source, "element.iupac.0.value", clbk);
+		},
+		
+		toScreen: function(val, callback) {
+			CI.Type.chemical.getIUPAC(val, function(val) {
+				callback(val);
+			})
+			
 		}
 		
 	},

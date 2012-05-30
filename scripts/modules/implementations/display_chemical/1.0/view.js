@@ -37,9 +37,12 @@ CI.Module.prototype._types.display_chemical.View.prototype = {
 			return;
 		
 		this.chemical = moduleValue;
-		var div = CI.dataType.toScreen(this.chemical, this);
+		CI.DataType.toScreen(this.chemical, this.module, function(val) {
+			console.log(val);
+			view.dom.html(val);	
+		});
 		
-		this.dom.html(div);
+		
 	},
 	
 	
