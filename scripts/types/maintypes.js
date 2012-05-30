@@ -155,51 +155,60 @@ CI.DataType.getValueFromJPath = function(element, jpath, callback, wholeObject) 
 	CI.DataType._getValueFromJPath(CI.DataType.getValueIfNeeded(element), jpath2, callback, wholeObject ? element : false);
 }
 
-CI.DataType._getValueFromJPath = function(element, jpath, callback, wholeObject) {
-	var el = element;
+CI.DataType._getValueFromJPath = function(element, jpath, callback) {
+	var el = CI.DataType.getValueIfNeeded(element);
 	var type;
 	var jpathElement = jpath.shift();
 	
 	if(!jpathElement)
-		callback(wholeObject ? wholeObject : element);
+		callback(element);
 		
 	el = element[jpathElement];
 	CI.DataType.fetchElementIfNeeded(el, function(elChildren) {
-		var element = CI.DataType.getValueIfNeeded(elChildren);
-		CI.DataType._getValueFromJPath(element, jpath, callback, wholeObject ? elChildren : false);
+		CI.DataType._getValueFromJPath(elChildren, jpath, callback);
 	});
 }
 
-CI.DataType.getJPathsFromStructure = function(structure, jpathspool, keystr) {
 
-	if(!structure)
+CI.DataType.getJPathsFromStructure = function(structure, title, jpathspool, keystr) {
+ 
+ 	if(!structure)
 		return;
 
 	if(!keystr)
 		keystr = "element";
-
-	switch(structure.type) {
+	else
+		keystr = keystr + "." + title;
 		
-		case 'object':
+	var children = [];
+	jpathspool.push({ title: title, children: children, key: keystr });
+	
+	if(structure.elements) {
+		
+		switch(structure.type) {
 			
-			for(var i in structure.elements) {
+			case 'object':
+				
+				for(var i in structure.elements) {
+					CI.DataType.getJPathsFromStructure(structure.elements[i], i, children, keystr);
+				}
+				
+			break;
+			
+			case 'array':
+			
+				CI.DataType.getJPathsFromStructure(structure.elements, '0', children, keystr);
+				/*
 				var jpathpoolchild = [];
-				var keystr2 = keystr + "." + i;
-				jpathspool.push({ title: i, children: jpathpoolchild, key: keystr2 });
-				CI.DataType.getJPathsFromStructure(structure.elements[i], jpathpoolchild, keystr2);
-			}
-			
-		break;
-		
-		case 'array':
-			var jpathpoolchild = [];
-			var keystr2 = keystr + ".0";
-			jpathspool.title =  "n-th element";
-			jpathspool.children = jpathpoolchild;
-			jpathspool.key = keystr2;
-			CI.DataType.getJPathsFromStructure(structure.elements, jpathpoolchild, keystr2);
-		break;
-	}	
+				var keystr2 = keystr + ".0";
+				jpathspool.title =  "n-th element";
+				jpathspool.children = jpathpoolchild;
+				jpathspool.key = keystr2;
+				CI.DataType.getJPathsFromStructure(structure.elements, jpathpoolchild, keystr2);*/
+			break;
+		}		
+	}
+	
 }
 
 
@@ -241,22 +250,26 @@ CI.DataType.getStructureFromElement = function(element, structure) {
 
 CI.DataType.getJPathsFromElement = function(element, jpaths) {
 	
+	
+	if(!jpaths)
+		var jpaths = [];
+		
 	if(!element)
 		return;
 		
 	// We know the dynamic structure
 	// Apply to typed elements + to js objects
 	if(element.structure)
-		CI.DataType.getJPathsFromStructure(element.structure, jpaths);	
+		CI.DataType.getJPathsFromStructure(element.structure, null, jpaths);	
 	else if(element.type && CI.DataType.Structures[element.type])
-		CI.DataType.getJPathsFromStructure(CI.DataType.Structures[element.type], jpaths);
+		CI.DataType.getJPathsFromStructure(CI.DataType.Structures[element.type], null, jpaths);
 	else {
 		
 		switch(typeof element) {
 			case 'object':
 				var structure = {};
 				CI.DataType.getStructureFromElement(element, structure);
-				CI.DataType.getJPathsFromStructure(structure, jpaths);
+				CI.DataType.getJPathsFromStructure(structure, null, jpaths);
 			break;
 			
 			default:
@@ -351,22 +364,23 @@ CI.DataType._valueToScreen = function(value, box, callback) {
 	
 	var repoFuncs = box.view.typeToScreen;
 	var type = CI.DataType.getType(value);
-
+	var valueToDisplay = CI.DataType.getValueIfNeeded(value); 
+	
 	if(!type)
 		return;
 		
 	if(typeof repoFuncs[type] == 'function') {
 		if(callback)
-			callback(repoFuncs[type](value));
-		return repoFuncs[type](value);
+			callback(repoFuncs[type](valueToDisplay));
+		else
+			return repoFuncs[type](valueToDisplay);
 		
-	}
-	
+	}	
 	if(CI.Type[type] && typeof CI.Type[type].toScreen == 'function') {
 		if(callback)
-			callback(CI.Type[type].toScreen(value, callback));
-			
-		return CI.Type[type].toScreen(value, callback);
+			callback(CI.Type[type].toScreen(valueToDisplay, callback));
+		else
+			return CI.Type[type].toScreen(valueToDisplay);
 	}
 	
 	
@@ -404,6 +418,18 @@ CI.Type = {
 	},
 	
 	
+	gif: {
+		
+		toScreen: function(val, clbk) {
+			var val = '<img src="' + val + '" />';
+			if(clbk)
+				clbk(val);
+			else
+				return val;
+			
+		}	
+		
+	},
 	
 	molfile2D: {
 	

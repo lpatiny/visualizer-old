@@ -87,8 +87,6 @@ CI.Module.prototype._types.grid.View.prototype = {
 
 
 				CI.DataType.getValueFromJPath(source[i], jpath, function(data) {
-					if(i < 10)
-						console.log(CI.DataType.asyncToScreenHtml(data, box));
 					element.data[j] = CI.DataType.asyncToScreenHtml(data, box);
 				});
 				
