@@ -53,13 +53,17 @@ CI.DataSource.prototype = {
 		var dataRebuilt = {};
 		if(!(this.sourceAccepts.type instanceof Array))
 			this.sourceAccepts.type = [this.sourceAccepts.type];
+	
+		var dataType = CI.DataType.getType(data);
+		console.log(data);
+		console.log(dataType);
 		console.log(this.sourceAccepts);
 		var mustRebuild = false;
 		var asObject = typeof this.sourceAccepts.asObject != "undefined" && this.sourceAccepts.asObject;
 		
 		for(var i = 0; i < this.sourceAccepts.type.length; i++) {
 			
-			if(this.sourceAccepts.type[i] == CI.DataType.getType(data))
+			if(this.sourceAccepts.type[i] == dataType)
 				return this.data = data;
 				
 			else if(asObject && CI.DataType.getType(data) == 'object') {

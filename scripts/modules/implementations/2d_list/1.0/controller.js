@@ -40,9 +40,12 @@ CI.Module.prototype._types['2d_list'].Controller.prototype = {
 					if(!(moduleValue = module.getDataFromRel('list').getData()))
 						return;
 					var value = CI.Util.getValue(moduleValue);
-					var toSend = CI.Types.getValueFromJPath(actions[j].jpath, value[elementId]);
-					if(toSend != null)
-						CI.API.setSharedVar(actions[j].name, toSend);
+					var k = j;
+					CI.DataType.getValueFromJPath(value[elementId], actions[j].jpath, function(toSend) {
+						if(toSend != null)
+							CI.API.setSharedVar(actions[k].name, toSend);
+					}, true);
+					
 				});
 				
 			}

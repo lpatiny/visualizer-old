@@ -143,7 +143,7 @@ CI.DataType.fetchElementIfNeeded = function(element, callback) {
 }
 
 
-CI.DataType.getValueFromJPath = function(element, jpath, callback) {
+CI.DataType.getValueFromJPath = function(element, jpath, callback, wholeObject) {
 	
 	if(!jpath.split)
 		jpath = '';
@@ -151,21 +151,21 @@ CI.DataType.getValueFromJPath = function(element, jpath, callback) {
 	var jpath2 = jpath.split('.');
 	jpath2.shift();
 
-	CI.DataType._getValueFromJPath(CI.DataType.getValueIfNeeded(element), jpath2, callback);
+	CI.DataType._getValueFromJPath(CI.DataType.getValueIfNeeded(element), jpath2, callback, wholeObject ? element : false);
 }
 
-CI.DataType._getValueFromJPath = function(element, jpath, callback) {
+CI.DataType._getValueFromJPath = function(element, jpath, callback, wholeObject) {
 	var el = element;
 	var type;
 	var jpathElement = jpath.shift();
 	
 	if(!jpathElement)
-		callback(element);
+		callback(wholeObject ? wholeObject : element);
 		
 	el = element[jpathElement];
 	CI.DataType.fetchElementIfNeeded(el, function(elChildren) {
 		var element = CI.DataType.getValueIfNeeded(elChildren);
-		CI.DataType._getValueFromJPath(element, jpath, callback);
+		CI.DataType._getValueFromJPath(element, jpath, callback, wholeObject ? elChildren : false);
 	});
 }
 
