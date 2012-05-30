@@ -38,7 +38,7 @@ CI.Module.prototype._types.spectra_displayer.View.prototype = {
 	},
 	
 	update: function() {
-
+console.log("Variable received in spectra displayer");
 		var moduleValue;
 		var view = this;
 		
@@ -56,9 +56,14 @@ CI.Module.prototype._types.spectra_displayer.View.prototype = {
 			}
 		});
 		*/
-		console.log(CI.dataType.toScreen(CI.Types.getValueFromJPath('', moduleValue, [], null, this, true), this));
-		this.dom.html(CI.dataType.toScreen(CI.Types.getValueFromJPath('', moduleValue, [], null, this, true), this));
-		$(document).trigger('checkAsyncLoad', [ this.dom ]);
+	
+	
+		CI.DataType.getValueFromJPath(moduleValue, '', function(val) {
+			view.dom.html(CI.DataType.toScreen(val, view.module));
+			$(document).trigger('checkAsyncLoad', [ view.dom ]);
+		});
+		
+		
 		CI.Grid.moduleResize(this.module);
 			
 	},

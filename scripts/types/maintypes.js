@@ -2,18 +2,6 @@
 CI.DataType = {};
 
 
-$(document).bind('checkAsyncLoad', function(event, dom) {
-
-	$(dom).find('.load-async').each(function() {
-		var loadType = $(this).data('async-type');
-		var fct = CI.dataType.asyncLoading[loadType];
-		if(typeof fct == "function")
-			fct($(this));
-	});
-});
-
-
-
 CI.DataType.Structures = {
 	
 	'mol2D': "string",
@@ -357,16 +345,17 @@ CI.DataType.getJPathsFromStructure = function(structure, title, jpathspool, keys
  	if(!structure)
 		return;
 
-	if(!keystr || keystr == null) {
-		keystr = "element";
-		title = keystr;
-	} else
-		keystr = keystr + "." + title;
-		
 	var children = [];
 	
 	if(structure.elements) {
 		
+			
+		if(!keystr || keystr == null) {
+			keystr = "element";
+			title = keystr;
+		} else
+			keystr = keystr + "." + title;
+					
 		jpathspool.push({ title: title, children: children, key: keystr });
 	
 		switch(structure.type) {
@@ -401,6 +390,16 @@ CI.DataType.getJPathsFromStructure = function(structure, title, jpathspool, keys
 			
 			
 		} else {
+			
+			
+					
+			if(!keystr || keystr == null) {
+				keystr = "element";
+				title = keystr;
+			} else
+				keystr = keystr + "." + title;
+				
+				
 			jpathspool.push({ title: title, children: children, key: keystr });
 	
 		}
@@ -642,24 +641,52 @@ CI.Type = {
 		}
 	},
 	
+	jcamp: {
+		toScreen: function(value) {
+			return '<canvas data-async-type="jcamp"  class="asyncLoading" data-jcamp="' + escape(value) + '"></canvas>';
+		}
+	}
+}
+
+
+CI.DataType._jcampid = 0;
+CI.DataType._asyncLoading = 0;
+
+CI.DataType.asyncLoading = {
+	
 	jcamp: function(dom) {
-		var data = unescape(dom.data('value'));
-		dom.attr('id', 'jcamp_' + (++CI.dataType._jcampid));
-		var spectra = new ChemDoodle.PerspectiveCanvas('jcamp_' + (CI.dataType._jcampid), '100', '100');
+		
+		var data = unescape(dom.data('jcamp'));
+		console.log(dom);
+		dom.attr('id', 'jcamp_' + (++CI.DataType._jcampid));
+		var spectra = new ChemDoodle.PerspectiveCanvas('jcamp_' + (CI.DataType._jcampid), '500', '500');
 		dom.data('spectra', spectra);
 		spectra.specs.plots_showYAxis = true;
 		spectra.specs.plots_flipXAxis = false;
 		var jcampLoaded = ChemDoodle.readJCAMP(data);
-		
+		console.log(jcampLoaded);
   		spectra.loadSpectrum(jcampLoaded);
+	  		
 	}
 	
-	
-	
-	
-	
-	
 }
+
+
+$(document).bind('checkAsyncLoad', function(event, dom) {
+
+	$(dom).find('.asyncLoading').each(function() {
+		var loadType = $(this).data('async-type');
+		var fct = CI.DataType.asyncLoading[loadType];
+		
+		if(typeof fct == "function")
+			fct($(this));
+	});
+});
+
+
+
+
+
 
 /*
 CI.Types.mf = {	
