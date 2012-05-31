@@ -23,41 +23,49 @@ CI.Module.prototype._types.canvas_matrix.Controller.prototype = {
 		var actions;
 		if(!(actions = this.module.definition.dataSend))	
 			return;
+		
+	
+		$(this.module.getDomView()).on('mousemove', 'canvas', function(e) {
+			
+			var cellX = 1;
+			var cellY = 1;
+			
+			var moduleValue;
+			if(!(moduleValue = module.getDataFromRel('matrix').getData()))
+				return;
+			
+			console.log(moduleValue);
+			moduleValue = moduleValue.value;
+			var xLabel = moduleValue.xLabel;
+			var yLabel = moduleValue.yLabel;
+			var gridData = moduleValue.data;
+			
+			//Positions relative to top-left of canvas
+			var xpx = e.pageX - $(e.target).offset().left;
+			var ypx = e.pageY - $(e.target).offset().top;
+			
+			//offset by the position of the grid within the canvas
+			xpx += module.view.moduleCenterX * module.view.lastImageData.width - $(e.target).width()/2
+			ypx += module.view.moduleCenterY * module.view.lastImageData.height - $(e.target).height()/2
+			
+			//grid coordinates
+			var x = Math.floor(xpx / module.view.lastCellWidth);
+			var y = Math.floor(ypx / module.view.lastCellHeight);
+			if (x<0 || y<0 || x>=gridData.length || y>=gridData[0].length)
+				return;
 				
-		if(typeof actions.onPixelHover !== "undefined") 
-			$(this.module.getDomView()).on('mousemove', 'canvas', function(e) {
+			var dataKeyed = gridData[x][y];
+			var value = false;
+			
+			for(var i in actions) {
 				
-				var cellX = 1;
-				var cellY = 1;
+				var j = i;
 				
-				var moduleValue;
-				if(!(moduleValue = module.getDataFromRel('matrix').getData()))
-					return;
-				
-				var xLabel = moduleValue.xLabel;
-				var yLabel = moduleValue.yLabel;
-				var gridData = moduleValue.value;
-				
-				//Positions relative to top-left of canvas
-				var xpx = e.pageX - $(e.target).offset().left;
-				var ypx = e.pageY - $(e.target).offset().top;
-				
-				//offset by the position of the grid within the canvas
-				xpx += module.view.moduleCenterX * module.view.lastImageData.width - $(e.target).width()/2
-				ypx += module.view.moduleCenterY * module.view.lastImageData.height - $(e.target).height()/2
-				
-				//grid coordinates
-				var x = Math.floor(xpx / module.view.lastCellWidth);
-				var y = Math.floor(ypx / module.view.lastCellHeight);
-				if (x<0 || y<0 || x>=gridData.length || y>=gridData[0].length)
-					return;
+				if(actions[i].event == "onPixelHover") {
 					
-				var dataKeyed = gridData[x][y];
-				var value = false;
-				for(var i = 0; i < actions.onPixelHover.length; i++) {
-					
+
 					var hashmap = false;
-					switch(actions.onPixelHover[i].rel) {
+					switch(actions[i].rel) {
 						case 'row':
 							//yLabel[y].id = x + ", " + y;
 							hashmap = yLabel[y];	
@@ -74,14 +82,24 @@ CI.Module.prototype._types.canvas_matrix.Controller.prototype = {
 						break;
 					}
 					
-					if(!!hashmap) {
-						var data = CI.Types.getValueFromJPath(actions.onPixelHover[i].key, hashmap);
-						CI.API.setSharedVar(actions.onPixelHover[i].name, data);
-					} else if(!!value)
-						CI.API.setSharedVar(actions.onPixelHover[i].name, value);
+					(function(h, jpath, name, value, hashmap) {
+						
+						if(!!hashmap) {
+							var data = CI.DataType.getValueFromJPath(hashmap, jpath, function(value) {
+								CI.API.setSharedVar(name, value);
+							});
+							
+						} else if(!!value)
+							var data = CI.DataType.getValueFromJPath(value, jpath, function(value) {
+								CI.API.setSharedVar(name, value);
+							});
+						
+						
+					}) (j, actions[j].jpath, actions[j].name, value, hashmap);
 				}
-			});
-		
+			}
+		});
+			
 		if(actions.onPixelClick) {
 		}
 		var view = this.module.view;

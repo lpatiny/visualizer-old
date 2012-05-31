@@ -53,17 +53,14 @@ CI.Module.prototype._types.grid.Controller.prototype = {
 			return;
 				
 		for(var i = 0; i < actions.length; i++) {
-			
 			if(actions[i].event == "onHover") {
 				var j = i;
-				console.log(actions[j].jpath);
 				CI.DataType.getValueFromJPath(element, actions[j].jpath, function(toSend) {
+				
 					CI.API.setSharedVar(actions[j].name, toSend);	
 				});
 			}
 		}
-			
-		
 	},
 	
 	configurationSend: {

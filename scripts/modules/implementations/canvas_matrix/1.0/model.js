@@ -53,10 +53,10 @@ CI.Module.prototype._types.canvas_matrix.Model.prototype = {
 	
 	getjPath: function(rel, accepts) {
 		
-		function getjPath(data, accepts) {
-			var jpaths = {};
-			for(var i = 0; i < data.length; i++) 
-				CI.Types._getjPath(data[i], jpaths, accepts);
+		function getjPath(data) {
+			
+			var jpaths = [];
+			CI.DataType.getJPathsFromElement(data[0], jpaths);
 			return jpaths;
 		}
 		
@@ -64,8 +64,8 @@ CI.Module.prototype._types.canvas_matrix.Model.prototype = {
 		
 		if(!data)
 			return;
-		
 		data = data.getData();
+		data = data.value;
 		if(!data)
 			return;
 			

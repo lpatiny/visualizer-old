@@ -297,8 +297,9 @@ CI.DataType.fetchElementIfNeeded = function(element, callback) {
 	if(!element.value && element.url) {
 		
 		ajaxType = typeof CI.DataType.Structures[type] == "object" ? 'json' : 'text';
+		
 		$.ajax({
-			url: element.url,
+			url: './proxify.php?url=' + escape(element.url),
 			dataType: ajaxType,
 			type: "get",
 			timeout: 120000,
@@ -657,14 +658,14 @@ CI.DataType.asyncLoading = {
 	jcamp: function(dom) {
 		
 		var data = unescape(dom.data('jcamp'));
-		console.log(dom);
+		
 		dom.attr('id', 'jcamp_' + (++CI.DataType._jcampid));
 		var spectra = new ChemDoodle.PerspectiveCanvas('jcamp_' + (CI.DataType._jcampid), '500', '500');
 		dom.data('spectra', spectra);
 		spectra.specs.plots_showYAxis = true;
 		spectra.specs.plots_flipXAxis = false;
 		var jcampLoaded = ChemDoodle.readJCAMP(data);
-		console.log(jcampLoaded);
+		
   		spectra.loadSpectrum(jcampLoaded);
 	  		
 	}
