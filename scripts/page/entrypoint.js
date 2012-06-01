@@ -169,3 +169,99 @@ CI.EntryPoint.prototype = {
 		CI.Grid.removeModule(Module);
 	}
 }
+
+
+
+
+
+
+
+var red = '#ff0000';
+	var orange = '#EDAB10';
+	var green = '#9DDDA3';	
+
+	if(/*Err_L_Reservoir && Err_L_Reservoir > 0.5 || */L_Bassin === false || L_Bassin === null) {
+
+		setText('#vartxtlvl', '--- m');
+		setAttribute('#varrectlvl', 'fill', '#f0f0f0');
+
+	} else {
+		setText('#vartxtlvl', L_Bassin.toFixed(2) + ' m');
+		
+		setDimension('#varrectlvl', L_Bassin, 'height', [0, 0, 4, 126]);
+		setBottom('#varrectlvl', 250);
+		setAttribute('#varrectlvl', 'fill', L_Bassin < 1.5 ? red : '#C1E6EA');
+	} 
+
+
+
+
+	if(/*Err_Q_Sortie && Err_Q_Sortie > 0.5 || */!Q_EP_Out) {
+		setText('#txtDebit', 'Q = --- l/min');
+	} else {
+		setText('#txtDebit', 'Q = ' + Q_EP_Out.toFixed(2) + ' l/min');
+	}
+	
+	if(P_UV_Lamp) {
+		setText('#P_UV', P_UV_Lamp.toFixed(2) + ' W/m2');
+	} else {
+		setText('#P_UV', '--- W/m2');
+	}
+
+	if(T_UV) {
+		setText('#T_UV', T_UV.toFixed(2) + ' °C');
+	} else {
+		setText('#T_UV', '--- °C');
+	}
+ 	
+	if(!isNaN(parseInt(S_UV_Status))) {
+		
+		if(S_UV_Status < 0.5) {
+			setAttribute('#UVContainer', 'fill', green);
+			setAttribute('#lampTop', 'fill', 'transparent');
+			setAttribute('#lampBottom', 'fill', 'transparent');
+
+		} else if(S_UV_Status > 0.5 && S_UV_Status < 1.5) {
+			setAttribute('#lampBottom', 'fill', orange);
+			setAttribute('#lampTop', 'fill', 'transparent');
+			setAttribute('#UVContainer', 'fill', 'transparent');
+
+		} else if(S_UV_Status > 1.5 && S_UV_Status < 2.5) {
+			setAttribute('#lampTop', 'fill', red);
+			setAttribute('#lampBottom', 'fill', 'transparent');
+			setAttribute('#UVContainer', 'fill', 'transparent');
+
+		} else {
+			setAttribute('#lampTop', 'fill', 'transparent');
+			setAttribute('#lampBottom', 'fill', 'transparent');
+			setAttribute('#UVContainer', 'fill', '#f0f0f0');
+
+		}
+
+	} else {
+		setAttribute('#UVLamp2', 'fill', 'transparent');
+		setAttribute('#UVLamp1', 'fill', 'transparent');
+		setAttribute('#UV', 'fill', '#f0f0f0');
+	}
+
+	setAttribute('#SousPression', 'fill', Al_Mano_Min > 0.5 ? red : green);
+	setAttribute('#SurPression', 'fill', Al_Mano_Max > 0.5 ? red : green);
+	
+	if(P_Source_1)
+		setText('#P_Source', P_Source_1.toFixed(2) + " bar");
+	else
+		setText('#P_Source', '--- bar');
+
+	/*setText('#Date', timeToDate(time));*/
+
+
+	
+
+try {
+	setText("#varuvp", P_UV_Lamp + " W/m");
+	setText("#varuvtime",  h_UV_Lamp + " h");
+	setText("#varuvencl1", n1_UV_Lamp);
+	setText("#varuvencl2", n2_UV_Lamp);
+} catch(e) {
+	console.log("Impossible to set UV data");
+}

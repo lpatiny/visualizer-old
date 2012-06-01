@@ -299,7 +299,7 @@ CI.DataType.fetchElementIfNeeded = function(element, callback) {
 		ajaxType = typeof CI.DataType.Structures[type] == "object" ? 'json' : 'text';
 		
 		$.ajax({
-			url: './proxify.php?url=' + escape(element.url),
+			url: element.url,
 			dataType: ajaxType,
 			type: "get",
 			timeout: 120000,
