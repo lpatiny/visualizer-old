@@ -39,10 +39,10 @@ CI.Module.prototype._types.plot_stat.Controller.prototype = {
 	},
 	
 	configurationReceive: {
-		"roc": {
-			type: 'roc',
-			label: 'Roc Curve',
-			description: 'A Roc Curve defined by ROCy and ROCx'
+		"lineChart": {
+			type: 'xyChart',
+			label: 'Scatter plot',
+			description: 'A scatter plot'
 		}	
 	},
 	

@@ -26,14 +26,16 @@ CI.EntryPoint = function(structure, data, options, onLoad) {
 		
 		if(!structure.modules)
 			structure.modules = [];
-			
+		if(structure.showLeftConfig)
+			$("#ci-expand").bind('click');
 		entryPoint.entryData = structure.entryPoint;
 		
 		if(structure.modules !== undefined)
 			for(var i = 0; i < structure.modules.length; i++) {
 				entryPoint.addModuleFromJSON(structure.modules[i]);
 			}
-			
+		
+		CI.Grid.checkDimensions();
 		CI.DataSource.prototype._bindEvent();
 		
 		if(typeof data == "object")

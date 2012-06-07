@@ -7,6 +7,18 @@
  */
 
 
+
+
+(function() {
+      google.load('visualization', '1.0', {'packages':['corechart']});
+      // Set a callback to run when the Google Visualization API is loaded.
+      google.setOnLoadCallback(function() {
+      		console.log('Chart API ready');
+      });
+ })();
+ 
+ 
+ 
 if(typeof CI.Module.prototype._types.plot_stat == 'undefined')
 	CI.Module.prototype._types.plot_stat = {};
 
@@ -20,10 +32,7 @@ CI.Module.prototype._types.plot_stat.View.prototype = {
 		var html = [];
 		html.push('<div class="ci-plot"><div id="module-' + this.module.id + '"></div></div>');
 		this.dom = $(html.join(''));
-
-		google.load('visualization', '1.0', {'packages':['corechart']});
-		
-  	     //
+ 	     //
 		this.module.getDomContent().html(this.dom);
 	},
 	
@@ -40,31 +49,55 @@ CI.Module.prototype._types.plot_stat.View.prototype = {
 		var lastDataReceived = this.module.model.lastDataName;
 		var relLastDataReceived = this.module.getDataRelFromName(lastDataReceived);
 		
+		
+		
 		if(!(moduleValue = this.module.getDataFromRel(relLastDataReceived).getData()))
 			return;
 		
-		switch(rel) {
-			
-			case 'roc':
+		var moduleValue = CI.DataType.getValueIfNeeded(moduleValue);
+		
+
+		switch(relLastDataReceived) {
+						
+			case 'lineChart':
 				
-				var data = [["TTR", "FTP"]];
-				for(var i = 0; i < moduleValue.ROCx.length; i++) {
-					data.push([moduleValue.ROCx[i], moduleValue.ROCy[i]]);
+				var data = [[ moduleValue.xAxis.label ]];
+				
+				for(var i = 0, k = moduleValue.serieLabels.length; i < k; i++) {
+					data[0].push(moduleValue.serieLabels[i]);
 				}
-			return;	
-				new google.visualization.LineChart(document.getElementById('module-' + this.module.id)).
-      				draw(data, {curveType: "function",
-                  			width: 500, height: 400,
-                  			vAxis: {maxValue: 10}}
-          			);
 				
-			
-			break;
-			
-			
-			
-			
+				for(var i = 0, k = moduleValue.x.length; i < k; i++) {
+					data.push([moduleValue.x[i]]);
+				}
+				
+				for(var i = 0, k = moduleValue.series.length; i < k; i++) {
+					
+					for(var j = 0, l = moduleValue.series[i].length; j < l; j++) {
+						var val = moduleValue.series[i][j];
+						
+						if(val.value)
+							val = val.value;
+						data[j + 1].push(val);	
+					}
+				}
+				
+				console.log(data);
+				var data = google.visualization.arrayToDataTable(data);
+
+				new google
+					.visualization
+					.ScatterChart(document.getElementById('module-' + this.module.id))
+					.draw(data, {
+				          title: moduleValue.title,
+				          hAxis: {title: moduleValue.xAxis.label, minValue: moduleValue.xAxis.minValue, maxValue: moduleValue.xAxis.maxValue},
+				          vAxis: {title: moduleValue.yAxis.label},
+				          legend: 'none'
+				        });		
+
+			return;
 		}
+		
 	},
 	
 	getDom: function() {

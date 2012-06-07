@@ -28,6 +28,7 @@ CI.Module = function(definition) {
 	this.definition = definition;
 	
 	this.id = ++CI.Module.prototype.lastId;
+	CI.modules[this.id] = this;
 	
 	if(!definition.configuration)
 		definition.configuration = {};

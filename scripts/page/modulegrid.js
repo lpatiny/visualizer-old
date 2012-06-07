@@ -49,11 +49,13 @@ CI.Grid = {
 			grid: [CI.Grid.definition.xWidth, CI.Grid.definition.yHeight],
 			resize: function() {
 				CI.Grid.moduleResize(module);
+				CI.Grid.checkDimensions();
 			},
 			
 			containment: "parent"
 			
 		}).draggable({
+			
 			grid: [CI.Grid.definition.xWidth, CI.Grid.definition.yHeight],
 			containment: "parent",
 			handle: '.ci-module-header',
@@ -75,6 +77,10 @@ CI.Grid = {
 				
 				module.getPosition().left = position.left / CI.Grid.definition.xWidth;
 				module.getPosition().top = position.top / CI.Grid.definition.yHeight;
+			},
+			
+			drag: function() {
+				CI.Grid.checkDimensions();
 			}
 		}).trigger('resize');
 		
@@ -84,6 +90,20 @@ CI.Grid = {
 		});
 		
 		CI.Grid.moduleResize(module);
+	},
+	
+	checkDimensions: function() {
+		
+		var bottomMax = 0;
+		for(var i in CI.modules) {
+			
+			var pos = CI.modules[i].getPosition();
+			var size = CI.modules[i].getSize();
+			bottomMax = Math.max(bottomMax, pos.top + size.height);
+			
+		}
+		
+		CI.Grid._el.css('height', (CI.Grid.defaults.yHeight * bottomMax + 1000));
 	},
 	
 	

@@ -27,13 +27,14 @@ html, body {
 	height: 100%;
 }
 
-#ci-left, #ci-right {
+#ci-left {
 	vertical-align: top;
 	width: 250px;
 	position: relative;
+	display: none;
 }
 
-#ci-left ul, #ci-right ul {
+#ci-left ul {
 	margin: 0px;
 	padding: 0px;
 	margin-left: 20px;
@@ -228,7 +229,7 @@ div.ci-module-header-toolbar ul li {
 
 div.ci-module-wrapper .ci-module-content {
 	width: 100%;
-	overflow: hidden;
+	overflow: auto;
 }
 
 .ci-module-expand {
