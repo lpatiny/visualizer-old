@@ -288,4 +288,8 @@ div.ci-module-wrapper .ci-module-content {
 	margin-bottom: 3px;
 	cursor: pointer;
 }
+
+.ci-plot {
+	font-size: 0px;
+}
 	

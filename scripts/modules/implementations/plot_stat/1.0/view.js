@@ -38,7 +38,8 @@ CI.Module.prototype._types.plot_stat.View.prototype = {
 	
 	onResize: function() {
 		
-	
+		if(this.chart)
+			this.drawChart();
 	},
 	
 	update: function() {
@@ -82,22 +83,42 @@ CI.Module.prototype._types.plot_stat.View.prototype = {
 					}
 				}
 				
-				console.log(data);
-				var data = google.visualization.arrayToDataTable(data);
-
-				new google
+				this.data = data;
+				this.chartData = google.visualization.arrayToDataTable(data);
+				
+				this.chart = new google
 					.visualization
-					.ScatterChart(document.getElementById('module-' + this.module.id))
-					.draw(data, {
+					.ScatterChart(document.getElementById('module-' + this.module.id));
+					
+					
+				google.visualization.events.addListener(this.chart, 'onmouseover', function(e) {
+					var row = e.row;
+					var col = e.column;
+					var rowData = moduleValue.series[col - 1][row];
+					view.module.controller.hoverEvent(rowData);
+				});
+
+				this.chartOptions = {
 				          title: moduleValue.title,
 				          hAxis: {title: moduleValue.xAxis.label, minValue: moduleValue.xAxis.minValue, maxValue: moduleValue.xAxis.maxValue},
 				          vAxis: {title: moduleValue.yAxis.label},
 				          legend: 'none'
-				        });		
-
+				       };
+			       
+				this.drawChart();
 			return;
 		}
 		
+	},
+	
+	
+	drawChart: function() {
+		
+		this.chartOptions.width = this.module.domContent.parent().width();
+		this.chartOptions.height = this.module.domContent.parent().height();
+		this.chart
+			.draw(this.chartData, this.chartOptions);		
+
 	},
 	
 	getDom: function() {

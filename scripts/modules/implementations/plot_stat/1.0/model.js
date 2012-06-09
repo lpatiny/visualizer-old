@@ -60,8 +60,32 @@ CI.Module.prototype._types.plot_stat.Model.prototype = {
 	},
 	
 	
-	getjPath: function(rel) {
+			
+	getjPath: function(rel, accepts) {
+		console.log(rel);
+		function getjPath(data) {
+			
+			var jpaths = [];
+			CI.DataType.getJPathsFromElement(data, jpaths);
+			console.log(jpaths);
+			return jpaths;
+		}
 		
-		return [];
+		var data = this.module.getDataFromRel('lineChart');
+		
+		if(!data)
+			return;
+		data = data.getData();
+		data = data.value;
+		if(!data)
+			return;
+			
+		switch(rel) {
+			case 'element':
+				var data = data.series[0][0];
+				return getjPath(data, accepts);
+			break;
+			
+		}	
 	}
 }

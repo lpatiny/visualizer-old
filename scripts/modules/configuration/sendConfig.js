@@ -92,14 +92,6 @@ $(document).bind('configModule', function(event, module) {
 		});
 		field.setTitle(new CI.Title('Variable to store in'));
 		
-		
-		
-		
-		
-		
-		
-		
-		
 		// Receive configuration
 		var availCfg = module.controller.configurationReceive;
 		
@@ -304,8 +296,6 @@ function buildSendConfig(module) {
 
 
 function buildReceiveConfig(module) {
-	
-	
 	
 	var availCfg = module.controller.getConfigurationReceive();
 	var currentCfg = module.definition.dataSource;

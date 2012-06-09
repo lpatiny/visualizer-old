@@ -29,13 +29,36 @@ CI.Module.prototype._types.plot_stat.Controller.prototype = {
 	configurationSend: {
 
 		events: {
-		
+			onHover: {
+				label: 'Hovers an element',
+				description: 'Pass the mouse over a line to select it'
+			}
 		},
 		
 		rels: {
-			
+			'element': {
+				label: 'The selected element data',
+				description: 'Returns the selected element'
+			}
 		}
 		
+	},
+	
+	hoverEvent: function(data) {
+		
+			
+		var actions;
+		if(!(actions = this.module.definition.dataSend))	
+			return;
+				
+		for(var i = 0; i < actions.length; i++) {
+			if(actions[i].event == "onHover") {
+				var j = i;
+				CI.DataType.getValueFromJPath(data, actions[j].jpath, function(toSend) {
+					CI.API.setSharedVar(actions[j].name, toSend);	
+				});
+			}
+		}
 	},
 	
 	configurationReceive: {
