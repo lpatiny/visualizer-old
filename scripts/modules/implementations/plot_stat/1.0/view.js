@@ -64,8 +64,10 @@ CI.Module.prototype._types.plot_stat.View.prototype = {
 				
 				var data = [[ moduleValue.xAxis.label ]];
 				
-				for(var i = 0, k = moduleValue.serieLabels.length; i < k; i++) {
-					data[0].push(moduleValue.serieLabels[i]);
+				if (moduleValue.serieLabels && moduleValue.serieLabels.length>0) {
+					for(var i = 0, k = moduleValue.serieLabels.length; i < k; i++) {
+						data[0].push(moduleValue.serieLabels[i]);
+					}
 				}
 				
 				for(var i = 0, k = moduleValue.x.length; i < k; i++) {
