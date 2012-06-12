@@ -47,20 +47,24 @@ CI.Module.prototype._types.plot_stat.View.prototype = {
 		var moduleValue;
 		var view = this;
 		
-		var lastDataReceived = this.module.model.lastDataName;
-		var relLastDataReceived = this.module.getDataRelFromName(lastDataReceived);
-		
-		
-		
-		if(!(moduleValue = this.module.getDataFromRel(relLastDataReceived).getData()))
+		if(!(moduleValue = this.module.getDataFromRel('chart').getData()))
 			return;
-		
+		var type = CI.DataType.getType(moduleValue);
 		var moduleValue = CI.DataType.getValueIfNeeded(moduleValue);
 		
 
-		switch(relLastDataReceived) {
-						
-			case 'lineChart':
+		switch(type) {
+				
+				
+			case 'barChart':
+			
+			
+			
+			
+			break;
+			
+					
+			case 'xyChart':
 				
 				var data = [[ moduleValue.xAxis.label ]];
 				

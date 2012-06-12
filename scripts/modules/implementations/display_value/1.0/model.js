@@ -7,10 +7,10 @@
  */
 
 
-if(typeof CI.Module.prototype._types.plot_stat == 'undefined')
-	CI.Module.prototype._types.plot_stat = {};
+if(typeof CI.Module.prototype._types.display_value == 'undefined')
+	CI.Module.prototype._types.display_value = {};
 
-CI.Module.prototype._types.plot_stat.Model = function(module) {
+CI.Module.prototype._types.display_value.Model = function(module) {
 	/*
 	 * Sets
 	 * (array) this.data
@@ -21,7 +21,7 @@ CI.Module.prototype._types.plot_stat.Model = function(module) {
 	// Call anything else if you want. The prototyped init() function can also be used.
 }
 
-CI.Module.prototype._types.plot_stat.Model.prototype = {
+CI.Module.prototype._types.display_value.Model.prototype = {
 	
 	
 	// Usually you don't really to init a model. But who knows. Please leave it.

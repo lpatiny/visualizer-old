@@ -62,10 +62,10 @@ CI.Module.prototype._types.plot_stat.Controller.prototype = {
 	},
 	
 	configurationReceive: {
-		"lineChart": {
-			type: 'xyChart',
-			label: 'Scatter plot',
-			description: 'A scatter plot'
+		"chart": {
+			type: ['xyChart', 'barChart'],
+			label: 'Any displayable chart (currently xyChart and barChart)',
+			description: ''
 		}	
 	},
 	
