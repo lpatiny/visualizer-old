@@ -59,11 +59,13 @@ CI.Module.prototype._types.plot_stat.Model.prototype = {
 	},
 	
 	getjPath: function(rel, accepts) {
+		
 		function getjPath(data) {
 			var jpaths = [];
 			CI.DataType.getJPathsFromElement(data, jpaths);
 			return jpaths;
 		}
+		
 		var data = this.module.getDataFromRel('chart');
 		if(!data)
 			return;

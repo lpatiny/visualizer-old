@@ -56,6 +56,9 @@ CI.DataSource.prototype = {
 	
 		var dataType = CI.DataType.getType(data);
 		
+		console.log(data);
+		console.log(dataType);
+		
 		var mustRebuild = false;
 		var asObject = typeof this.sourceAccepts.asObject != "undefined" && this.sourceAccepts.asObject;
 		

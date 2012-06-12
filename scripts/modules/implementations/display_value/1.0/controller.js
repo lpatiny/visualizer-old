@@ -41,7 +41,7 @@ CI.Module.prototype._types.display_value.Controller.prototype = {
 	
 	configurationReceive: {
 		"value": {
-			type: ['string', 'number'],
+			type: ['string', 'number', 'mf'],
 			label: 'Any string or number',
 			description: ''
 		}

@@ -5,6 +5,7 @@ CI.DataType = {};
 CI.DataType.Structures = {
 	
 	'mol2D': "string",
+	'mf': 'string',
 	'chemical': {
 		"type": "object",
 		"elements": {
@@ -409,24 +410,31 @@ CI.DataType.getJPathsFromStructure = function(structure, title, jpathspool, keys
 }
 
 
-CI.DataType.getStructureFromElement = function(element, structure) {
+CI.DataType.getStructureFromElement = function(element) {
 	
+	var structure = {};
+	var el = element;
 	if(!element)
 		return;
 		
-	if(element.value && element.type)
+	if(element.type) 
 		element = element.value;
+	
 	
 	if(element instanceof Array) {
 		var element = element[0];
 		structure.type = "array";
 		structure.elements = {};
 		//structure.isFolder = true;
-		
+		/*
 		if(typeof element != "object")
 			structure.elements = typeof element;
 		else
 			CI.DataType.getStructureFromElement(element, structure.elements);
+		*/
+		for(var i in element) 
+			structure.elements[i] = CI.DataType.getStructureFromElement(element[i]);
+		
 		
 	} else if(typeof element == "object") {
 		
@@ -434,15 +442,14 @@ CI.DataType.getStructureFromElement = function(element, structure) {
 		//structure.isFolder = true;
 		structure.elements = {};
 		
-		for(var i in element) {
-			structure.elements[i] = {};
-			if(typeof element[i] != "object")
-				structure.elements[i] = typeof element[i];
-			else
-				CI.DataType.getStructureFromElement(element[i], structure.elements[i]);
-		}
-	} else 
-		structure = typeof element;
+		for(var i in element) 
+			structure.elements[i] = CI.DataType.getStructureFromElement(element[i]);
+		
+	} else if(el && el.type && CI.DataType.Structures[el.type])
+		structure = CI.DataType.Structures[el.type];
+		
+	return structure;
+	
 }
 
 CI.DataType.getJPathsFromElement = function(element, jpaths) {
@@ -464,8 +471,7 @@ CI.DataType.getJPathsFromElement = function(element, jpaths) {
 		
 		switch(typeof element) {
 			case 'object':
-				var structure = {};
-				CI.DataType.getStructureFromElement(element, structure);
+				var structure = CI.DataType.getStructureFromElement(element, structure);
 				CI.DataType.getJPathsFromStructure(structure, null, jpaths);
 			break;
 			
@@ -645,6 +651,12 @@ CI.Type = {
 	jcamp: {
 		toScreen: function(value) {
 			return '<canvas data-async-type="jcamp"  class="asyncLoading" data-jcamp="' + escape(value) + '"></canvas>';
+		}
+	},
+	
+	mf: {
+		toScreen: function(value) {
+			return value.replace(/([0-9]+)/g,"<sub>$1</sub>");
 		}
 	}
 }

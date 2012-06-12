@@ -52,69 +52,71 @@ CI.Module.prototype._types.plot_stat.View.prototype = {
 		var type = CI.DataType.getType(moduleValue);
 		var moduleValue = CI.DataType.getValueIfNeeded(moduleValue);
 		
-
-		switch(type) {
-				
-				
-			case 'barChart':
-			
-			
-			
-			
-			break;
-			
+		try {
+			switch(type) {
 					
-			case 'xyChart':
-				
-				var data = [[ moduleValue.xAxis.label ]];
-				
-				if (moduleValue.serieLabels && moduleValue.serieLabels.length>0) {
-					for(var i = 0, k = moduleValue.serieLabels.length; i < k; i++) {
-						data[0].push(moduleValue.serieLabels[i]);
-					}
-				}
-				
-				for(var i = 0, k = moduleValue.x.length; i < k; i++) {
-					data.push([moduleValue.x[i]]);
-				}
-				
-				for(var i = 0, k = moduleValue.series.length; i < k; i++) {
 					
-					for(var j = 0, l = moduleValue.series[i].length; j < l; j++) {
-						var val = moduleValue.series[i][j];
+				case 'barChart':
+				
+				
+				
+				
+				break;
+				
 						
-						if(val.value)
-							val = val.value;
-						data[j + 1].push(val);	
+				case 'xyChart':
+					
+					var data = [[ moduleValue.xAxis.label ]];
+					
+					if (moduleValue.serieLabels && moduleValue.serieLabels.length>0) {
+						for(var i = 0, k = moduleValue.serieLabels.length; i < k; i++) {
+							data[0].push(moduleValue.serieLabels[i]);
+						}
 					}
-				}
-				
-				this.data = data;
-				this.chartData = google.visualization.arrayToDataTable(data);
-				
-				this.chart = new google
-					.visualization
-					.ScatterChart(document.getElementById('module-' + this.module.id));
 					
+					for(var i = 0, k = moduleValue.x.length; i < k; i++) {
+						data.push([moduleValue.x[i]]);
+					}
 					
-				google.visualization.events.addListener(this.chart, 'onmouseover', function(e) {
-					var row = e.row;
-					var col = e.column;
-					var rowData = moduleValue.series[col - 1][row];
-					view.module.controller.hoverEvent(rowData);
-				});
-
-				this.chartOptions = {
-				          title: moduleValue.title,
-				          hAxis: {title: moduleValue.xAxis.label, minValue: moduleValue.xAxis.minValue, maxValue: moduleValue.xAxis.maxValue},
-				          vAxis: {title: moduleValue.yAxis.label},
-				          legend: 'none'
-				       };
-			       
-				this.drawChart();
-			return;
-		}
-		
+					for(var i = 0, k = moduleValue.series.length; i < k; i++) {
+						
+						for(var j = 0, l = moduleValue.series[i].length; j < l; j++) {
+							var val = moduleValue.series[i][j];
+							
+							if(val.value)
+								val = val.value;
+							data[j + 1].push(val);	
+						}
+					}
+					
+					this.data = data;
+					this.chartData = google.visualization.arrayToDataTable(data);
+					
+					this.chart = new google
+						.visualization
+						.ScatterChart(document.getElementById('module-' + this.module.id));
+						
+						
+					google.visualization.events.addListener(this.chart, 'onmouseover', function(e) {
+						var row = e.row;
+						var col = e.column;
+						var rowData = moduleValue.series[col - 1][row];
+						view.module.controller.hoverEvent(rowData);
+					});
+	
+					this.chartOptions = {
+					          title: moduleValue.title,
+					          hAxis: {title: moduleValue.xAxis.label, minValue: moduleValue.xAxis.minValue, maxValue: moduleValue.xAxis.maxValue},
+					          vAxis: {title: moduleValue.yAxis.label},
+					          legend: 'none'
+					       };
+				       
+					this.drawChart();
+				return;
+			}
+		} catch(e) {
+			this.dom.mask("Error while creating the chart");
+		}		
 	},
 	
 	
