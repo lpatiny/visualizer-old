@@ -655,8 +655,11 @@ CI.Type = {
 	},
 	
 	mf: {
-		toScreen: function(value) {
-			return value.replace(/([0-9]+)/g,"<sub>$1</sub>");
+		toScreen: function(value, callback) {
+			var val = value.replace(/\[([0-9]+)/g,"[<sup>$1</sup>").replace(/([a-zA-Z)])([0-9]+)/g,"$1<sub>$2</sub>");
+			if(callback)
+				return callback(val);
+			return val;
 		}
 	}
 }

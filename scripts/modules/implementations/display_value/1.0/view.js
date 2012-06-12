@@ -45,15 +45,19 @@ CI.Module.prototype._types.display_value.View.prototype = {
 		var view = this;
 		if(!(moduleValue = this.module.getDataFromRel('value').getData()))
 			return;
-			
-		var type = CI.DataType.getType(moduleValue);
-		var moduleValue = CI.DataType.getValueIfNeeded(moduleValue);
-		this.dom.html(moduleValue);
+		
+		CI.DataType.toScreen(moduleValue, this.module, function(val) {
+		
+			view.dom.html(val);	
+		})
+		
 	},
 	
 	getDom: function() {
 		return this.dom;
-	}
+	},
+	
+	typeToScreen: {}
 }
 
  
