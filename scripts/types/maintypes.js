@@ -656,7 +656,7 @@ CI.Type = {
 	
 	mf: {
 		toScreen: function(value, callback) {
-			var val = value.replace(/\[([0-9]+)/g,"[<sup>$1</sup>").replace(/([a-zA-Z)])([0-9]+)/g,"$1<sub>$2</sub>");
+			var val = value.replace(/\[([0-9]+)/g,"[<sup>$1</sup>").replace(/([a-zA-Z)])([0-9]+)/g,"$1<sub>$2</sub>").replace(/\(([0-9+-]+)\)/g,"<sup>$1</sup>");
 			if(callback)
 				return callback(val);
 			return val;
