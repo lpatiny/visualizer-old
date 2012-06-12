@@ -649,8 +649,12 @@ CI.Type = {
 	},
 	
 	jcamp: {
-		toScreen: function(value) {
-			return '<canvas data-async-type="jcamp"  class="asyncLoading" data-jcamp="' + escape(value) + '"></canvas>';
+		toScreen: function(value, callback) {
+			
+			var val = '<canvas data-async-type="jcamp"  class="asyncLoading" data-jcamp="' + escape(value) + '"></canvas>';
+			if(callback)
+				return callback(val);
+			return val;
 		}
 	},
 	

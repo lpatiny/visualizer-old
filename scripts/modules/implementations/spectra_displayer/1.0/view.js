@@ -38,7 +38,7 @@ CI.Module.prototype._types.spectra_displayer.View.prototype = {
 	},
 	
 	update: function() {
-console.log("Variable received in spectra displayer");
+		
 		var moduleValue;
 		var view = this;
 		
@@ -59,8 +59,10 @@ console.log("Variable received in spectra displayer");
 	
 	
 		CI.DataType.getValueFromJPath(moduleValue, '', function(val) {
-			view.dom.html(CI.DataType.toScreen(val, view.module));
-			$(document).trigger('checkAsyncLoad', [ view.dom ]);
+			CI.DataType.toScreen(val, view.module, function(val) {
+				view.dom.html(val);
+				$(document).trigger('checkAsyncLoad', [ view.dom ]);
+			});
 		});
 		
 		
