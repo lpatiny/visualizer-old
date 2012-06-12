@@ -60,6 +60,7 @@ CI.Module.prototype._types.spectra_displayer.View.prototype = {
 	
 		CI.DataType.getValueFromJPath(moduleValue, '', function(val) {
 			CI.DataType.toScreen(val, view.module, function(val) {
+				console.log(view.module.id);
 				view.dom.html(val);
 				$(document).trigger('checkAsyncLoad', [ view.dom ]);
 			});
