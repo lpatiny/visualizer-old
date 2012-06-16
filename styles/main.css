@@ -292,4 +292,7 @@ div.ci-module-wrapper .ci-module-content {
 .ci-plot {
 	font-size: 0px;
 }
-	
+
+.ci-hidden {
+	display: none;
+}

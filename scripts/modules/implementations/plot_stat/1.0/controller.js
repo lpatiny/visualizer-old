@@ -71,7 +71,7 @@ CI.Module.prototype._types.plot_stat.Controller.prototype = {
 	
 	
 	moduleInformations: {
-		moduleName: 'Statistical Plot'
+		moduleName: 'Chart'
 	},
 	
 	
@@ -79,17 +79,55 @@ CI.Module.prototype._types.plot_stat.Controller.prototype = {
 	
 	doConfiguration: function(section) {
 		
+		var groupfield = new BI.Forms.GroupFields.List('module');
+		section.addFieldGroup(groupfield);
+		
+		var field = groupfield.addField({
+			type: 'Text',
+			name: 'linewidth'
+		});
+		field.setTitle(new CI.Title('Line width'));
+		
+		
+		var field = groupfield.addField({
+			type: 'Text',
+			name: 'pointsize'
+		});
+		field.setTitle(new CI.Title('Point size'));
+		
+		
+		
 		return true;
 	},
 	
 	doFillConfiguration: function() {
 	
+		var cfg = this.module.getConfiguration();
+		var linewidth = cfg.linewidth || 0;
+		var pointsize = cfg.pointsize || 7;
 		
+		return {
+			module: [{
+				linewidth: [linewidth],
+				pointsize: [pointsize]
+			}]
+		}
 	},
 	
 	
 	doSaveConfiguration: function(confSection) {
-	
+		
+		
+		var group = confSection[0].module[0];
+		
+		
+		var linewidth = group.linewidth[0];
+		var pointsize = group.pointsize[0];
+		
+		this.module.definition.configuration = {
+			linewidth: linewidth,
+			pointsize: pointsize
+		};
 	}
 	
 

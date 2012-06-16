@@ -84,25 +84,29 @@ CI.Module = function(definition) {
 	this.buildDom = buildDom;
 	function buildDom() {
 		
-		var html = [];
-		html.push('<div class="ci-module-wrapper ci-module-');
-		html.push(this.definition.type);
-		html.push('" data-module-id="');
-		html.push(this.definition.id);
-		html.push('"><div class="ci-module"><div class="ci-module-header"><div class="ci-module-header-title">');
-		html.push(this.definition.title);
-		html.push('</div>');
-		html.push('<div class="ci-module-header-toolbar">');
-		html.push('<ul>');
-		html.push('<li class="ci-configure">Config</li>')
-		html.push('<li class="ci-remove">X</li>')
-		html.push('</ul>');
-		html.push('</div>');
-		html.push('</div><div class="ci-module-content"><div class="ci-module-content-overflow">');
+		var html = "";
+		html += '<div class="ci-module-wrapper ci-module-';
+		html += this.definition.type;
+		html += '" data-module-id="';
+		html += this.definition.id;
+		html += '"><div class="ci-module"><div class="ci-module-header';
+		if($.inArray('showheader', this.definition.showHeaderOnHover) > -1)
+			html += ' ci-hidden';
 		
-		html.push('</div></div>');
-		html.push('</div>');
-		return html.join('');
+		html += '"><div class="ci-module-header-title">';
+		html += this.definition.title;
+		html += '</div>';
+		html += '<div class="ci-module-header-toolbar">';
+		html += '<ul>';
+		html += '<li class="ci-configure">Config</li>';
+		html += '<li class="ci-remove">X</li>';
+		html += '</ul>';
+		html += '</div>';
+		html += '</div><div class="ci-module-content"><div class="ci-module-content-overflow">';
+		
+		html += '</div></div>';
+		html += '</div>';
+		return html;
 	}
 	
 	this.init();

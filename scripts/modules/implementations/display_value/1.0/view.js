@@ -43,12 +43,23 @@ CI.Module.prototype._types.display_value.View.prototype = {
 		
 		var moduleValue;
 		var view = this;
-		if(!(moduleValue = this.module.getDataFromRel('value').getData()))
+		if(!(moduleValue = this.module.getDataFromRel('value')))
 			return;
 		
-		CI.DataType.toScreen(moduleValue, this.module, function(val) {
+		moduleValue = moduleValue.getData();
 		
-			view.dom.html(val);	
+		var cfg = this.module.getConfiguration();
+		
+		CI.DataType.toScreen(moduleValue, this.module, function(val) {
+			
+			var div = $("<div />").css({
+				fontFamily: cfg.font || 'Arial',
+				fontSize: cfg.fontsize || '10pt',
+				color: cfg.frontcolor || '#000000',
+				textAlign: cfg.align || 'left'
+			}).html(val);
+		
+			view.dom.html(div);
 		})
 		
 	},

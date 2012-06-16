@@ -119,7 +119,6 @@ CI.Module.prototype._types['2d_list'].Controller.prototype = {
 		
 		
 		var data = this.module.getDataFromRel('list').getData();
-		console.log(data);
 		var jpaths = [];
 		
 		if(data != null) 

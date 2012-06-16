@@ -47,8 +47,13 @@ CI.Module.prototype._types.plot_stat.View.prototype = {
 		var moduleValue;
 		var view = this;
 		
-		if(!(moduleValue = this.module.getDataFromRel('chart').getData()))
+		if(!(moduleValue = this.module.getDataFromRel('chart')))
 			return;
+		
+		
+		var cfg = this.module.getConfiguration();
+			
+		moduleValue = moduleValue.getData();
 		var type = CI.DataType.getType(moduleValue);
 		var moduleValue = CI.DataType.getValueIfNeeded(moduleValue);
 		
@@ -58,7 +63,54 @@ CI.Module.prototype._types.plot_stat.View.prototype = {
 					
 				case 'barChart':
 				
-				
+					var data = [[ moduleValue.xAxis.label ]];
+					
+					if (moduleValue.serieLabels && moduleValue.serieLabels.length>0) {
+						for(var i = 0, k = moduleValue.serieLabels.length; i < k; i++) {
+							data[0].push(moduleValue.serieLabels[i]);
+						}
+					}
+					
+					for(var i = 0, k = moduleValue.series[0].length; i < k; i++) {
+						data.push([i + ""]);
+					}
+					
+					for(var i = 0, k = moduleValue.series.length; i < k; i++) {
+						
+						for(var j = 0, l = moduleValue.series[i].length; j < l; j++) {
+							var val = moduleValue.series[i][j];
+							
+							if(val.value)
+								val = val.value;
+							data[j + 1].push(val);	
+						}
+					}
+					
+					this.data = data;
+					this.chartData = google.visualization.arrayToDataTable(data);
+					
+					this.chart = new google
+						.visualization
+						.BarChart(document.getElementById('module-' + this.module.id));
+						
+						
+					google.visualization.events.addListener(this.chart, 'onmouseover', function(e) {
+						var row = e.row;
+						var col = e.column;
+						var rowData = moduleValue.series[col - 1][row];
+						view.module.controller.hoverEvent(rowData);
+					});
+	
+					this.chartOptions = {
+					          title: moduleValue.title,
+					          hAxis: {title: moduleValue.xAxis.label, minValue: moduleValue.xAxis.minValue, maxValue: moduleValue.xAxis.maxValue},
+					          vAxis: {title: moduleValue.yAxis.label},
+					          legend: 'none',
+					          pointSize: cfg.pointsize || 7,
+					          lineWidth: cfg.linewidth || 0
+					       };
+				       
+					this.drawChart();
 				
 				
 				break;
@@ -108,7 +160,9 @@ CI.Module.prototype._types.plot_stat.View.prototype = {
 					          title: moduleValue.title,
 					          hAxis: {title: moduleValue.xAxis.label, minValue: moduleValue.xAxis.minValue, maxValue: moduleValue.xAxis.maxValue},
 					          vAxis: {title: moduleValue.yAxis.label},
-					          legend: 'none'
+					          legend: 'none',
+					          pointSize: cfg.pointsize || 7,
+					          lineWidth: cfg.linewidth || 0
 					       };
 				       
 					this.drawChart();
@@ -116,6 +170,7 @@ CI.Module.prototype._types.plot_stat.View.prototype = {
 			}
 		} catch(e) {
 			this.dom.mask("Error while creating the chart");
+			console.log(e);
 		}		
 	},
 	

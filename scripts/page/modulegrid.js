@@ -52,6 +52,14 @@ CI.Grid = {
 				CI.Grid.checkDimensions();
 			},
 			
+			start: function() {
+				CI.Util.maskIframes();
+			},
+			
+			stop: function() {
+				CI.Util.unmaskIframes();
+			},
+			
 			containment: "parent"
 			
 		}).draggable({
@@ -60,6 +68,8 @@ CI.Grid = {
 			containment: "parent",
 			handle: '.ci-module-header',
 			start: function() {
+				
+				CI.Util.maskIframes();
 				var myZIndex  = $(this).css("zIndex");
 				var count = 0;
 				for (var i in CI.modules) {
@@ -74,7 +84,7 @@ CI.Grid = {
 			stop: function() {
 				var position = $(this).position();
 				
-				
+				CI.Util.unmaskIframes();
 				module.getPosition().left = position.left / CI.Grid.definition.xWidth;
 				module.getPosition().top = position.top / CI.Grid.definition.yHeight;
 			},
@@ -82,7 +92,15 @@ CI.Grid = {
 			drag: function() {
 				CI.Grid.checkDimensions();
 			}
-		}).trigger('resize');
+		}).trigger('resize').bind('mouseover', function() {
+			if(module.getDomHeader().hasClass('ci-hidden'))
+				module.getDomHeader().removeClass('ci-hidden').addClass('ci-hidden-disabled');
+			
+		}).bind('mouseout', function() {
+			if(module.getDomHeader().hasClass('ci-hidden-disabled'))
+				module.getDomHeader().addClass('ci-hidden').removeClass('ci-hidden-disabled');
+			
+		});
 		
 		module.getDomWrapper().on('click', '.ci-module-expand', function() {
 			module.getDomWrapper().height((module.getDomContent().outerHeight() + module.getDomHeader().outerHeight()));
@@ -96,11 +114,9 @@ CI.Grid = {
 		
 		var bottomMax = 0;
 		for(var i in CI.modules) {
-			
 			var pos = CI.modules[i].getPosition();
 			var size = CI.modules[i].getSize();
 			bottomMax = Math.max(bottomMax, pos.top + size.height);
-			
 		}
 		
 		CI.Grid._el.css('height', (CI.Grid.defaults.yHeight * bottomMax + 1000));

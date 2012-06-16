@@ -58,7 +58,7 @@ CI.DataSource.prototype = {
 		
 		var mustRebuild = false;
 		var asObject = typeof this.sourceAccepts.asObject != "undefined" && this.sourceAccepts.asObject;
-		
+		console.log(this.sourceAccepts);
 		for(var i = 0; i < this.sourceAccepts.type.length; i++) {
 			
 			if(this.sourceAccepts.type[i] == dataType)

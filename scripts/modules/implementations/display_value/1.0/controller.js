@@ -54,18 +54,112 @@ CI.Module.prototype._types.display_value.Controller.prototype = {
 	
 	doConfiguration: function(section) {
 		
+		var groupfield = new BI.Forms.GroupFields.List('module');
+		section.addFieldGroup(groupfield);
+		
+		var field = groupfield.addField({
+			type: 'Color',
+			name: 'fcolor'
+		});
+		field.setTitle(new CI.Title('Foreground color'));
+		
+		
+		var field = groupfield.addField({
+			type: 'Color',
+			name: 'bcolor'
+		});
+		field.setTitle(new CI.Title('Background color'));
+		
+		
+		var field = groupfield.addField({
+			type: 'Combo',
+			name: 'font'
+		});
+		field.setTitle(new CI.Title('Font'));
+		field.implementation.setOptions([
+			{title: 'Arial', key: 'arial'},
+			{title: 'Arial Black', key: 'arial black'},
+			{title: 'Comic Sans MS', key: 'comic sans ms'},
+			{title: 'Courier', key: 'courier'},
+			{title: 'Courier new', key: 'courier new'},
+			{title: 'Georgia', key: 'georgia'},
+			{title: 'Helvetica', key: 'helvetica'},
+			{title: 'Impact', key: 'impact'},
+			{title: 'Palatino', key: 'palatino'},
+			{title: 'Times new roman', key: 'times new roman'},
+			{title: 'Trebuchet MS', key: 'trebuchet ms'},
+			{title: 'Verdana', key: 'verdana'}
+		]);
+		
+		
+		var field = groupfield.addField({
+			type: 'Combo',
+			name: 'fsize'
+		});
+		field.setTitle(new CI.Title('Font size'));
+		field.implementation.setOptions([
+			{title: '8pt', key: '8pt'},
+			{title: '9pt', key: '9pt'},
+			{title: '10pt', key: '10pt'},
+			{title: '11pt', key: '11pt'},
+			{title: '12pt', key: '12pt'},
+			{title: '13pt', key: '13pt'},
+			{title: '14pt', key: '14pt'},
+			{title: '15pt', key: '15pt'}
+		]);
+		
+		
+		var field = groupfield.addField({
+			type: 'Combo',
+			name: 'align'
+		});
+		field.setTitle(new CI.Title('Align'));
+		field.implementation.setOptions([
+			{title: 'Left', key: 'left'},
+			{title: 'Center', key: 'center'},
+			{title: 'Right', key: 'right'}
+		]);
+		
+		
 		return true;
 	},
 	
 	doFillConfiguration: function() {
-	
 		
+		var fcolor = this.module.getConfiguration().frontcolor || "";
+		var bcolor = this.module.getConfiguration().backcolor || "";
+		var font = this.module.getConfiguration().font || "arial";
+		var fontsize = this.module.getConfiguration().fontsize || "";
+		var align = this.module.getConfiguration().align || "left";
+	
+		return {
+			module: [{
+				fcolor: [fcolor],
+				bcolor: [bcolor],
+				font: [font],
+				fsize: [fontsize],
+				align: [align]
+			}]
+		}
 	},
 	
 	
 	doSaveConfiguration: function(confSection) {
 	
+		var group = confSection[0].module[0];
+		
+		var fcolor = group.fcolor[0];
+		var bcolor = group.bcolor[0];
+		var font = group.font[0];
+		var fsize = group.fsize[0];
+		var align = group.align[0];
+		
+		this.module.definition.configuration = {
+			frontcolor: fcolor,
+			backcolor: bcolor,
+			font: font,
+			fontsize: fsize,
+			align: align
+		};
 	}
-	
-
 }

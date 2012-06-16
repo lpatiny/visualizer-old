@@ -80,7 +80,9 @@ BI.Forms.Fields.Checkbox.prototype = {
 			html.push(fieldAttrId);
 			html.push('" value="');
 			html.push(i);
-			html.push('" /><label for="');
+			html.push('" data-name="');
+			html.push(i)
+			html.push('"/><label for="');
 			html.push(fieldAttrId);
 			html.push('">');
 			html.push(this.options[i]);
@@ -88,12 +90,36 @@ BI.Forms.Fields.Checkbox.prototype = {
 		}
 		
 		this._checkboxContainer.empty().html(html.join('')).children('input').customInput();
+		
+		var impl = this;
+		this._checkboxContainer.bind('click', 'input', function() {
+			var val = [];
+			impl._checkboxContainer.find('input:checked').each(function() {
+				val.push($(this).data('name'));
+			});
+			// No duplication ==> all at 0 index
+			impl.main.changeValue(0, val);
+		});
 	},
 	
 	
-	setValue: function(value) {
-		dom.children('input').val(value);
-		this.main.valueChanged(value);
+	setValue: function(index, value) {
+		
+		var stack = this.main.fields[index].field;
+		if(!value instanceof Array)
+			value = [value];
+			
+		for(var i = 0; i < value.length; i++) {
+			var field = stack.find('input#' + this.main.getFieldId() + '_' + value[i]);
+			if(field.length == 0)
+				continue;
+			if(value)
+				field.attr('checked', 'checked');
+			else
+				field.removeAttr('checked');
+			field.trigger('updateState')
+		}
+		this.main.changeValue(index, value);
 	},
 	
 	addField: function() {

@@ -32,6 +32,8 @@ BI.Forms.Field.prototype = {
 				return;
 			}
 			
+			console.log(implementationLocation);
+			console.log(implementationName);
 			this.implementation = new BI.Forms.Fields[implementationLocation][implementationName](this);
 		}
 		
@@ -312,7 +314,7 @@ BI.Forms.Field.prototype = {
 	showExpander: function(index) {
 		
 		// Hide the expander (unbind the document event before binding it again)
-		this.hideExpander(true);
+		this.hideExpander(false);
 		
 		// Bind event
 		$(document).bind('click', this.handlerHideExpander);
@@ -324,6 +326,8 @@ BI.Forms.Field.prototype = {
 		var pos = input.position();
 		var width = input.innerWidth();
 		var height = input.innerHeight();
+		
+		this.expandedIndex = index;
 		
 		if(typeof this.implementation.expanderShowed == "function")
 			this.implementation.expanderShowed(index);
@@ -337,30 +341,33 @@ BI.Forms.Field.prototype = {
 		$(document).unbind('click', this.handlerHideExpander);
 		
 		// Finds the element hat is current expanded
-		var bound = this.findExpandedElement();
 		
-		if(bound == undefined)
-			return;
+		if((bound = $(".bi-formfield-expand:visible").data('field')) !== undefined) {
 			
-		// Else, hide the expander
-		var index = bound.index;
-		
-		if(this.fields[index].duplicater)
-			this.fields[index].duplicater.animate({ opacity: 1 });
-		
-		// Should we really close id ?
-		if(!doNotClose)
-			this.domExpander.slideUp('fast', function() {
-				bound.field.removeClass('bi-expanded');
-			});
-		else // If not, just remove the bi-expanded class
-			bound.field.removeClass('bi-expanded');
+			if(bound == undefined)
+				return;
+			
+			// Else, hide the expander
+			var index = bound.expandedIndex;
+			
+			if(bound.fields[index].duplicater)
+				bound.fields[index].duplicater.animate({ opacity: 1 });
+			
+			// Should we really close id ?
+			if(!doNotClose)
+				bound.domExpander.slideUp('fast', function() {
+					bound.fields[index].field.removeClass('bi-expanded');
+				});
+			else // If not, just remove the bi-expanded class
+				bound.fields[index].field.removeClass('bi-expanded');
+		}
 	},
 	
 	handlerHideExpander: function(event) {
 		
+		
 		var expander;
-		if((expander = $(event.target).parents('.bi-formfield-element').andSelf()).length == 1)
+		if((expander = $(event.target).parents('.bi-formfield-styled').andSelf().filter('.bi-formfield-styled')).length == 1)
 			return;
 			
 		var data;
@@ -370,9 +377,23 @@ BI.Forms.Field.prototype = {
 	
 	findExpandedElement: function() {
 		
-		for(var i in this.fields)
-			if(this.fields[i].field.hasClass('bi-expanded'))
-				return this.fields[i];
+		var fields = this.form.fields;
+		
+		for(var i in fields) {
+			
+			for(var j in fields[i].fields) {
+				
+				var field = fields[i].fields[j];
+				if(field.field)
+					var fieldEl = field.field;
+				else if(field.html)
+					var fieldEl = field.html;
+				
+				console.log(fieldEl);
+				if(fieldEl.hasClass('bi-expanded'))
+					return field;
+			}
+		}
 	},
 	
 	

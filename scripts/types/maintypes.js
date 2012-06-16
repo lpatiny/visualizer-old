@@ -606,7 +606,9 @@ CI.Type = {
 		},
 		
 		toScreen: function(val, callback) {
-			return CI.Type.chemical.getIUPAC(val, callback);
+			var data = CI.Type.chemical.getIUPAC(val, callback);
+			if(!callback)
+				return data;
 		}
 		
 	},
