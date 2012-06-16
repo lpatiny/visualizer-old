@@ -23,6 +23,7 @@ CI.Module.prototype._types.display_value.Controller.prototype = {
 		var actions;
 		if(!(actions = this.module.definition.dataSend))	
 			return;
+			
 	
 	},
 	
@@ -44,6 +45,11 @@ CI.Module.prototype._types.display_value.Controller.prototype = {
 			type: ['string', 'number', 'mf'],
 			label: 'Any string or number',
 			description: ''
+		},
+		
+		"color": {
+			type: "string",
+			label: "A color to fill the module with"
 		}
 	},
 	
@@ -58,6 +64,14 @@ CI.Module.prototype._types.display_value.Controller.prototype = {
 		section.addFieldGroup(groupfield);
 		
 		var field = groupfield.addField({
+			type: 'Text',
+			name: 'defaultvalue'
+		});
+		field.setTitle(new CI.Title('Default value'));
+		
+		
+		
+		var field = groupfield.addField({
 			type: 'Color',
 			name: 'fcolor'
 		});
@@ -68,7 +82,7 @@ CI.Module.prototype._types.display_value.Controller.prototype = {
 			type: 'Color',
 			name: 'bcolor'
 		});
-		field.setTitle(new CI.Title('Background color'));
+		field.setTitle(new CI.Title('Default background color'));
 		
 		
 		var field = groupfield.addField({
@@ -126,6 +140,7 @@ CI.Module.prototype._types.display_value.Controller.prototype = {
 	
 	doFillConfiguration: function() {
 		
+		var defaultvalue = this.module.getConfiguration().defaultvalue || "";
 		var fcolor = this.module.getConfiguration().frontcolor || "";
 		var bcolor = this.module.getConfiguration().backcolor || "";
 		var font = this.module.getConfiguration().font || "arial";
@@ -134,6 +149,7 @@ CI.Module.prototype._types.display_value.Controller.prototype = {
 	
 		return {
 			module: [{
+				defaultvalue: [defaultvalue],
 				fcolor: [fcolor],
 				bcolor: [bcolor],
 				font: [font],
@@ -153,13 +169,15 @@ CI.Module.prototype._types.display_value.Controller.prototype = {
 		var font = group.font[0];
 		var fsize = group.fsize[0];
 		var align = group.align[0];
+		var defaultvalue = group.defaultvalue[0];
 		
 		this.module.definition.configuration = {
 			frontcolor: fcolor,
 			backcolor: bcolor,
 			font: font,
 			fontsize: fsize,
-			align: align
+			align: align,
+			defaultvalue: defaultvalue
 		};
 	}
 }

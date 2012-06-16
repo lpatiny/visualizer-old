@@ -33,6 +33,11 @@ CI.Module.prototype._types.display_value.View.prototype = {
 		html += '<div></div>';
 		this.dom = $(html);
 		this.module.getDomContent().html(this.dom);
+		/*var cfg = this.module.getConfiguration();
+		if(cfg.defaultvalue)
+			this.fillWithVal(cfg.defaultvalue);*/
+			
+		this.update();
 	},
 	
 	onResize: function() {
@@ -43,25 +48,38 @@ CI.Module.prototype._types.display_value.View.prototype = {
 		
 		var moduleValue;
 		var view = this;
-		if(!(moduleValue = this.module.getDataFromRel('value')))
-			return;
+		var cfg = this.module.getConfiguration();
+		if(moduleColor = this.module.getDataFromRel('color')) {
+			color = moduleColor.getData();
+			view.module.getDomWrapper().css('background-color', color);
+		} else if(cfg.backcolor) {
+			view.module.getDomWrapper().css('background-color', cfg.backcolor);
+		}
 		
-		moduleValue = moduleValue.getData();
+		
+		if(!(moduleValue = this.module.getDataFromRel('value')) || moduleValue.getData() == null) {
+			if(cfg.defaultvalue)
+				view.fillWithVal(cfg.defaultvalue);
+		} else {
+			if(moduleValue)
+				CI.DataType.toScreen(moduleValue, this.module, function(val) {
+					view.fillWithVal(val);
+				})
+		}
+	},
+	
+	fillWithVal: function(val) {
 		
 		var cfg = this.module.getConfiguration();
 		
-		CI.DataType.toScreen(moduleValue, this.module, function(val) {
-			
-			var div = $("<div />").css({
-				fontFamily: cfg.font || 'Arial',
-				fontSize: cfg.fontsize || '10pt',
-				color: cfg.frontcolor || '#000000',
-				textAlign: cfg.align || 'left'
-			}).html(val);
-		
-			view.dom.html(div);
-		})
-		
+		var div = $("<div />").css({
+			fontFamily: cfg.font || 'Arial',
+			fontSize: cfg.fontsize || '10pt',
+			color: cfg.frontcolor || '#000000',
+			textAlign: cfg.align || 'left'
+		}).html(val);
+	
+		this.dom.html(div);
 	},
 	
 	getDom: function() {
