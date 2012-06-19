@@ -57,14 +57,14 @@ CI.Module.prototype._types.grid.View.prototype = {
 			Columns[j] = Column;
 		}
 		
-		this.list = CI.Util.getValue(moduleValue);
+		this.list = CI.DataType.getValueIfNeeded(moduleValue);
 		
 		var Content = new CI.Tables.Content();
 		var elements = [];
 		this.buildElement(this.list, elements, jpaths);
 		for(var i = 0, length = elements.length; i < length; i++)
 			Content.addElement(elements[i]);
-		console.log(elements);
+		
 		Table.setContent(Content);
 		Table.init(this.dom);
 		
