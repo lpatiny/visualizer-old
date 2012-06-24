@@ -52,10 +52,7 @@ CI.Module.prototype._types.display_value.View.prototype = {
 		if(moduleColor = this.module.getDataFromRel('color')) {
 			color = moduleColor.getData();
 			view.module.getDomWrapper().css('background-color', color);
-		} else if(cfg.backcolor) {
-			view.module.getDomWrapper().css('background-color', cfg.backcolor);
 		}
-		
 		
 		if(!(moduleValue = this.module.getDataFromRel('value')) || moduleValue.getData() == null) {
 			if(cfg.defaultvalue)

@@ -3,23 +3,34 @@ if(!window[window._namespaces['buttons']].Buttons)
 	window[window._namespaces['buttons']].Buttons = {};
 
 
-window[window._namespaces['buttons']].Buttons.Zone = function() {
+window[window._namespaces['buttons']].Buttons.Zone = function(options) {
 	this.buttons = {};	
+	
+	this.options = options;
+	if(!this.options)
+		this.options = {};
+		
+	this.hAlign = this.options.hAlign || 'left';
+	this.vAlign = this.options.vAlign || 'vertical'
 }
 
 window[window._namespaces['buttons']].Buttons.Zone.prototype = {
 	
 	addButton: function(button) {
-		console.log(button.getId());
 		this.buttons[button.getId()] = button;
 	},
 	
 	render: function() {
 		var html = '<div class="bi-buttonzone';
 		
-		if(this.align) { 
+		if(this.hAlign) { 
 			html += ' bi-align-';
-			html += this.align;
+			html += this.hAlign;
+		}
+		
+		if(this.vAlign) {
+			html += ' bi-valign-';
+			html += this.vAlign;
 		}
 		
 		html += '">';
@@ -36,7 +47,13 @@ window[window._namespaces['buttons']].Buttons.Zone.prototype = {
 	},
 	
 	setAlignment: function(align) {
-		this.align = align;
+		this.hAlign = align;
+	},
+	
+	setVerticalAlignment: function(align) {
+		this.vAlign = align;
 	}
+	
+	
 }
 

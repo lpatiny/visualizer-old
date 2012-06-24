@@ -84,13 +84,15 @@ CI.Module = function(definition) {
 	this.buildDom = buildDom;
 	function buildDom() {
 		
+		var entryCfg = Entry.getConfiguration();
+		
 		var html = "";
 		html += '<div class="ci-module-wrapper ci-module-';
 		html += this.definition.type;
 		html += '" data-module-id="';
 		html += this.definition.id;
 		html += '"><div class="ci-module"><div class="ci-module-header';
-		if($.inArray('showheader', this.definition.showHeaderOnHover) > -1)
+		if(entryCfg.showModuleHeaderOnHover)
 			html += ' ci-hidden';
 		
 		html += '"><div class="ci-module-header-title">';
@@ -102,7 +104,18 @@ CI.Module = function(definition) {
 		html += '<li class="ci-remove">X</li>';
 		html += '</ul>';
 		html += '</div>';
-		html += '</div><div class="ci-module-content"><div class="ci-module-content-overflow">';
+		html += '</div><div class="ci-module-content" style="';
+		
+		if(this.definition.bgColor) {
+			html += "background-color: ";
+			html += this.definition.bgColor;
+		} else if(entryCfg.moduleBackground) {
+			html += "background-color: ";
+			html += entryCfg.moduleBackground;
+		}
+		
+		
+		html += '"><div class="ci-module-content-overflow">';
 		
 		html += '</div></div>';
 		html += '</div>';

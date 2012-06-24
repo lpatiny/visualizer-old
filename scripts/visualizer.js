@@ -44,14 +44,31 @@ CI.ConfigVisualizer = function() {
 		
 	var html = [];
 	
-	html.push('<h3><span class="triangle-down"></span>Entry point</h3>');
+	html.push('<h3><span class="triangle-down"></span>Configuration</h3>');
+	
+	var btnzone = new CI.Buttons.Zone({
+		vAlign: 'vertical',
+		hAlign: 'center'
+	});
 	
 	var btn = new CI.Buttons.Button('Configure entry point', function() {
 		configureEntryPoint();
 	});
-	
-	var btnzone = new CI.Buttons.Zone();
 	btnzone.addButton(btn);
+	
+	
+	var btn = new CI.Buttons.Button('Configure visualizer', function() {
+		configureVisualizer();
+	});
+	btnzone.addButton(btn);
+	
+	
+	var btn = new CI.Buttons.Button('Save', function() {
+		Entry.save();
+	});
+	btn.setColor('blue');
+	btnzone.addButton(btn);
+	
 	
 	html.push(btnzone.render());
 	
@@ -305,6 +322,105 @@ CI.ConfigVisualizer = function() {
 			
 		
 			
+		});
+	}
+
+
+
+
+	
+	
+	function configureVisualizer() {
+		var now = Date.now();
+		$.fancybox($("<div />").attr('id', 'formVisualizer-' + now), { width: 700, height: 500, autoSize: false });
+		
+		$("#formVisualizer-" + now).biForm({}, function() {
+			
+			var inst = this;			
+			var section = new BI.Forms.Section('cfg', { multiple: false });
+			this.addSection(section);
+			var title = new CI.Title();
+			title.setLabel('General configuration');
+			section.setTitle(title);
+			
+			var groupfield = new BI.Forms.GroupFields.List('general');
+			section.addFieldGroup(groupfield);
+			
+			var field = groupfield.addField({
+				type: 'Text',
+				name: 'title'
+			});
+			field.setTitle(new CI.Title('Title'));
+			
+			
+			var field = groupfield.addField({
+				type: 'Checkbox',
+				name: 'moduleheaders'
+			});
+			field.setTitle(new CI.Title('Module headers'));
+			field.implementation.setOptions({ 'showonhover': 'Only show module headers on mouseover'})
+			
+			
+			var field = groupfield.addField({
+				type: 'Checkbox',
+				name: 'menubar'
+			});
+			field.setTitle(new CI.Title('Menu bar'));
+			
+			field.implementation.setOptions({ 'display': 'Display menu bar on start'})
+			
+			
+			var field = groupfield.addField({
+				type: 'Color',
+				name: 'modulebg'
+			});
+			field.setTitle(new CI.Title('Modules background'));
+			
+			
+		
+			var save = new CI.Buttons.Button('Save', function() {
+				var value = inst.getValue();
+				var data = value.cfg[0].general[0];
+				
+				var config = Entry.getConfiguration();
+			
+				config.showMenuBarOnStart = data.menubar[0][0] == 'display';
+				config.showModuleHeaderOnHover = data.moduleheaders[0][0] == 'showonhover';
+				config.title = data.title[0];
+				config.moduleBackground = data.modulebg[0];
+				
+				Entry.setConfiguration(config);
+				Entry.save();
+			});
+			
+			save.setColor('blue');
+			this.addButtonZone().addButton(save);
+			
+		}, function() {
+			
+			var config = Entry.getConfiguration();
+			
+			var title = config.title || 'Visualizer title';
+			var menubar = config.showMenuBarOnStart ? ['display'] : [false];
+			var moduleheader = config.showModuleHeaderOnHover ? ['showonhover'] : [false];
+			var modulebg = config.moduleBackground || '#ffffff';
+			
+			
+			var vars = { title: [title], menubar: [menubar], modulebg: [modulebg], moduleheaders: [moduleheader] };
+				
+			var fill = { 
+				sections: {
+					cfg: [
+						{
+							groups: {
+								general: [vars]
+							}
+						}
+					]
+				}
+			};
+			console.log(fill);
+			this.fillJson(fill);
 		});
 	}
 

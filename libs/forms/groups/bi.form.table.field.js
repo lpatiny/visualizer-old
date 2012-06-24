@@ -47,6 +47,8 @@ BI.Forms.Table.Field.prototype.showExpander = function(index) {
 	var width = input.innerWidth();
 	var height = input.innerHeight();
 	
+	this.expandedIndex = index;
+	
 	this.domExpander.css({top: pos.top + height, width: width}).slideDown(100);
 	//this.group.stopEditing();
 	

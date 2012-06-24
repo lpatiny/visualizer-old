@@ -32,6 +32,7 @@ CI.Grid = {
 	 */
 	addModule: function(module) {
 		
+		var grid = this;
 		var modulePos = module.getPosition();
 		var moduleSize = module.getSize();
 		
@@ -54,10 +55,12 @@ CI.Grid = {
 			
 			start: function() {
 				CI.Util.maskIframes();
+				module.resizing = true;
 			},
 			
 			stop: function() {
 				CI.Util.unmaskIframes();
+				module.resizing = false;
 			},
 			
 			containment: "parent"
@@ -78,6 +81,7 @@ CI.Grid = {
 					}
 					count++;
 				}
+				module.moving = true;
 				$(this).css("zIndex",count);
 			},
 			
@@ -87,23 +91,38 @@ CI.Grid = {
 				CI.Util.unmaskIframes();
 				module.getPosition().left = position.left / CI.Grid.definition.xWidth;
 				module.getPosition().top = position.top / CI.Grid.definition.yHeight;
+				module.moving = false;
 			},
 			
 			drag: function() {
 				CI.Grid.checkDimensions();
 			}
 		}).trigger('resize').bind('mouseover', function() {
-			if(module.getDomHeader().hasClass('ci-hidden'))
+			
+			if(module.resizing || module.moving)
+				return;
+				
+			if(module.getDomHeader().hasClass('ci-hidden')) {
 				module.getDomHeader().removeClass('ci-hidden').addClass('ci-hidden-disabled');
+				//module.getDomContent().parent().height("-=" + module.getDomHeader().outerHeight(true));
+				grid.moduleResize(module);
+			}
 			
 		}).bind('mouseout', function() {
-			if(module.getDomHeader().hasClass('ci-hidden-disabled'))
-				module.getDomHeader().addClass('ci-hidden').removeClass('ci-hidden-disabled');
 			
+			
+			if(module.resizing || module.moving)
+				return;
+				
+			if(module.getDomHeader().hasClass('ci-hidden-disabled')) {
+				//module.getDomContent().parent().height("+=" + module.getDomHeader().outerHeight(true));
+				module.getDomHeader().addClass('ci-hidden').removeClass('ci-hidden-disabled');
+				grid.moduleResize(module);	
+			}
 		});
 		
 		module.getDomWrapper().on('click', '.ci-module-expand', function() {
-			module.getDomWrapper().height((module.getDomContent().outerHeight() + module.getDomHeader().outerHeight()));
+			module.getDomWrapper().height((module.getDomContent().outerHeight() + module.getDomHeader().outerHeight(true)));
 			CI.Grid.moduleResize(module);
 		});
 		
@@ -138,7 +157,7 @@ CI.Grid = {
 		var wrapper = module.getDomWrapper();
 		module.getSize().width = wrapper.width() / CI.Grid.definition.xWidth;
 		module.getSize().height = wrapper.height() / CI.Grid.definition.yHeight;
-		var containerHeight = wrapper.height() - module.getDomHeader().outerHeight(true);
+		var containerHeight = wrapper.height() - (module.getDomHeader().is(':visible') ? module.getDomHeader().outerHeight(true) : 0);
 		
 		module.getDomContent().parent().css({
 			height: containerHeight

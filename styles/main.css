@@ -79,8 +79,8 @@ html, body {
 
 
 
-#ci-left > h3, #ci-right > h3 {
-	background: #eaeaea;
+#ci-left > h3 {
+	background: #f0f0f0;
 	padding: 6px;
 	cursor: pointer;
 }
@@ -92,28 +92,26 @@ td.ci-expand {
 	line-height: 0.4em;
 	font-size: 30px;
 	background: #f0f0f0;
-	border: 1px solid #d0d0d0;
+	border-right: 1px solid #d0d0d0;
 	color: #c0c0c0;
 	cursor: pointer;
 }
+#ci-header {
+	width: 100%;
+}
 
 
-
-#ci-left > h3 > span, #ci-right > h3 > span {
+#ci-left > h3 > span {
 	margin-right: 5px;
 }
 
 
-#ci-left > div, #ci-right > div {
+#ci-left > div {
 	padding: 6px;
 }
 
 
 #ci-left {
-
-}
-
-#ci-right {
 
 }
 
@@ -131,7 +129,7 @@ td.ci-expand {
 }
 
 
-#ci-left .ci-varname, #ci-right .ci-varname {
+#ci-left .ci-varname {
 	font-weight: bold;
 	font-size: 1.2em;
 	background: #f0f0f0;
@@ -147,11 +145,13 @@ td.ci-expand {
 
 #ci-center {
 	height: 100%;
+	border-top: 1px solid #d0d0d0;
 }
 
 #ci-modules-grid {
 	width: 100%;
 	height: 100%;
+	margin: 10px;
 	min-height: 100%;
 	background: #fefefe;
 	position: relative;
@@ -178,7 +178,7 @@ div.ci-module-wrapper .ci-module {
 
 div.ci-module-wrapper .ci-module-header {
 	height: 20px;
-	
+	cursor: move;
 	background: #eaeaea; /* Old browsers */
 	background: -moz-linear-gradient(top, #eaeaea 8%, #f7f7f7 75%); /* FF3.6+ */
 	background: -webkit-gradient(linear, left top, left bottom, color-stop(8%,#eaeaea), color-stop(75%,#f7f7f7)); /* Chrome,Safari4+ */
@@ -295,4 +295,24 @@ div.ci-module-wrapper .ci-module-content {
 
 .ci-hidden {
 	display: none;
+}
+
+
+#ci-header .title {
+	float: left;
+	font-size: 20px;
+	margin: 10px;
+	margin-top: 13px;
+	margin-bottom: 7px;
+}
+
+#ci-header .infos {
+	float: right;
+	font-size: 10px;
+	margin: 10px;
+}
+
+#ci-header {
+	background: none repeat scroll 0 0 #F0F0F0;
+	
 }

@@ -26,8 +26,13 @@ CI.EntryPoint = function(structure, data, options, onLoad) {
 		
 		if(!structure.modules)
 			structure.modules = [];
-		if(structure.showLeftConfig)
+			
+		if(structure.configuration.showMenuBarOnStart)
 			$("#ci-expand").bind('click');
+			
+		
+		$("#ci-header .title").text(structure.configuration.title || 'No title');
+			
 		entryPoint.entryData = structure.entryPoint;
 		
 		if(structure.modules !== undefined)
@@ -72,9 +77,11 @@ CI.EntryPoint = function(structure, data, options, onLoad) {
 			type: 'get',
 			dataType: 'text',
 			success: function(data) {
+				$("body").unmask().mask("Parsing data...", { error: true });
 				CI.WebWorker.send('jsonparser', data, function(data) {
+					$("body").unmask();
 					doData(data);	
-				})
+				});
 			},
 			
 			error: function() {
@@ -171,6 +178,19 @@ CI.EntryPoint.prototype = {
 			}
 		}
 		CI.Grid.removeModule(Module);
+	},
+	
+	getConfiguration: function() {
+		
+		if(!this.structure.configuration)
+			this.structure.configuration = {};
+			
+		return this.structure.configuration;
+	},
+	
+	
+	setConfiguration: function(cfg) {
+		return this.structure.configuration = cfg;
 	}
 }
 

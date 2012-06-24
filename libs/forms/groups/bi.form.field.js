@@ -32,8 +32,6 @@ BI.Forms.Field.prototype = {
 				return;
 			}
 			
-			console.log(implementationLocation);
-			console.log(implementationName);
 			this.implementation = new BI.Forms.Fields[implementationLocation][implementationName](this);
 		}
 		
@@ -187,7 +185,6 @@ BI.Forms.Field.prototype = {
 		this.fields.splice(index, 1);
 		this.renumberInputs();
 		
-		console.log(this.fields);
 	},
 	
 	initField: function(index) {
@@ -389,7 +386,6 @@ BI.Forms.Field.prototype = {
 				else if(field.html)
 					var fieldEl = field.html;
 				
-				console.log(fieldEl);
 				if(fieldEl.hasClass('bi-expanded'))
 					return field;
 			}

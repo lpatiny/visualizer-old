@@ -701,6 +701,16 @@ table.bi-table-groupfield-table span span {
 }
 
 
+.bi-valign-vertical .bi-form-button {
+	margin-bottom: 5px;
+}
+
+
+.bi-valign-horizontal .bi-form-button {
+	float: left;
+}
+
+ 
 .bi-form-button {
 	
 	height: 27px;

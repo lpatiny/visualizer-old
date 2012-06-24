@@ -77,13 +77,13 @@ CI.Module.prototype._types.display_value.Controller.prototype = {
 		});
 		field.setTitle(new CI.Title('Foreground color'));
 		
-		
+		/*
 		var field = groupfield.addField({
 			type: 'Color',
 			name: 'bcolor'
 		});
 		field.setTitle(new CI.Title('Default background color'));
-		
+		*/
 		
 		var field = groupfield.addField({
 			type: 'Combo',
@@ -142,7 +142,7 @@ CI.Module.prototype._types.display_value.Controller.prototype = {
 		
 		var defaultvalue = this.module.getConfiguration().defaultvalue || "";
 		var fcolor = this.module.getConfiguration().frontcolor || "";
-		var bcolor = this.module.getConfiguration().backcolor || "";
+	//	var bcolor = this.module.getConfiguration().backcolor || "";
 		var font = this.module.getConfiguration().font || "arial";
 		var fontsize = this.module.getConfiguration().fontsize || "";
 		var align = this.module.getConfiguration().align || "left";
@@ -151,7 +151,7 @@ CI.Module.prototype._types.display_value.Controller.prototype = {
 			module: [{
 				defaultvalue: [defaultvalue],
 				fcolor: [fcolor],
-				bcolor: [bcolor],
+			//	bcolor: [bcolor],
 				font: [font],
 				fsize: [fontsize],
 				align: [align]
@@ -165,7 +165,7 @@ CI.Module.prototype._types.display_value.Controller.prototype = {
 		var group = confSection[0].module[0];
 		
 		var fcolor = group.fcolor[0];
-		var bcolor = group.bcolor[0];
+	//	var bcolor = group.bcolor[0];
 		var font = group.font[0];
 		var fsize = group.fsize[0];
 		var align = group.align[0];
@@ -173,7 +173,7 @@ CI.Module.prototype._types.display_value.Controller.prototype = {
 		
 		this.module.definition.configuration = {
 			frontcolor: fcolor,
-			backcolor: bcolor,
+		//	backcolor: bcolor,
 			font: font,
 			fontsize: fsize,
 			align: align,
