@@ -28,7 +28,7 @@ CI.EntryPoint = function(structure, data, options, onLoad) {
 			structure.modules = [];
 			
 		if(structure.configuration.showMenuBarOnStart)
-			$("#ci-expand").bind('click');
+			$("#ci-expand").trigger('click');
 			
 		
 		$("#ci-header .title").text(structure.configuration.title || 'No title');
