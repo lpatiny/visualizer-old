@@ -119,7 +119,12 @@ CI.Module.prototype._types.display_value.Controller.prototype = {
 			{title: '12pt', key: '12pt'},
 			{title: '13pt', key: '13pt'},
 			{title: '14pt', key: '14pt'},
-			{title: '15pt', key: '15pt'}
+			{title: '18pt', key: '18pt'},
+			{title: '24pt', key: '24pt'},
+			{title: '30pt', key: '30pt'},
+			{title: '36pt', key: '36pt'},
+			{title: '48pt', key: '48pt'},
+			{title: '64pt', key: '64pt'}
 		]);
 		
 		
