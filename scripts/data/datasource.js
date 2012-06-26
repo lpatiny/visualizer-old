@@ -30,6 +30,7 @@ CI.DataSource.prototype = {
 		$(document).bind('sharedDataChanged', function(event, varName, varVal) {
 			
 			var allSources = CI.DataSource.prototype._dataSources[varName];
+			console.log(allSources);
 			if(typeof allSources == "undefined")
 				return;
 			for(var i = 0; i < allSources.length; i++)

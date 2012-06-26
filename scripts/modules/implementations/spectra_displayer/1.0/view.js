@@ -42,8 +42,10 @@ CI.Module.prototype._types.spectra_displayer.View.prototype = {
 		var moduleValue;
 		var view = this;
 		
-		if(!(moduleValue = this.module.getDataFromRel('jcamp').getData()))
+		if(!(moduleValue = this.module.getDataFromRel('jcamp')))
 			return;
+			
+		moduleValue = moduleValue.getData();
 			/*
 		var url = moduleValue;
 		var query = new CI.Util.AjaxQuery({
@@ -57,11 +59,10 @@ CI.Module.prototype._types.spectra_displayer.View.prototype = {
 		});
 		*/
 	
-	
 		CI.DataType.getValueFromJPath(moduleValue, '', function(val) {
 			CI.DataType.toScreen(val, view.module, function(val) {
-				console.log(view.module.id);
 				view.dom.html(val);
+				
 				$(document).trigger('checkAsyncLoad', [ view.dom ]);
 			});
 		});
