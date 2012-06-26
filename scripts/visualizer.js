@@ -379,6 +379,8 @@ CI.ConfigVisualizer = function() {
 			
 		
 			var save = new CI.Buttons.Button('Save', function() {
+				
+				inst.dom.trigger('stopEditing');
 				var value = inst.getValue();
 				var data = value.cfg[0].general[0];
 				

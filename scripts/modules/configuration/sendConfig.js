@@ -131,6 +131,9 @@ $(document).bind('configModule', function(event, module) {
 		
 		
 		var save = new CI.Buttons.Button('Save', function() {
+			
+			
+			inst.dom.trigger('stopEditing');
 			var value = inst.getValue();
 			module.setTitle(value.general[0].general[0].moduletitle[0]);
 			module.definition.bgColor = value.general[0].general[0].bgcolor[0];

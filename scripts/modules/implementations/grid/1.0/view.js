@@ -34,8 +34,10 @@ CI.Module.prototype._types.grid.View.prototype = {
 		var view = this;
 		
 		var jpaths = this.module.getConfiguration().colsjPaths;
-		if(!(moduleValue = this.module.getDataFromRel('list').getData()))
+		if(!(moduleValue = this.module.getDataFromRel('list')))
 			return;
+			
+		moduleValue = moduleValue.getData();
 		
 		var Table = new CI.Tables.Table({
 			

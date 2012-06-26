@@ -129,7 +129,11 @@ BI.Forms.GroupFields.Table.prototype = {
 				
 			if($(event.target).parents().andSelf().filter('.bi-formfield-expand').length == 0)
 				inst.stopEditing();
-		})
+		});
+		
+		$(this.section.form.dom).bind('stopEditing', function() {
+			inst.stopEditing();
+		});
 		
 		for(var i = 0; i < this.fields.length; i++) {
 			this.fields[i].afterInit(this.dom.children());
