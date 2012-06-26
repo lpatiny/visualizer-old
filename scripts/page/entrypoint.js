@@ -26,11 +26,13 @@ CI.EntryPoint = function(structure, data, options, onLoad) {
 		
 		if(!structure.modules)
 			structure.modules = [];
-			
-		if(structure.configuration.showMenuBarOnStart)
-			$("#ci-expand").trigger('click');
-			
 		
+		if(!structure.configuration)
+			structure.configuration = {};
+		
+		if(structure.configuration.showMenuBarOnStart)
+			$("#ci-expand-left").trigger('click');
+			
 		$("#ci-header .title").text(structure.configuration.title || 'No title');
 			
 		entryPoint.entryData = structure.entryPoint;

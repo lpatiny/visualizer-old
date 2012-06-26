@@ -39,7 +39,7 @@ CI.Module.prototype._types['2d_list'].Controller.prototype = {
 					var elementId = trIndex * cols + tdIndex;
 					if(!(moduleValue = module.getDataFromRel('list').getData()))
 						return;
-					var value = CI.Util.getValue(moduleValue);
+					var value = CI.DataType.getValueIfNeeded(moduleValue);
 					var k = j;
 					
 					CI.DataType.getValueFromJPath(value[elementId], actions[j].jpath, function(toSend) {

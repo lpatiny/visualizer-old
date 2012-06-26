@@ -38,10 +38,11 @@ CI.Module.prototype._types['2d_list'].View.prototype = {
 		var cols = this.module.getConfiguration().colnumber || 4;
 		
 		
-		if(!(moduleValue = this.module.getDataFromRel('list').getData()))
+		if(!(moduleValue = this.module.getDataFromRel('list')))
 			return;
 		
-		this.list = CI.Util.getValue(moduleValue);
+		moduleValue = moduleValue.getData();
+		this.list = CI.DataType.getValueIfNeeded(moduleValue);
 		
 		var html = '<table cellpadding="3" cellspacing="0">';
 		for(var i = 0; i < this.list.length; i++) {

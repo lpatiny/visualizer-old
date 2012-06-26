@@ -114,7 +114,8 @@ CI.Module.prototype._types.grid.Controller.prototype = {
 		field.setTitle(new CI.Title('Columns title'));
 		
 		var options = [];
-		var data = this.module.getDataFromRel('list').getData();
+		if(data = this.module.getDataFromRel('list'))
+			data = data.getData();
 		
 		if(data != null)
 			CI.DataType.getJPathsFromElement(data[0], options);
