@@ -364,7 +364,7 @@ BI.Forms.Field.prototype = {
 		
 		
 		var expander;
-		if((expander = $(event.target).parents('.bi-formfield-styled').andSelf().filter('.bi-formfield-styled')).length == 1)
+		if((expander = $(event.target).parents('.bi-formfield-styled').andSelf().filter('.bi-formfield-styled, .dynatree-expander')).length == 1)
 			return;
 			
 		var data;
