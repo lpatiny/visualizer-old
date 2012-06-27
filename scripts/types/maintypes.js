@@ -437,8 +437,9 @@ CI.DataType.getStructureFromElement = function(element) {
 	if(element.type) 
 		element = element.value;
 	
-	
-	if(element instanceof Array) {
+	if(el && el.type && CI.DataType.Structures[el.type]) {
+		structure = CI.DataType.Structures[el.type];
+	} else if(element instanceof Array) {
 		var element = element[0];
 		structure.type = "array";
 		structure.elements = {};
@@ -449,21 +450,19 @@ CI.DataType.getStructureFromElement = function(element) {
 		else
 			CI.DataType.getStructureFromElement(element, structure.elements);
 		*/
-		for(var i in element) 
-			structure.elements[i] = CI.DataType.getStructureFromElement(element[i]);
+		//for(var i in element) 
+		structure.elements = CI.DataType.getStructureFromElement(element);
 		
 		
 	} else if(typeof element == "object") {
 		
+		
 		structure.type = "object";	
 		//structure.isFolder = true;
 		structure.elements = {};
-		
 		for(var i in element) 
 			structure.elements[i] = CI.DataType.getStructureFromElement(element[i]);
-		
-	} else if(el && el.type && CI.DataType.Structures[el.type])
-		structure = CI.DataType.Structures[el.type];
+	} 
 	else
 		structure = el.type;
 		
@@ -491,6 +490,7 @@ CI.DataType.getJPathsFromElement = function(element, jpaths) {
 		switch(typeof element) {
 			case 'object':
 				var structure = CI.DataType.getStructureFromElement(element, structure);
+				console.log(structure);
 				CI.DataType.getJPathsFromStructure(structure, null, jpaths);
 			break;
 			
