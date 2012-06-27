@@ -46,27 +46,16 @@ CI.Module.prototype._types.spectra_displayer.View.prototype = {
 			return;
 			
 		moduleValue = moduleValue.getData();
-			/*
-		var url = moduleValue;
-		var query = new CI.Util.AjaxQuery({
-			url: url,
-			dataType: 'text',
-			success: function(data) {
-				
-				var spectra = ChemDoodle.readJCAMP(data);
-		  		view.spectra.loadSpectrum(spectra);
-			}
-		});
-		*/
-	
-		CI.DataType.getValueFromJPath(moduleValue, '', function(val) {
-			CI.DataType.toScreen(val, view.module, function(val) {
-				view.dom.html(val);
-				
-				$(document).trigger('checkAsyncLoad', [ view.dom ]);
-			});
-		});
 		
+		if(moduleValue == CI.DataType._PENDING) {
+			view.dom.html("Loading spectra...");
+			return;
+		}
+	
+		CI.DataType.toScreen(moduleValue, view.module, function(val) {
+			view.dom.html(val);
+			$(document).trigger('checkAsyncLoad', [ view.dom ]);
+		});
 		
 		CI.Grid.moduleResize(this.module);
 			

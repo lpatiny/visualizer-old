@@ -375,7 +375,6 @@ BI.Forms.Field.prototype = {
 	findExpandedElement: function() {
 		
 		var fields = this.form.fields;
-		
 		for(var i in fields) {
 			
 			for(var j in fields[i].fields) {

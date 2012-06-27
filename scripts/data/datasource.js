@@ -30,7 +30,7 @@ CI.DataSource.prototype = {
 		$(document).bind('sharedDataChanged', function(event, varName, varVal) {
 			
 			var allSources = CI.DataSource.prototype._dataSources[varName];
-			console.log(allSources);
+			
 			if(typeof allSources == "undefined")
 				return;
 			for(var i = 0; i < allSources.length; i++)
@@ -59,10 +59,10 @@ CI.DataSource.prototype = {
 		
 		var mustRebuild = false;
 		var asObject = typeof this.sourceAccepts.asObject != "undefined" && this.sourceAccepts.asObject;
-		console.log(this.sourceAccepts);
+	
 		for(var i = 0; i < this.sourceAccepts.type.length; i++) {
 			
-			if(this.sourceAccepts.type[i] == dataType)
+			if(this.sourceAccepts.type[i] == dataType || data == CI.DataType._PENDING)
 				return this.data = data;
 				
 			else if(asObject && CI.DataType.getType(data) == 'object') {

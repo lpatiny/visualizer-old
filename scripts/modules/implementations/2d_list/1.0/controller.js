@@ -42,19 +42,11 @@ CI.Module.prototype._types['2d_list'].Controller.prototype = {
 					var value = CI.DataType.getValueIfNeeded(moduleValue);
 					var k = j;
 					
-					CI.DataType.getValueFromJPath(value[elementId], actions[j].jpath, function(toSend) {
-					
-						if(toSend != null)
-							CI.API.setSharedVar(actions[k].name, toSend);
-					});
-					
+					CI.API.setSharedVarFromJPath(actions[k].name, value[elementId], actions[j].jpath);
 				});
 				
 			}
 		}
-			
-			
-		
 	},
 	/*
 	cellHover: function(element) {

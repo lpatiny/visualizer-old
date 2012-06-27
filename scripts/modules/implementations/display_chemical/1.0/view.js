@@ -32,18 +32,14 @@ CI.Module.prototype._types.display_chemical.View.prototype = {
 
 		var moduleValue;
 		var view = this;
-		
-		if(!(moduleValue = this.module.getDataFromRel('chemical').getData()))
+		if(!(moduleValue = this.module.getDataFromRel('chemical')))
 			return;
-		
+			
+		moduleValue = moduleValue.getData()
 		this.chemical = moduleValue;
-		
 		CI.DataType.toScreen(this.chemical, this.module, function(val) {
-		console.log(val);	
 			view.dom.html(val);	
 		});
-		
-		
 	},
 	
 	

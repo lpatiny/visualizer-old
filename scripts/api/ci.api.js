@@ -46,3 +46,11 @@ CI.API.resendAllVars = function() {
 		CI.API.setSharedVar(i, CI.sharedData[i]);
 	}
 }
+
+
+CI.API.setSharedVarFromJPath = function(name, value, jpath) {
+	
+	CI.DataType.getValueFromJPath(value, jpath, function(returned) {
+		CI.API.setSharedVar(name, returned);
+	});
+}

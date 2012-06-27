@@ -288,6 +288,7 @@ CI.DataType.getValueIfNeeded = function(element) {
 	return element;
 }
 
+CI.DataType._PENDING = new Object();
 
 CI.DataType.fetchElementIfNeeded = function(element, callback) {
 	
@@ -309,10 +310,19 @@ CI.DataType.fetchElementIfNeeded = function(element, callback) {
 				callback(element);
 			}
 		});
+		
+		callback(CI.DataType._PENDING);
+		return CI.DataType._PENDING;
 	} else {
-		callback(element);
-		return element;
+		
+		if(callback) {
+			callback(element);
+			return false;
+		}
+		return false;
 	}
+	
+	return false;
 }
 
 
@@ -330,6 +340,13 @@ CI.DataType.getValueFromJPath = function(element, jpath, callback, wholeObject) 
 CI.DataType._getValueFromJPath = function(element, jpath, callback) {
 	var el = CI.DataType.getValueIfNeeded(element);
 	var type;
+	
+	if(element == CI.DataType._PENDING) {
+		if(callback)
+			callback(element);
+		return element;
+	}
+	
 	var jpathElement = jpath.shift();
 	
 	if(jpathElement == undefined && callback)
@@ -555,10 +572,12 @@ CI.DataType.asyncToScreenHtml = function(element, box) {
 
 CI.DataType._toScreen = function(element, box, callback) {
 	
-	var value = CI.DataType.getValueIfNeeded(element);
-	return CI.DataType._valueToScreen(CI.DataType.fetchElementIfNeeded(element, function(val) {
-		CI.DataType._valueToScreen(val, box, callback);
-	}), box, callback);
+	//var value = CI.DataType.getValueIfNeeded(element);
+	if(!(value = CI.DataType.fetchElementIfNeeded(element, function(val) {
+			if(callback)
+				CI.DataType._valueToScreen(element, box, callback);
+		}), box, callback)) 
+			return CI.DataType._valueToScreen(element, box, callback);
 }
 
 CI.DataType.toScreen = CI.DataType._toScreen;
