@@ -464,6 +464,8 @@ CI.DataType.getStructureFromElement = function(element) {
 		
 	} else if(el && el.type && CI.DataType.Structures[el.type])
 		structure = CI.DataType.Structures[el.type];
+	else
+		structure = el.type;
 		
 	return structure;
 	
