@@ -463,8 +463,10 @@ CI.DataType.getStructureFromElement = function(element) {
 		for(var i in element) 
 			structure.elements[i] = CI.DataType.getStructureFromElement(element[i]);
 	} 
-	else
+	else if(el.type)
 		structure = el.type;
+	else
+		return typeof el;
 		
 	return structure;
 	

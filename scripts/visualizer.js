@@ -256,7 +256,9 @@ CI.ConfigVisualizer = function() {
 			var options = [];
 			var data = Entry.getDataFromSource();
 			for(var i in data)
-				options.push({title: i, key: i});	
+				options.push({title: i, key: i});
+				
+					
 			var field = groupfield.addField({
 				type: 'Combo',
 				name: 'sourcename'
