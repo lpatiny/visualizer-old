@@ -65,6 +65,27 @@ CI.Module.prototype._types.grid.Controller.prototype = {
 		}
 	},
 	
+	
+	
+	lineClick: function(element) {
+		
+		var actions;
+		if(!(actions = this.module.definition.dataSend))	
+			return;
+				
+		for(var i = 0; i < actions.length; i++) {
+			if(actions[i].event == "onClick") {
+				(function(element, actionName, jpath) {
+					
+					CI.API.setSharedVarFromJPath(actionName, element, jpath);
+					/*CI.DataType.getValueFromJPath(element, jpath, function(toSend) {
+						CI.API.setSharedVar(actionName, toSend);	
+					});*/
+				}) (element, actions[i].name, actions[i].jpath)
+			}
+		}
+	},
+	
 	configurationSend: {
 
 		events: {

@@ -44,6 +44,11 @@ CI.Module.prototype._types.grid.View.prototype = {
 			onLineHover: function(element) {
 				var source = element._source;
 				view.module.controller.lineHover(source);
+			},
+			
+			onLineClick: function(element) {
+				var source = element._source;
+				view.module.controller.lineClick(source);
 			}
 		});
 		

@@ -118,6 +118,13 @@ window[_namespaces['table']].Tables.Table.prototype = {
 			
 			if(typeof inst.options.onLineHover == "function")
 				inst.options.onLineHover(inst.content.getElementById($(this).data('element-id')));
+		}).on('click', 'tr', function() {
+			
+			if($(this).hasClass('ci-table-pagination'))
+				return;
+			
+			if(typeof inst.options.onLineClick == "function")
+				inst.options.onLineClick(inst.content.getElementById($(this).data('element-id')));
 		});
 		
 		for(var i = 0; i < this.cols.length; i++) {
