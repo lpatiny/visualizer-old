@@ -47,6 +47,7 @@ CI.Module.prototype._types.grid.View.prototype = {
 			},
 			
 			onLineClick: function(element) {
+				
 				var source = element._source;
 				view.module.controller.lineClick(source);
 			}
