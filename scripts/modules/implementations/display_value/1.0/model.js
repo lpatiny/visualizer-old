@@ -59,23 +59,6 @@ CI.Module.prototype._types.display_value.Model.prototype = {
 	},
 	
 	getjPath: function(rel, accepts) {
-		function getjPath(data) {
-			var jpaths = [];
-			CI.DataType.getJPathsFromElement(data, jpaths);
-			return jpaths;
-		}
-		var data = this.module.getDataFromRel('chart');
-		if(!data)
-			return;
-		data = data.getData();
-		data = data.value;
-		if(!data)
-			return;
-		switch(rel) {
-			case 'element':
-				var data = data.series[0][0];
-				return getjPath(data, accepts);
-			break;
-		}	
+		
 	}
 }
