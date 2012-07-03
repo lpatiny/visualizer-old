@@ -145,9 +145,11 @@ CI.EntryPoint.prototype = {
 	
 	save: function() {
 		var script = JSON.stringify(this.structure);
-		$.post(_saveViewUrl, {content: script}, function() {
-			$("#savedone").html('Visualizer saved !');
-		});
+		if (typeof _saveViewUrl != "undefined") {
+			$.post(_saveViewUrl, {content: script}, function() {
+				$("#savedone").html('Visualizer saved !');
+			});
+		}
 		$.fancybox('<h3>JSON of the structure</h3><div id="savedone">Your visualizer is currently saving. Please wait...</div><textarea style="width: 500px; height: 300px;">' + script + '</textarea>', { autoSize: false, height: 350, width: 505});
 	},
 	
