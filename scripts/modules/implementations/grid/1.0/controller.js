@@ -195,9 +195,5 @@ CI.Module.prototype._types.grid.Controller.prototype = {
 		};*/
 	}
 	
-	
-
-
-
 
 }

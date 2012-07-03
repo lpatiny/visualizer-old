@@ -35,7 +35,7 @@ BI.Forms.Fields.Table.Combo.prototype.initHtml = function() {
 
 
 BI.Forms.Fields.Table.Combo.prototype.setText = function(index, text) {
-		this.main.fieldContainer.children().eq(index).html(text);
+	this.main.fieldContainer.children().eq(index).html(text);
 };
 	
 

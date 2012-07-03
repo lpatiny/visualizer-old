@@ -6,23 +6,33 @@ if(!BI.Forms.Fields.Table)
 
 BI.Forms.Fields.Table.Color = function(main) {
 	this.main = main;
+	this.divs = [];
 }
 
 BI.Forms.Fields.Table.Color.prototype = new BI.Forms.Fields.Color();
 
 $.extend(BI.Forms.Fields.Table.Color.prototype, {
 
-
-	buildHtml: function() {},
-	
+	initHtml: function() {
 		
-	initHtml: function() { },
+		
+		var field = this;
+		// Change the input value will change the input hidden value
+		
+		this.fillExpander();
+		this._picker = this.main.domExpander.find('.bi-formfield-colorpicker').farbtastic(function(color) {
+			field._hasChanged(color);
+		});
+		
+	},
+	
+	
 	
 	addField: function(position) {
 		var div = $("<div />");
 		this.divs.splice(position, 0, div)
-		this.input = $("<input />");
-		return { html: div, index: position };
+		var input = $("<input />");
+		return { html: div, field: div, input: input, index: position };
 	},
 	
 	removeField: function(position) {
@@ -30,20 +40,24 @@ $.extend(BI.Forms.Fields.Table.Color.prototype, {
 	},
 
 	startEditing: function(position) {
-		this.divs[position].hide().after(this.input.val(this.main.getValue(position)));
-		this.input.focus();
+		var field = this.main.fields[position];
+		field.field.html(this.main.getValue(position));
+		//this.main.fields[position].input.remove();
+		this.main.toggleExpander(position);
 	},
 
 	stopEditing: function(position) {
-		this.divs[position].show().html(this.input.val());
-		this.input.remove();
-		this.main.changeValue(position, this.input.val());
+		var field = this.main.fields[position];
+		//this.main.changeValue(position, this.main.fields[position].input.val());
+		
+		this.main.hideExpander();
 	},
 
 
-	setValue: function(index, value) {
-	
+	_setValueText: function(index, value) {
+
 		this.main.fields[index].html.html(value);
 		this.main.changeValue(index, value);
 	}
+
 });
