@@ -52,26 +52,18 @@ function generateGrid(gridData, gridImage, cols, rows, cellWidth, cellHeight, co
 
 function getColorFromValueAndColors(value, colors, minValue, maxValue, highContrast) {
 	
-	var ratio = 1/(maxValue-minValue);
+	var ratio = 1 / (maxValue - minValue);
 	if (highContrast) {
-		value=(value-minValue)*ratio;
-		ratio=1;
-		minValue=0;
-		maxValue=1;
+		value = (value-minValue)*ratio;
+		minValue = 0;
+		maxValue = 1;
 	}
-	var step = (maxValue - minValue) / (colors.length - 1);
+	var diff = maxValue - minValue;
+	var step = diff / (colors.length - 1);
+	var color1Id = parseInt((colors.length - 1) * (value - minValue) / diff);
+	color1Id = Math.min(Math.max(0, color1Id), colors.length - 2);
 	
-	// TODO: should be possible to remove this loop
-	var firstColorID=parseInt((value-minValue)/(ratio*step));
-
-	if (firstColorID==(colors.length-1) && value==maxValue) firstColorID--;
-	if (firstColorID>=0 && (firstColorID<(colors.length-1))) {
-		return getColorBetween(value, colors[firstColorID], colors[firstColorID + 1], firstColorID * step + minValue, (firstColorID + 1) * step + minValue);		
-	}
-	
-	throw value;
-	throw "Should 	not be there";
-	return [0, 0, 0];
+	return getColorBetween(value, colors[color1Id], colors[color1Id + 1], color1Id * step + minValue, (color1Id + 1) * step + minValue);		
 }
 
 
