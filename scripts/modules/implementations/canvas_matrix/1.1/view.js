@@ -191,7 +191,8 @@ CI.Module.prototype._types.canvas_matrix.View.prototype = {
 					endRow: this.rowNumber - Math.ceil(Math.max(0,this.gridImage.height*(1-this.moduleCenterY) - this.canvas.height*0.5 - this.cellHeight)/this.cellHeight),
 					cellWidth: this.cellWidth,
 					cellHeight: this.cellHeight,
-					colors: this.module.getConfiguration().colors
+					colors: this.module.getConfiguration().colors,
+					highContrast: true
 				});
 				
 				//then afterwards generate the whole thing
@@ -204,7 +205,8 @@ CI.Module.prototype._types.canvas_matrix.View.prototype = {
 					endRow: this.rowNumber,
 					cellWidth: this.cellWidth,
 					cellHeight: this.cellHeight,
-					colors: this.module.getConfiguration().colors
+					colors: this.module.getConfiguration().colors,
+					highContrast: true
 				});
 				break;
 			}

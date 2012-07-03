@@ -50,22 +50,25 @@ function generateGrid(gridData, gridImage, cols, rows, cellWidth, cellHeight, co
 	return gridImage;
 }
 
-function getColorFromValueAndColors(value, colors, from0To1) {
+function getColorFromValueAndColors(value, colors, minValue, maxValue, highContrast) {
 	
-	
-	if(from0To1) {
-		var maxValue = 1;  
-		var minValue = 0;
+	var ratio = 1/(maxValue-minValue);
+	if (highContrast) {
+		value=(value-minValue)*ratio;
+		ratio=1;
+		minValue=0;
+		maxValue=1;
 	}
-	
 	var step = (maxValue - minValue) / (colors.length - 1);
 	
-	for(var i = 0, len = colors.length; i < len - 1; i++) {
-		
-		if(value <= ((i + 1) * step + minValue) && value > (i * step + minValue)) {
-			return getColorBetween(value, colors[i], colors[i + 1], i * step + minValue, (i + 1) * step + minValue);
-		}
+	// TODO: should be possible to remove this loop
+	var firstColorID=parseInt((value-minValue)/(ratio*step));
+
+	if (firstColorID==(colors.length-1) && value==maxValue) firstColorID--;
+	if (firstColorID>=0 && (firstColorID<(colors.length-1))) {
+		return getColorBetween(value, colors[firstColorID], colors[firstColorID + 1], firstColorID * step + minValue, (firstColorID + 1) * step + minValue);		
 	}
+	
 	throw value;
 	throw "Should not be there";
 	return [0, 0, 0];
@@ -80,7 +83,8 @@ function getColorBetween(value, color1, color2, color1Val, color2Val) {
 	// Between 0 and 1
 	var ratio = (value - color1Val) / (color2Val - color1Val);
 	
-	return [parseInt(ratio * Math.abs(color2[0] - color1[0]) + Math.min(color2[0], color1[0])), parseInt(ratio * Math.abs(color2[1] - color1[1]) + Math.min(color2[1], color1[1])), parseInt(ratio * Math.abs(color2[2] - color1[2]) + Math.min(color2[2], color1[2]))];
+	return [parseInt(ratio * (color2[0] - color1[0]) + color1[0]), parseInt(ratio * (color2[1] - color1[1]) + color1[1]), parseInt(ratio * (color2[2] - color1[2]) + color1[2])];
+//	return [parseInt(ratio * Math.abs(color2[0] - color1[0]) + Math.min(color2[0], color1[0])), parseInt(ratio * Math.abs(color2[1] - color1[1]) + Math.min(color2[1], color1[1])), parseInt(ratio * Math.abs(color2[2] - color1[2]) + Math.min(color2[2], color1[2]))];
 }
 
 
@@ -97,21 +101,31 @@ function getRGB(color) {
     }
 }
 
-function generateGridArea(gridData, gridImage, startCol, startRow, endCol, endRow, cellWidth, cellHeight, canvas, colors) {
+
+
+function generateGridArea(gridData, gridImage, startCol, startRow, endCol, endRow, cellWidth, cellHeight, canvas, colors, highContrast) {
 	
 	var dataColumns = gridData.length;
 	var gridImageData = gridImage.data;
 	var gridWidth = gridImage.width;
 	var gridHeight = gridImage.height;
-	
-	
 	var color, x=startCol, y=startRow, i=0, j=0, pixelNum=0;
 	
-	while (x<endCol) {
+	var minValue=0;
+	var maxValue=1;
 	
+	if (highContrast) { // we calculate min and max values
+		for (i=0;i<gridData.length;i++) {
+			for (j=0;j<gridData[i].length;j++) {
+		      if (!minValue || gridData[i][j]<minValue) minValue=gridData[i][j];
+		      if (!maxValue || gridData[i][j]>maxValue) maxValue=gridData[i][j];
+		    }
+		}
+	}
+
+	while (x<endCol) {
 		while (y<endRow) {
-		
-			color = getColorFromValueAndColors(gridData[x][y], colors, true);
+			color = getColorFromValueAndColors(gridData[x][y], colors, minValue, maxValue, highContrast);
 				
 			// The Math.min calls ensure that we don't try to draw beyond the edges of the canvas
 			drawCell(x*cellWidth, y*cellHeight, Math.min(cellWidth, gridWidth - x*cellWidth), Math.min(cellHeight, gridHeight - y*cellHeight), gridWidth, color, gridImageData);
@@ -154,9 +168,9 @@ onmessage = function(event) {
 	var now = new Date().getTime();
 	var d = event.data;
 	
-	
 	if (typeof d.startCol != 'undefined' && typeof d.endCol != 'undefined' && typeof d.startRow != 'undefined' && typeof d.endRow != 'undefined') {
-		postMessage(generateGridArea(d.gridData, d.gridImageData, d.startCol, d.startRow, d.endCol, d.endRow, d.cellWidth, d.cellHeight, d.canvas, d.colors));
+		
+		postMessage(generateGridArea(d.gridData, d.gridImageData, d.startCol, d.startRow, d.endCol, d.endRow, d.cellWidth, d.cellHeight, d.canvas, d.colors, d.highContrast));
 	}
 	var diff = new Date().getTime() - now;
 	//then generate the whole thing, once we've given the user something to look at in the meantime
