@@ -70,7 +70,7 @@ function getColorFromValueAndColors(value, colors, minValue, maxValue, highContr
 	}
 	
 	throw value;
-	throw "Should not be there";
+	throw "Should 	not be there";
 	return [0, 0, 0];
 }
 
