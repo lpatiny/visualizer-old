@@ -157,6 +157,17 @@ CI.Module.prototype._types.canvas_matrix.Controller.prototype = {
 	
 	doConfiguration: function(section) {
 		
+		var groupfield = new BI.Forms.GroupFields.List('opts');
+		section.addFieldGroup(groupfield);
+		
+		var field = groupfield.addField({
+			type: 'Checkbox',
+			name: 'highcontrast'
+		});
+		field.implementation.setOptions({ 'true': 'Take data min/max as boundaries'});
+		field.setTitle(new CI.Title('Contrast'));
+		
+		
 		var groupfield = new BI.Forms.GroupFields.Table('colors');
 		section.addFieldGroup(groupfield);
 		
@@ -172,8 +183,14 @@ CI.Module.prototype._types.canvas_matrix.Controller.prototype = {
 	doFillConfiguration: function() {
 		
 		var cols = this.module.getConfiguration().colors || [];
+		var highcontrast = this.module.getConfiguration().highContrast || false;
 
 		return {
+			
+			opts: [{
+				highcontrast: [highcontrast ? ['true'] : []]
+			}], 
+			
 			colors: [{
 				color: cols
 			}]
@@ -191,6 +208,7 @@ CI.Module.prototype._types.canvas_matrix.Controller.prototype = {
 			colors.push(group[i].color);
 		
 		this.module.getConfiguration().colors = colors;
+		this.module.getConfiguration().highContrast = confSection[0].opts[0].highcontrast[0][0];
 		
 		/*var coltitle = group.colnumber;
 		var coljpath = group.valjPath;

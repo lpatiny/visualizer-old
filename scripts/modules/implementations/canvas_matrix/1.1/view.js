@@ -192,7 +192,7 @@ CI.Module.prototype._types.canvas_matrix.View.prototype = {
 					cellWidth: this.cellWidth,
 					cellHeight: this.cellHeight,
 					colors: this.module.getConfiguration().colors,
-					highContrast: true
+					highContrast: this.module.getConfiguration().highContrast || false
 				});
 				
 				//then afterwards generate the whole thing
@@ -206,7 +206,7 @@ CI.Module.prototype._types.canvas_matrix.View.prototype = {
 					cellWidth: this.cellWidth,
 					cellHeight: this.cellHeight,
 					colors: this.module.getConfiguration().colors,
-					highContrast: true
+					highContrast: this.module.getConfiguration().highContrast || false
 				});
 				break;
 			}
