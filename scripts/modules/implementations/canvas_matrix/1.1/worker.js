@@ -60,8 +60,8 @@ function getColorFromValueAndColors(value, colors, from0To1) {
 	
 	var step = (maxValue - minValue) / (colors.length - 1);
 	
+	// TODO: should be possible to remove this loop
 	for(var i = 0, len = colors.length; i < len - 1; i++) {
-		
 		if(value <= ((i + 1) * step + minValue) && value > (i * step + minValue)) {
 			return getColorBetween(value, colors[i], colors[i + 1], i * step + minValue, (i + 1) * step + minValue);
 		}
@@ -80,7 +80,8 @@ function getColorBetween(value, color1, color2, color1Val, color2Val) {
 	// Between 0 and 1
 	var ratio = (value - color1Val) / (color2Val - color1Val);
 	
-	return [parseInt(ratio * Math.abs(color2[0] - color1[0]) + Math.min(color2[0], color1[0])), parseInt(ratio * Math.abs(color2[1] - color1[1]) + Math.min(color2[1], color1[1])), parseInt(ratio * Math.abs(color2[2] - color1[2]) + Math.min(color2[2], color1[2]))];
+	return [parseInt(ratio * (color2[0] - color1[0]) + color1[0]), parseInt(ratio * (color2[1] - color1[1]) + color1[1]), parseInt(ratio * (color2[2] - color1[2]) + color1[2])];
+//	return [parseInt(ratio * Math.abs(color2[0] - color1[0]) + Math.min(color2[0], color1[0])), parseInt(ratio * Math.abs(color2[1] - color1[1]) + Math.min(color2[1], color1[1])), parseInt(ratio * Math.abs(color2[2] - color1[2]) + Math.min(color2[2], color1[2]))];
 }
 
 
