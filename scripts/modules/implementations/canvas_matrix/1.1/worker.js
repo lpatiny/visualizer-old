@@ -113,7 +113,6 @@ function generateGridArea(gridData, gridImage, startCol, startRow, endCol, endRo
 	
 	var minValue=0;
 	var maxValue=1;
-	var highContrast=true;
 	
 	if (highContrast) { // we calculate min and max values
 		for (i=0;i<gridData.length;i++) {
@@ -169,9 +168,9 @@ onmessage = function(event) {
 	var now = new Date().getTime();
 	var d = event.data;
 	
-	
 	if (typeof d.startCol != 'undefined' && typeof d.endCol != 'undefined' && typeof d.startRow != 'undefined' && typeof d.endRow != 'undefined') {
-		postMessage(generateGridArea(d.gridData, d.gridImageData, d.startCol, d.startRow, d.endCol, d.endRow, d.cellWidth, d.cellHeight, d.canvas, d.colors));
+		
+		postMessage(generateGridArea(d.gridData, d.gridImageData, d.startCol, d.startRow, d.endCol, d.endRow, d.cellWidth, d.cellHeight, d.canvas, d.colors, d.highContrast));
 	}
 	var diff = new Date().getTime() - now;
 	//then generate the whole thing, once we've given the user something to look at in the meantime
