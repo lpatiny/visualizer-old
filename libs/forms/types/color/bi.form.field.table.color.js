@@ -42,6 +42,7 @@ $.extend(BI.Forms.Fields.Table.Color.prototype, {
 	startEditing: function(position) {
 		var field = this.main.fields[position];
 		field.field.html(this.main.getValue(position));
+		$.farbtastic(this._picker).setColor(this.main.getValue(position));
 		//this.main.fields[position].input.remove();
 		this.main.toggleExpander(position);
 	},

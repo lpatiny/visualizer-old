@@ -52,15 +52,15 @@ function generateGrid(gridData, gridImage, cols, rows, cellWidth, cellHeight, co
 
 function getColorFromValueAndColors(value, colors, minValue, maxValue, highContrast) {
 	
-	var ratio = 1 / (maxValue - minValue);
-	if (highContrast) {
-		value = (value-minValue)*ratio;
+	if(!highContrast) {
 		minValue = 0;
 		maxValue = 1;
 	}
+	var ratio = 1 / (maxValue - minValue);
 	var diff = maxValue - minValue;
-	var step = diff / (colors.length - 1);
-	var color1Id = parseInt((colors.length - 1) * (value - minValue) / diff);
+	var segNb = colors.length - 1;
+	var step = diff / segNb;
+	var color1Id = parseInt(segNb * (value - minValue) / diff);
 	color1Id = Math.min(Math.max(0, color1Id), colors.length - 2);
 	
 	return getColorBetween(value, colors[color1Id], colors[color1Id + 1], color1Id * step + minValue, (color1Id + 1) * step + minValue);		
