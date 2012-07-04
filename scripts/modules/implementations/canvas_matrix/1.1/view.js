@@ -68,7 +68,7 @@ CI.Module.prototype._types.canvas_matrix.View.prototype = {
 				view.zoomMax = Math.max(view.zoomMax, Math.abs(delta));
 				speed = 3*Math.abs(delta)/view.zoomMax;
 			}
-			console.log(e.originalEvent);
+			
 			if(delta !== undefined)
 				view.onZoom((delta<0?-1:1)*speed);
 		});
@@ -120,7 +120,7 @@ CI.Module.prototype._types.canvas_matrix.View.prototype = {
 		
 	},
 	
-	onResize: function() {
+	onResize: function(width, height, force) {
 		
 		var container = this.module.getDomContent().find('.canvas-container').each(function() {
 			$(this).width($(this).parent().width() - 70);
@@ -137,13 +137,12 @@ CI.Module.prototype._types.canvas_matrix.View.prototype = {
 			
 		if (typeof this.zoomLevelPreset == 'undefined' || !this.zoomLevelPreset) {
 			var size;
-			console.log('there');
+			
 			if (typeof this.fitFillMode != 'undefined' && this.fitFillMode == "fit")
 				size = Math.min(moduleWidth, moduleHeight);
 			else if (typeof this.fitFillMode != 'undefined' && this.fitFillMode == "fill")
 				size = Math.max(moduleWidth, moduleHeight);
 			else return;
-			console.log('here');
 			this.cellHeight = Math.floor(size / this.rowNumber);
 			this.cellWidth = Math.floor(size / this.colNumber); 
 			this.zoomLevelPreset = true;
@@ -152,7 +151,7 @@ CI.Module.prototype._types.canvas_matrix.View.prototype = {
 		this.canvas.width = moduleWidth;
 		this.canvas.height = moduleHeight;
 		
-		this.updateCanvas();
+		this.updateCanvas(force);
 	},
 	
 	//expects zoomFactor = 1-5
@@ -170,7 +169,6 @@ CI.Module.prototype._types.canvas_matrix.View.prototype = {
 		if(!(moduleValue = this.module.getDataFromRel('matrix').getData()))
 			return;
 		
-				
 		if(moduleValue.xLabel && moduleValue.yLabel) {
 			this.colNumber = moduleValue.value.xLabel.length;
 			this.rowNumber = moduleValue.value.yLabel.length;
@@ -193,20 +191,20 @@ CI.Module.prototype._types.canvas_matrix.View.prototype = {
 			CI.WebWorker.send('getminmaxmatrix', moduleValue.value.data, function(data) {
 				self.minValue = data.min;
 				self.maxValue = data.max;
-				self.onResize()
+				self.onResize(false, false, true);
+				
 				self.redoScale(self.minValue, self.maxValue, self.module.getConfiguration().colors);		
 			});
 		} else {
-			self.onResize();
+			self.onResize(false, false, true);
 			self.minValue = 0;
 			self.maxValue = 1;
+			
 			this.redoScale(self.minValue, self.maxValue, this.module.getConfiguration().colors);
 		}
-		
-		
 	},
 	
-	updateCanvas: function() {
+	updateCanvas: function(force) {
 		var moduleValue;
 		if(!(moduleValue = this.module.getDataFromRel('matrix').getData()))
 			return;
@@ -216,10 +214,9 @@ CI.Module.prototype._types.canvas_matrix.View.prototype = {
 		var newWidth = this.cellWidth;
 		var newHeight = this.cellHeight;
 		
-		
 		// We only need to trigger re-evaluation of the pixels when the zoom-level has changed.
 		// Otherwise, keep the same imagedata, but draw it in another position
-		if(newWidth != this.lastCellWidth || newHeight != this.lastCellHeight) {
+		if(newWidth != this.lastCellWidth || newHeight != this.lastCellHeight || force) {
 			
 			this.lastCellWidth = newWidth;
 			this.lastCellHeight = newHeight;
@@ -227,8 +224,6 @@ CI.Module.prototype._types.canvas_matrix.View.prototype = {
 			if(newWidth == 0 || newHeight == 0)
 				return;
 			
-			console.log(newWidth);
-			console.log(newHeight);
 			this.gridImage = this.canvasContext.createImageData(newWidth * this.colNumber, newHeight * this.rowNumber); // Store the image
 			for(var i in moduleValue) {
 				if(moduleValue[i] != "matrix" || this.gridImage == undefined)

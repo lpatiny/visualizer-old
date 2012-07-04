@@ -142,9 +142,8 @@ $(document).bind('configModule', function(event, module) {
 			
 			if(module.controller.doSaveConfiguration) 
 				module.controller.doSaveConfiguration(value.module);
-				
+			
 			Entry.save();
-				
 			CI.API.resendAllVars();
 			module.updateView();
 		});
