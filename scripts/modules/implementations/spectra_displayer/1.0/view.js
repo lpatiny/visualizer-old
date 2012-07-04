@@ -16,14 +16,12 @@ CI.Module.prototype._types.spectra_displayer.View = function(module) {
 
 CI.Module.prototype._types.spectra_displayer.View.prototype = {
 	
-	init: function() {	
+	init: function() {
+		
 		var html = [];
 		html.push('<div class="ci-canvas-jcamp"></div>');
-		
 		this.dom = $(html.join(''));
-		
 		this.module.getDomContent().html(this.dom);
-		
 	},
 	
 	inDom: function() {

@@ -121,6 +121,8 @@ jQuery._farbtastic = function (container, callback) {
     var el = event.target || event.srcElement;
     var reference = fb.wheel;
 
+
+
     if (typeof event.offsetX != 'undefined') {
       // Use offset coordinates and find common offsetParent
       var pos = { x: event.offsetX, y: event.offsetY };
@@ -135,6 +137,7 @@ jQuery._farbtastic = function (container, callback) {
         e = e.offsetParent;
       }
 
+	
       // Look for the coordinates starting from the wheel widget.
       var e = reference;
       var offset = { x: 0, y: 0 }
@@ -148,7 +151,7 @@ jQuery._farbtastic = function (container, callback) {
         offset.y += e.offsetTop;
         e = e.offsetParent;
       }
-
+		
       // Reset stored coordinates
       e = el;
       while (e) {
@@ -160,8 +163,10 @@ jQuery._farbtastic = function (container, callback) {
     else {
       // Use absolute coordinates
       var pos = fb.absolutePosition(reference);
-      x = (event.pageX || 0*(event.clientX + $('html').get(0).scrollLeft)) - pos.x;
-      y = (event.pageY || 0*(event.clientY + $('html').get(0).scrollTop)) - pos.y;
+      //console.log(event.pageY);
+      //console.log(event.screenY);
+      x = (event.pageX || 0*(event.clientX + $('html').get(0).scrollLeft)) - pos.left;
+      y = (event.pageY || 0*(event.clientY + $('html').get(0).scrollTop)) - pos.top;
     }
     // Subtract distance to middle
     return { x: x - fb.width / 2, y: y - fb.width / 2 };
@@ -260,6 +265,8 @@ jQuery._farbtastic = function (container, callback) {
    * Get absolute position of element
    */
   fb.absolutePosition = function (el) {
+  	
+  return $(el).offset();
     var r = { x: el.offsetLeft, y: el.offsetTop };
     // Resolve relative to offsetParent
     if (el.offsetParent) {

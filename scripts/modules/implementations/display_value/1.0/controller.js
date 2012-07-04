@@ -42,8 +42,8 @@ CI.Module.prototype._types.display_value.Controller.prototype = {
 	
 	configurationReceive: {
 		"value": {
-			type: ['string', 'number', 'mf'],
-			label: 'Any string or number',
+			type: ['string', 'number', 'mf', 'picture', 'gif', 'jpeg', 'png'],
+			label: 'Any string, number or picture',
 			description: ''
 		},
 		

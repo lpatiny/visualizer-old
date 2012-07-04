@@ -603,12 +603,9 @@ CI.DataType._valueToScreen = function(value, box, callback) {
 		return CI.Type[type].toScreen(valueToDisplay, callback)
 	}
 	
-	
 	if(callback)
 		callback("__unimplemented");	
 }
-	
-
 
 CI.Type = {
 	
@@ -637,7 +634,7 @@ CI.Type = {
 	},
 	
 	
-	gif: {
+	picture: {
 		
 		toScreen: function(val, clbk) {
 			var val = '<img src="' + val + '" />';
@@ -730,7 +727,9 @@ $(document).bind('checkAsyncLoad', function(event, dom) {
 
 
 
-
+CI.Type.gif = CI.Type.picture;
+CI.Type.jpeg = CI.Type.picture;
+CI.Type.png = CI.Type.picture;
 
 
 /*

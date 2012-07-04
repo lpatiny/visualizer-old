@@ -53,10 +53,11 @@ CI.Module.prototype._types.plot_stat.Controller.prototype = {
 				
 		for(var i = 0; i < actions.length; i++) {
 			if(actions[i].event == "onHover") {
-				var j = i;
-				CI.DataType.getValueFromJPath(data, actions[j].jpath, function(toSend) {
-					CI.API.setSharedVar(actions[j].name, toSend);	
-				});
+				(function(data, jpath, name) {
+					CI.DataType.getValueFromJPath(data, jpath, function(toSend) {
+						CI.API.setSharedVar(name, toSend);	
+					});
+				}) (data, actions[i].jpath, actions[i].name);
 			}
 		}
 	},
@@ -69,13 +70,9 @@ CI.Module.prototype._types.plot_stat.Controller.prototype = {
 		}	
 	},
 	
-	
 	moduleInformations: {
 		moduleName: 'Chart'
 	},
-	
-	
-	
 	
 	doConfiguration: function(section) {
 		
@@ -94,8 +91,6 @@ CI.Module.prototype._types.plot_stat.Controller.prototype = {
 			name: 'pointsize'
 		});
 		field.setTitle(new CI.Title('Point size'));
-		
-		
 		
 		return true;
 	},
@@ -117,9 +112,7 @@ CI.Module.prototype._types.plot_stat.Controller.prototype = {
 	
 	doSaveConfiguration: function(confSection) {
 		
-		
 		var group = confSection[0].module[0];
-		
 		
 		var linewidth = group.linewidth[0];
 		var pointsize = group.pointsize[0];
@@ -129,6 +122,4 @@ CI.Module.prototype._types.plot_stat.Controller.prototype = {
 			pointsize: pointsize
 		};
 	}
-	
-
 }
