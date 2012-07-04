@@ -47,6 +47,8 @@ CI.Module.prototype._types.canvas_matrix.View.prototype = {
 		this.worker = new Worker('./scripts/modules/implementations/canvas_matrix/1.1/worker.js');
 		var view = this;
 		this.worker.addEventListener('message', function(event) {
+			
+			
 			view.lastImageData = event.data;
 			view.updateCanvas();
 			console.profileEnd("gridGenWW");
@@ -57,7 +59,7 @@ CI.Module.prototype._types.canvas_matrix.View.prototype = {
 
 		$(canvasContainer).on('mousewheel', 'canvas', function(e) {
 			e.preventDefault();
-			var delta = e.originalEvent.wheelDelta;
+			var delta = e.originalEvent.detail || e.originalEvent.wheelDelta;
 			var speed;
 			// Get normalized wheel speed
 			if (typeof (view.zoomMax) == 'undefined') {
@@ -66,8 +68,9 @@ CI.Module.prototype._types.canvas_matrix.View.prototype = {
 				view.zoomMax = Math.max(view.zoomMax, Math.abs(delta));
 				speed = 3*Math.abs(delta)/view.zoomMax;
 			}
-			
-			view.onZoom((delta<0?-1:1)*speed);
+			console.log(e.originalEvent);
+			if(delta !== undefined)
+				view.onZoom((delta<0?-1:1)*speed);
 		});
 		
 		$(canvasContainer).drag(function(e1, e2) {
@@ -134,12 +137,13 @@ CI.Module.prototype._types.canvas_matrix.View.prototype = {
 			
 		if (typeof this.zoomLevelPreset == 'undefined' || !this.zoomLevelPreset) {
 			var size;
+			console.log('there');
 			if (typeof this.fitFillMode != 'undefined' && this.fitFillMode == "fit")
 				size = Math.min(moduleWidth, moduleHeight);
 			else if (typeof this.fitFillMode != 'undefined' && this.fitFillMode == "fill")
 				size = Math.max(moduleWidth, moduleHeight);
 			else return;
-			
+			console.log('here');
 			this.cellHeight = Math.floor(size / this.rowNumber);
 			this.cellWidth = Math.floor(size / this.colNumber); 
 			this.zoomLevelPreset = true;
@@ -153,6 +157,7 @@ CI.Module.prototype._types.canvas_matrix.View.prototype = {
 	
 	//expects zoomFactor = 1-5
 	onZoom: function(zoomFactor) {
+		
 		this.cellWidth+=Math.ceil(zoomFactor);
 		this.cellHeight+=Math.ceil(zoomFactor);	
 		this.zoomLevelPreset = true;
@@ -222,6 +227,8 @@ CI.Module.prototype._types.canvas_matrix.View.prototype = {
 			if(newWidth == 0 || newHeight == 0)
 				return;
 			
+			console.log(newWidth);
+			console.log(newHeight);
 			this.gridImage = this.canvasContext.createImageData(newWidth * this.colNumber, newHeight * this.rowNumber); // Store the image
 			for(var i in moduleValue) {
 				if(moduleValue[i] != "matrix" || this.gridImage == undefined)

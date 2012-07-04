@@ -34,7 +34,6 @@ CI.Module.prototype._types.canvas_matrix.Controller.prototype = {
 			if(!(moduleValue = module.getDataFromRel('matrix').getData()))
 				return;
 			
-			console.log(moduleValue);
 			moduleValue = moduleValue.value;
 			var xLabel = moduleValue.xLabel;
 			var yLabel = moduleValue.yLabel;
@@ -45,8 +44,8 @@ CI.Module.prototype._types.canvas_matrix.Controller.prototype = {
 			var ypx = e.pageY - $(e.target).offset().top;
 			
 			//offset by the position of the grid within the canvas
-			xpx += module.view.moduleCenterX * module.view.lastImageData.width - $(e.target).width()/2
-			ypx += module.view.moduleCenterY * module.view.lastImageData.height - $(e.target).height()/2
+			xpx += module.view.moduleCenterX * module.view.gridImage.width - $(e.target).width()/2
+			ypx += module.view.moduleCenterY * module.view.gridImage.height - $(e.target).height()/2
 			
 			//grid coordinates
 			var x = Math.floor(xpx / module.view.lastCellWidth);
