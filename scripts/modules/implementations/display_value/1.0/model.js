@@ -60,5 +60,8 @@ CI.Module.prototype._types.display_value.Model.prototype = {
 	
 	getjPath: function(rel, accepts) {
 		
+		
+		
+		
 	}
 }

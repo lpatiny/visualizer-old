@@ -25,7 +25,7 @@ CI.Module.prototype._types.canvas_matrix.Controller.prototype = {
 			return;
 		
 	
-		$(this.module.getDomView()).on('mousemove', 'canvas', function(e) {
+		$(this.module.getDomView()).on('mousemove', 'canvas', $.debounce(250, function(e) {
 			
 			var cellX = 1;
 			var cellY = 1;
@@ -98,7 +98,7 @@ CI.Module.prototype._types.canvas_matrix.Controller.prototype = {
 					}) (j, actions[j].jpath, actions[j].name, value, hashmap);
 				}
 			}
-		});
+		}));
 			
 		if(actions.onPixelClick) {
 		}
