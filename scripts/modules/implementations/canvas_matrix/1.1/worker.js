@@ -95,7 +95,7 @@ function getRGB(color) {
 
 
 
-function generateGridArea(gridData, gridImage, startCol, startRow, endCol, endRow, cellWidth, cellHeight, canvas, colors, highContrast) {
+function generateGridArea(gridData, gridImage, startCol, startRow, endCol, endRow, cellWidth, cellHeight, canvas, colors, highContrast, minValue, maxValue) {
 	
 	var dataColumns = gridData.length;
 	var gridImageData = gridImage.data;
@@ -103,16 +103,10 @@ function generateGridArea(gridData, gridImage, startCol, startRow, endCol, endRo
 	var gridHeight = gridImage.height;
 	var color, x=startCol, y=startRow, i=0, j=0, pixelNum=0;
 	
-	var minValue=0;
-	var maxValue=1;
 	
-	if (highContrast) { // we calculate min and max values
-		for (i=0;i<gridData.length;i++) {
-			for (j=0;j<gridData[i].length;j++) {
-		      if (!minValue || gridData[i][j]<minValue) minValue=gridData[i][j];
-		      if (!maxValue || gridData[i][j]>maxValue) maxValue=gridData[i][j];
-		    }
-		}
+	if(!highContrast) { // we calculate min and max values
+		minValue = 0;
+		maxValue = 1;
 	}
 
 	while (x<endCol) {
@@ -161,8 +155,7 @@ onmessage = function(event) {
 	var d = event.data;
 	
 	if (typeof d.startCol != 'undefined' && typeof d.endCol != 'undefined' && typeof d.startRow != 'undefined' && typeof d.endRow != 'undefined') {
-		
-		postMessage(generateGridArea(d.gridData, d.gridImageData, d.startCol, d.startRow, d.endCol, d.endRow, d.cellWidth, d.cellHeight, d.canvas, d.colors, d.highContrast));
+		postMessage(generateGridArea(d.gridData, d.gridImageData, d.startCol, d.startRow, d.endCol, d.endRow, d.cellWidth, d.cellHeight, d.canvas, d.colors, d.highContrast, d.minValue, d.maxValue));
 	}
 	var diff = new Date().getTime() - now;
 	//then generate the whole thing, once we've given the user something to look at in the meantime

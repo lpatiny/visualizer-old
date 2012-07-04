@@ -43,5 +43,9 @@ CI.WebWorker = {
 			return;
 		
 		CI.WebWorker._workers[name].terminate();
-	}	
+	},
+	
+	hasWorkerInit: function(workerName) {
+		return !!CI.WebWorker._workers[workerName];
+	}
 }

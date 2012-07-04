@@ -316,3 +316,11 @@ div.ci-module-wrapper .ci-module-content {
 	background: none repeat scroll 0 0 #F0F0F0;
 	
 }
+
+.ci-canvas-jcamp, .canvas-container {
+	font-size: 0px;
+}
+
+.canvas-container {
+	float: left;
+}

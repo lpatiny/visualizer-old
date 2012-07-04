@@ -43,8 +43,7 @@ CI.Module.prototype._types.canvas_matrix.View.prototype = {
 		canvasContainer.appendChild(this.canvas);
 
 		this.module.getDomContent().html(this.dom);
-		
-		
+			
 		this.worker = new Worker('./scripts/modules/implementations/canvas_matrix/1.1/worker.js');
 		var view = this;
 		this.worker.addEventListener('message', function(event) {
@@ -92,9 +91,37 @@ CI.Module.prototype._types.canvas_matrix.View.prototype = {
 		}
 	},
 	
+	redoScale: function(min, max, colors) {
+		
+		var scaleCanvas = document.createElement('canvas');
+		var ctx = scaleCanvas.getContext('2d');
+		var cont = this.module.getDomContent().find('.canvas-container');
+		scaleCanvas.height = cont.height() - 5;
+		scaleCanvas.width = 40;
+		
+		var gradHeight = scaleCanvas.height - 15;
+		var step = (max - min) / (colors.length - 1);
+		var stepPx = gradHeight / (colors.length - 1);
+		
+		var lineargradient = ctx.createLinearGradient(0, 0, 0, gradHeight);
+	
+		for(var i = 0; i < colors.length; i++) {
+			lineargradient.addColorStop(i / (colors.length - 1), colors[i]);
+			ctx.fillText(Math.round(100 * i * step) / 100, 5, stepPx * i <= 0 ? 15 : stepPx * i - 5);	
+		}  
+	
+		ctx.fillStyle = lineargradient; 
+  		ctx.fillRect(28, 5, 10, gradHeight);
+  	
+		cont.after(scaleCanvas);
+		
+	},
+	
 	onResize: function() {
 		
-		var container = this.module.getDomContent().find('.canvas-container');
+		var container = this.module.getDomContent().find('.canvas-container').each(function() {
+			$(this).width($(this).parent().width() - 70);
+		});
 		
 		// Set the canvas to full width and height
 		var moduleWidth = container.width();
@@ -113,8 +140,8 @@ CI.Module.prototype._types.canvas_matrix.View.prototype = {
 				size = Math.max(moduleWidth, moduleHeight);
 			else return;
 			
-			this.cellHeight = Math.ceil(size / this.rowNumber);
-			this.cellWidth = Math.ceil(size / this.colNumber); 
+			this.cellHeight = Math.floor(size / this.rowNumber);
+			this.cellWidth = Math.floor(size / this.colNumber); 
 			this.zoomLevelPreset = true;
 		}
 	
@@ -133,11 +160,12 @@ CI.Module.prototype._types.canvas_matrix.View.prototype = {
 	},
 	
 	update: function() {
-		var moduleValue;
+		var moduleValue, self = this;
 		
 		if(!(moduleValue = this.module.getDataFromRel('matrix').getData()))
 			return;
 		
+				
 		if(moduleValue.xLabel && moduleValue.yLabel) {
 			this.colNumber = moduleValue.value.xLabel.length;
 			this.rowNumber = moduleValue.value.yLabel.length;
@@ -152,7 +180,25 @@ CI.Module.prototype._types.canvas_matrix.View.prototype = {
 		if ( typeof moduleValue.data.title != 'undefined')
 			this.module.domHeader.find("div")[0].innerHTML = moduleValue.data.title;
 		*/
-		this.onResize()
+		if(!CI.WebWorker.hasWorkerInit('getminmaxmatrix'))
+			CI.WebWorker.create('getminmaxmatrix', './scripts/webworker/scripts/getminmaxmatrix.js');
+		
+		
+		if(this.module.getConfiguration().highContrast) {
+			CI.WebWorker.send('getminmaxmatrix', moduleValue.value.data, function(data) {
+				self.minValue = data.min;
+				self.maxValue = data.max;
+				self.onResize()
+				self.redoScale(self.minValue, self.maxValue, self.module.getConfiguration().colors);		
+			});
+		} else {
+			self.onResize();
+			self.minValue = 0;
+			self.maxValue = 1;
+			this.redoScale(self.minValue, self.maxValue, this.module.getConfiguration().colors);
+		}
+		
+		
 	},
 	
 	updateCanvas: function() {
@@ -192,7 +238,9 @@ CI.Module.prototype._types.canvas_matrix.View.prototype = {
 					cellWidth: this.cellWidth,
 					cellHeight: this.cellHeight,
 					colors: this.module.getConfiguration().colors,
-					highContrast: this.module.getConfiguration().highContrast || false
+					highContrast: this.module.getConfiguration().highContrast || false,
+					minValue: this.minValue,
+					maxValue: this.maxValue
 				});
 				
 				//then afterwards generate the whole thing
@@ -206,8 +254,11 @@ CI.Module.prototype._types.canvas_matrix.View.prototype = {
 					cellWidth: this.cellWidth,
 					cellHeight: this.cellHeight,
 					colors: this.module.getConfiguration().colors,
-					highContrast: this.module.getConfiguration().highContrast || false
+					highContrast: this.module.getConfiguration().highContrast || false,
+					minValue: this.minValue,
+					maxValue: this.maxValue
 				});
+				
 				break;
 			}
 		} else {
