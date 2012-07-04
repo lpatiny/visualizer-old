@@ -119,6 +119,17 @@ CI.Module.prototype._types.grid.Controller.prototype = {
 	
 	doConfiguration: function(section) {
 		
+		
+		var groupfield = new BI.Forms.GroupFields.List('gencfg');
+		section.addFieldGroup(groupfield);
+		
+		var field = groupfield.addField({
+			type: 'Text',
+			name: 'nblines'
+		});
+		field.setTitle(new CI.Title('Lines per page'));
+		
+		
 		var groupfield = new BI.Forms.GroupFields.Table('cols');
 		section.addFieldGroup(groupfield);
 		
@@ -148,6 +159,8 @@ CI.Module.prototype._types.grid.Controller.prototype = {
 	doFillConfiguration: function() {
 		
 		var cols = this.module.getConfiguration().colsjPaths;
+		var nblines = this.module.getConfiguration().nbLines || 20;
+		
 		var titles = [];
 		var jpaths = [];
 		for(var i in cols) {
@@ -157,6 +170,11 @@ CI.Module.prototype._types.grid.Controller.prototype = {
 
 
 		return {
+			
+			gencfg: [{
+				nblines: [nblines]	
+			}],
+			
 			cols: [{
 				coltitle: titles,
 				coljpath: jpaths
@@ -175,6 +193,7 @@ CI.Module.prototype._types.grid.Controller.prototype = {
 			cols[group[i].coltitle] = { jpath: group[i].coljpath };
 		
 		this.module.getConfiguration().colsjPaths = cols;
+		this.module.getConfiguration().nbLines = confSection[0].gencfg[0].nblines[0];
 		
 		/*var coltitle = group.colnumber;
 		var coljpath = group.valjPath;
