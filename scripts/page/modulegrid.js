@@ -159,7 +159,7 @@ CI.Grid = {
 		module.getSize().height = wrapper.height() / CI.Grid.definition.yHeight;
 		var containerHeight = wrapper.height() - (module.getDomHeader().is(':visible') ? module.getDomHeader().outerHeight(true) : 0);
 		
-		module.getDomContent().parent().css({
+		module.getDomContent().css({
 			height: containerHeight
 		});
 		module.view.onResize(module.getDomContent().width(), containerHeight);

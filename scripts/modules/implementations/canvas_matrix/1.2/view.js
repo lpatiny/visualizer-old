@@ -16,20 +16,278 @@ CI.Module.prototype._types.canvas_matrix.View = function(module) {
 
 CI.Module.prototype._types.canvas_matrix.View.prototype = {
 	
-	init: function() {	
+	init: function() {
+			
+		this.canvas = document.createElement("canvas");
+		this.canvasContext = this.canvas.getContext('2d');
+		
+		this.canvasContainer = $("<div />").css({'height': '100%', width: '100%'});
+		this.scaleContainer = $("<div />").css({'height': '100%', width: '100%'});
+		
+		this.dom = $("<div />").css({'height': '100%', width: '100%'}).append(this.canvasContainer.append(this.canvas)).append(this.scaleContainer);
+		this.module.getDomContent().html(this.dom);
+		
+		this.squareLoading = 100;
+		this.availableZooms = [3];//,4,5,7,10,15,20,25,30,35,50];
+		
+		this.workers = {};
+		this.buffers = {};
+		
+	},
+	
+	inDom: function() {
+		this.onResize(true);
+		this.initWorkers();
+	},
+	
+	onResize: function(doNotRedraw) {
+		
+		// We only care about resizing
+		var containerWidth = this.canvasContainer.width(),
+	 	    containerHeight = this.canvasContainer.height();
+	 	
+		this.canvas.width = containerWidth;
+		this.canvas.height = containerHeight;
+
+		if(!doNotRedraw)
+			this.doCanvasRedraw();
+	},
+	
+	doCanvasErase: function() {
+		this.redrawStarted = false;	
+		this.canvasContext.clearRect(0, 0, this.canvas.width, this.canvas.height);
+	},
+	
+	doCanvasRedraw: function() {
+		
+		var bufferIndices = this.getBufferIndices(this.getPxPerCell());
+		
+		for(var i = bufferIndices.minXIndexBuffer; i <= bufferIndices.maxXIndexBuffer; i++) {
+			for(var j = bufferIndices.minYIndexBuffer; i <= bufferIndices.maxXIndexBuffer; i++) {
+				this.doCanvasDrawBuffer(i, j);
+			}
+		}
+	},
+	
+	getBufferIndices: function(pxPerCell) {
+		
+			
+		var shift = this.getXYShift();
+		
+		var minXIndex = 0;
+		if(shift.x < 0)
+			var minXIndex = Math.floor(shift.x / pxPerCell);
+			
+		var minYIndex = 0;
+		if(shift.y < 0)
+			var minYIndex = Math.floor(shift.y / pxPerCell);
+		
+		var maxXIndex = Math.min(this.canvasNbX);//, (this.canvas.width + shift.x) / pxPerCell);
+		var maxYIndex = Math.min(this.canvasNbY);//, (this.canvas.height + shift.y) / pxPerCell);
+		
+		return { 
+			minXIndexBuffer: Math.floor(minXIndex / this.squareLoading),  
+			minYIndexBuffer: Math.floor(minYIndex / this.squareLoading), 
+		 
+			maxXIndexBuffer: Math.ceil(maxXIndex / this.squareLoading) - 1, 
+			maxYIndexBuffer: Math.ceil(maxYIndex / this.squareLoading) - 1
+		};  
+	},
+	
+	getBufferKey: function(pxPerCell, x, y) {
+		return pxPerCell + "-" + x + "-" + y;	
+	},
+	
+	doCanvasDrawBuffer: function(bufferX, bufferY) {
+		var shift = this.getXYShift();
+		var pxPerCell = this.getPxPerCell();
+		var bufferKey = this.getBufferKey(pxPerCell, bufferX, bufferY);
+		if(!this.buffers[bufferKey])
+			return;
+		
+		this.canvasContext.putImageData(this.buffers[bufferKey], bufferX * this.squareLoading * pxPerCell + shift.x, bufferY * this.squareLoading * pxPerCell + shift.y);
+	},
+	
+	getPxPerCell: function() {
+		if(this.pxPerCell)
+			return this.pxPerCell;
+			
+		return this.pxPerCell = this.getClosest(this.availableZooms, new Number(Math.max(1, Math.min(this.canvas.width / this.canvasNbX, this.canvas.height / this.canvasNbY))));
+	},
+	
+	getClosest: function(haystack, needle) {
+		
+		var closest = false, newClosest;
+		for(var i = 0; i < haystack.length; i++) 
+			if(!closest || Math.abs(haystack[i] - needle.valueOf()) < closest) 
+				closest = haystack[i];
+		
+		return closest;
+	},
+	
+	changeZoom: function(diff) {
+		this.getPxPerCell() += diff;
+		this.doCanvasRedraw();
+	},
+	
+	// Get the XY shift (in case you have zoomed on the canvas)
+	// Used to center the canvas on the loading
+	
+	getXYShift: function() {
+		if(this.xyShift)
+			return this.xyShift;	
+		var pxPerCell = this.getPxPerCell();
+		var zoneX = pxPerCell * this.canvasNbX;
+		var zoneY = pxPerCell * this.canvasNbY; 
+		
+		
+		return this.xyShift = {x: Math.floor((this.canvas.width - zoneX) / 2), y: Math.floor((this.canvas.height - zoneY) / 2)};
+	},
+	
+	// Here we receive new data, we need to relaunch the workers
+	update: function() {
+		
+		var gridData;
+		this.doCanvasErase();
+		
+		
+		// Ok now we need to launch the workers
+		
+		// Get the new module value
+		var moduleValue;	
+		if(!(moduleValue = this.module.getDataFromRel('matrix')))
+			return;
+		
+		moduleValue = moduleValue.getData();
+		this.gridData = moduleValue.value.data;
+				
+		this.canvasNbX = this.gridData[0].length;
+		this.canvasNbY = this.gridData.length;
+		
+		// Init the getminmaxmatrix worker
+		// TODO: do it automatically
+		if(!CI.WebWorker.hasWorkerInit('getminmaxmatrix'))
+			CI.WebWorker.create('getminmaxmatrix', './scripts/webworker/scripts/getminmaxmatrix.js');
+			
+		timeStart = Date.now();
+		var self = this;
+		CI.WebWorker.send('getminmaxmatrix', moduleValue.value.data, function(data) {
+			self.minValue = data.min;
+			self.maxValue = data.max;
+			self.launchWorkers();
+			//self.redoScale(self.minValue, self.maxValue, self.module.getConfiguration().colors);		
+		});
+		
+		
+			
+		//	this.redoScale(self.minValue, self.maxValue, this.module.getConfiguration().colors);
+	},
+	
+	initWorkers: function() {
+		
+		for(var i = 0, len = this.availableZooms.length; i < len; i++) {
+			if(!this.workers[this.availableZooms[i]])
+				this.workers[this.availableZooms[i]] = this.initWorker(this.availableZooms[i]);
+		}
+	},
+	
+	launchWorkers: function() {
+		
+		this.doChangeWorkersData();
+		// We can keep the actual workers, not a problem. We just need to erase the buffers array	
+		this.buffers = [];
+		this.buffersDone = [];
+		
+		for(var i = 0, len = this.availableZooms.length; i < len; i++)
+			this.postNextMessageToWorker(this.availableZooms[i]);
+		
+	},
+	
+	postNextMessageToWorker: function(pxPerCell) {
+		
+		var bufferIndices = this.getBufferIndices(pxPerCell);
+		
+		for(var i = bufferIndices.minXIndexBuffer; i <= bufferIndices.maxXIndexBuffer; i++) {
+			for(var j = bufferIndices.minYIndexBuffer; j <= bufferIndices.maxYIndexBuffer; j++) {
+				var key = this.getBufferKey(pxPerCell, i, j);
+				
+				if(!this.buffers[key])
+					return this.doPostNextMessageToWorker(pxPerCell, i, j);
+			}
+		}
+		
+		var maxXBuffer = Math.ceil(this.canvasNbX / this.squareLoading) - 1;
+		var maxYBuffer = Math.ceil(this.canvasNbY / this.squareLoading) - 1;
+		
+		for(var i = 0; i <= maxXBuffer; i++) {
+			for(var j = 0; j <= maxYBuffer; j++) {
+				var key = this.getBufferKey(pxPerCell, i, j);
+				if(!this.buffers[key])
+					return this.doPostNextMessageToWorker(pxPerCell, i, j);
+				
+			}
+		}
+		
+		console.log(Date.now() - timeStart);
+	},
+	
+	doPostNextMessageToWorker: function(pxPerCell, indexX, indexY) {
+		
+		if(!this.buffers[this.getBufferKey(pxPerCell, indexX, indexY)]) {
+		
+			var w = this.squareLoading, 
+			    h = this.squareLoading;
+			    
+			if((indexX + 1) * this.squareLoading > this.canvasNbX)
+				w = (this.canvasNbX % this.squareLoading);
+				
+			if((indexY + 1) * this.squareLoading > this.canvasNbY)
+				h = (this.canvasNbY % this.squareLoading);
+			 
+			this.buffers[this.getBufferKey(pxPerCell, indexX, indexY)] = this.canvasContext.createImageData(w * pxPerCell, h * pxPerCell);
+		}
+			
+		this.workers[pxPerCell].postMessage({ title: "doPx", message: { indexX: indexX, indexY: indexY, buffer: this.buffers[this.getBufferKey(pxPerCell, indexX, indexY)], nbValX: w }})
+	},
+	
+	doChangeWorkersData: function() {
+
+		for(var i in this.workers)
+			this.workers[i].postMessage({ title: 'changeData', message: { data: this.gridData, min: this.minValue, max: this.maxValue }});
+	},
+	
+	initWorker: function(pxPerCell) {
+		
+		var worker = new Worker('./scripts/modules/implementations/canvas_matrix/1.2/worker.js');
+		worker.postMessage({ title: "init", message: {pxPerCell: pxPerCell, colors: this.getColors(), squareLoading: this.squareLoading } });
+		
+		var self = this;
+		worker.addEventListener('message', function(event) {
+			
+			var data = event.data;
+			var pxPerCell = data.pxPerCell;
+			var buffIndexX = data.indexX;
+			var buffIndexY = data.indexY;
+			
+			self.buffers[self.getBufferKey(pxPerCell, buffIndexX, buffIndexY)] = data.data;
+			if(self.getPxPerCell() == pxPerCell)
+				self.doCanvasDrawBuffer(buffIndexX, buffIndexY);
+				
+			self.postNextMessageToWorker(pxPerCell);
+		});
+		
+		return worker;
+	},
+	
+	getColors: function() {
+		return this.colors || (this.colors = this.module.getConfiguration().colors)
+	},
+	
+	
+		/*
 		
 		
 		
-		
-		
-		
-		
-		
-		
-		
-		
-		this.canvas = document.createElement("canvas"); // Store the pointer
-		this.canvasContext = this.canvas.getContext('2d'); // Store the context
 		this.lastCanvasWidth = 0;
 		this.lastCanvasHeight = 0;
 		this.lastCellWidth = 0;
@@ -62,8 +320,6 @@ CI.Module.prototype._types.canvas_matrix.View.prototype = {
 			
 			view.lastImageData = event.data;
 			view.updateCanvas();
-			
-			console.log(Date.now() - timeStart);
 			console.profileEnd("gridGenWW");
 		});
 		this.gridImage = this.canvasContext.createImageData(this.canvas.width, this.canvas.height);
@@ -191,13 +447,8 @@ CI.Module.prototype._types.canvas_matrix.View.prototype = {
 			
 		}
 		this.dataMatrix = moduleValue.value.data;
-			
-			
-			timeStart = Date.now();	
-		/*this._domTitle.innerHTML = "Luc tell me where you want to put the title";//;
-		if ( typeof moduleValue.data.title != 'undefined')
-			this.module.domHeader.find("div")[0].innerHTML = moduleValue.data.title;
-		*/
+				
+		
 		if(!CI.WebWorker.hasWorkerInit('getminmaxmatrix'))
 			CI.WebWorker.create('getminmaxmatrix', './scripts/webworker/scripts/getminmaxmatrix.js');
 		
@@ -282,6 +533,7 @@ CI.Module.prototype._types.canvas_matrix.View.prototype = {
 			this.canvasContext.putImageData(this.lastImageData, this.canvas.width*0.5 - (this.lastImageData.width)*this.moduleCenterX,  this.canvas.height*0.5 - (this.lastImageData.height)*this.moduleCenterY);
 		}
 	},
+*/	
 	
 	getDom: function() {
 		return this.dom;

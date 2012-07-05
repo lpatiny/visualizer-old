@@ -47,7 +47,7 @@ CI.Module = function(definition) {
 		
 		//Construct the DOM within the module
 		this.dom = $(this.buildDom());
-		this.domContent = this.dom.children().children('.ci-module-content').children('.ci-module-content-overflow');
+		this.domContent = this.dom.children().children('.ci-module-content');
 		this.domHeader = this.dom.children().children('.ci-module-header');
 		this.domWrapper = this.dom;
 		this.viewExpander = $('<div class="ci-module-expand">...</div>');
@@ -115,9 +115,9 @@ CI.Module = function(definition) {
 		}
 		
 		
-		html += '"><div class="ci-module-content-overflow">';
+		html += '">';
 		
-		html += '</div></div>';
+		html += '</div>';
 		html += '</div>';
 		return html;
 	}
