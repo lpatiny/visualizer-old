@@ -28,10 +28,21 @@ CI.Module.prototype._types.canvas_matrix.View.prototype = {
 		this.module.getDomContent().html(this.dom);
 		
 		this.squareLoading = 100;
-		this.availableZooms = [3];//,4,5,7,10,15,20,25,30,35,50];
+		this.availableZooms = [1,2,3,4,5,6,7, 8, 9, 10, 15, 20, 25];//,4,5,7,10,15,20,25,30,35,50];
 		
 		this.workers = {};
 		this.buffers = {};
+		
+		var self = this;
+		self.accumulatedDelta = 0;
+		$(this.canvasContainer).on('mousewheel', 'canvas', function(e) {
+			
+			e.preventDefault();
+			var delta = e.originalEvent.detail || e.originalEvent.wheelDelta;
+			self.accumulatedDelta += delta;
+			if(delta !== undefined)
+				self.changeZoom(self.accumulatedDelta / 1000, e.offsetX, e.offsetY);
+		});
 		
 	},
 	
@@ -63,7 +74,7 @@ CI.Module.prototype._types.canvas_matrix.View.prototype = {
 		var bufferIndices = this.getBufferIndices(this.getPxPerCell());
 		
 		for(var i = bufferIndices.minXIndexBuffer; i <= bufferIndices.maxXIndexBuffer; i++) {
-			for(var j = bufferIndices.minYIndexBuffer; i <= bufferIndices.maxXIndexBuffer; i++) {
+			for(var j = bufferIndices.minYIndexBuffer; j <= bufferIndices.maxXIndexBuffer; j++) {
 				this.doCanvasDrawBuffer(i, j);
 			}
 		}
@@ -102,32 +113,52 @@ CI.Module.prototype._types.canvas_matrix.View.prototype = {
 		var shift = this.getXYShift();
 		var pxPerCell = this.getPxPerCell();
 		var bufferKey = this.getBufferKey(pxPerCell, bufferX, bufferY);
+		
 		if(!this.buffers[bufferKey])
 			return;
 		
 		this.canvasContext.putImageData(this.buffers[bufferKey], bufferX * this.squareLoading * pxPerCell + shift.x, bufferY * this.squareLoading * pxPerCell + shift.y);
 	},
 	
-	getPxPerCell: function() {
-		if(this.pxPerCell)
+	getPxPerCell: function(force) {
+		if(this.pxPerCell && !force)
 			return this.pxPerCell;
-			
-		return this.pxPerCell = this.getClosest(this.availableZooms, new Number(Math.max(1, Math.min(this.canvas.width / this.canvasNbX, this.canvas.height / this.canvasNbY))));
+		return this.pxPerCell = this.getOriginalPxPerCell();
+	},
+	
+	getOriginalPxPerCell: function() {
+		return this.getClosest(this.availableZooms, Math.max(1, Math.min(this.canvas.width / this.canvasNbX, this.canvas.height / this.canvasNbY)));
 	},
 	
 	getClosest: function(haystack, needle) {
-		
 		var closest = false, newClosest;
 		for(var i = 0; i < haystack.length; i++) 
-			if(!closest || Math.abs(haystack[i] - needle.valueOf()) < closest) 
+			if(!closest || (haystack[i] - needle < 0 && needle - haystack[i] < needle - closest)) 
 				closest = haystack[i];
-		
 		return closest;
 	},
 	
-	changeZoom: function(diff) {
-		this.getPxPerCell() += diff;
-		this.doCanvasRedraw();
+	changeZoom: function(diff, mouseX, mouseY) {
+		var newPxPerCell = Math.max(1,this.getClosest(this.availableZooms, this.getOriginalPxPerCell() + this.tanh(diff)));
+		
+		if(this.pxPerCell != newPxPerCell) {
+			var zoomRatio = newPxPerCell / this.pxPerCell;
+			
+			var shift = this.getXYShift();
+			
+			shift.x = mouseX - (mouseX - shift.x) * zoomRatio;
+			shift.y = mouseY - (mouseY - shift.y) * zoomRatio;
+			
+			this.pxPerCell = newPxPerCell;
+			this.doCanvasErase();
+			this.doCanvasRedraw();
+		}
+	},
+	
+	tanh: function(arg) {
+		var scaleX = 5;
+		arg /= scaleX;
+		return this.availableZooms[this.availableZooms.length - 1] * 1.5 * (Math.exp(arg) - Math.exp(-arg)) / (Math.exp(arg) + Math.exp(-arg));
 	},
 	
 	// Get the XY shift (in case you have zoomed on the canvas)
@@ -174,6 +205,12 @@ CI.Module.prototype._types.canvas_matrix.View.prototype = {
 		CI.WebWorker.send('getminmaxmatrix', moduleValue.value.data, function(data) {
 			self.minValue = data.min;
 			self.maxValue = data.max;
+			
+			self.doChangeWorkersData();
+			// We can keep the actual workers, not a problem. We just need to erase the buffers array	
+			self.buffers = [];
+			self.buffersDone = [];
+			
 			self.launchWorkers();
 			//self.redoScale(self.minValue, self.maxValue, self.module.getConfiguration().colors);		
 		});
@@ -191,16 +228,35 @@ CI.Module.prototype._types.canvas_matrix.View.prototype = {
 		}
 	},
 	
+	getCurrentPxPerCellFetch: function() {
+		return this.currentPxFetch ? this.currentPxFetch : (this.currentPxFetch = this.getPxPerCell()); 
+	},
+	
+	incrementPxPerCellFetch: function() {
+		var next = false;
+		for(var i in this.availableZooms) {
+			if(next)
+				return this.currentPxFetch = this.availableZooms[i];
+				
+			if(this.availableZooms[i] == this.currentPxFetch)
+				next = true;
+		}
+		
+		return false; 
+	},
+	
 	launchWorkers: function() {
 		
-		this.doChangeWorkersData();
-		// We can keep the actual workers, not a problem. We just need to erase the buffers array	
-		this.buffers = [];
-		this.buffersDone = [];
+		var pxPerCell = this.getCurrentPxPerCellFetch();
 		
-		for(var i = 0, len = this.availableZooms.length; i < len; i++)
-			this.postNextMessageToWorker(this.availableZooms[i]);
-		
+		//for(var i = 0, len = this.availableZooms.length; i < len; i++)
+		if(!this.postNextMessageToWorker(pxPerCell)) {
+			
+			if(this.incrementPxPerCellFetch())
+				this.launchWorkers();
+			else
+				return;
+		}
 	},
 	
 	postNextMessageToWorker: function(pxPerCell) {
@@ -211,8 +267,10 @@ CI.Module.prototype._types.canvas_matrix.View.prototype = {
 			for(var j = bufferIndices.minYIndexBuffer; j <= bufferIndices.maxYIndexBuffer; j++) {
 				var key = this.getBufferKey(pxPerCell, i, j);
 				
-				if(!this.buffers[key])
-					return this.doPostNextMessageToWorker(pxPerCell, i, j);
+				if(typeof this.buffers[key] == "undefined") {
+					this.doPostNextMessageToWorker(pxPerCell, i, j);
+					return true;
+				}
 			}
 		}
 		
@@ -222,12 +280,14 @@ CI.Module.prototype._types.canvas_matrix.View.prototype = {
 		for(var i = 0; i <= maxXBuffer; i++) {
 			for(var j = 0; j <= maxYBuffer; j++) {
 				var key = this.getBufferKey(pxPerCell, i, j);
-				if(!this.buffers[key])
-					return this.doPostNextMessageToWorker(pxPerCell, i, j);
-				
+				if(!this.buffers[key]) {
+					this.doPostNextMessageToWorker(pxPerCell, i, j);
+					return true;
+				}
 			}
 		}
 		
+		return false;
 		console.log(Date.now() - timeStart);
 	},
 	
@@ -273,7 +333,9 @@ CI.Module.prototype._types.canvas_matrix.View.prototype = {
 			if(self.getPxPerCell() == pxPerCell)
 				self.doCanvasDrawBuffer(buffIndexX, buffIndexY);
 				
-			self.postNextMessageToWorker(pxPerCell);
+				
+			self.launchWorkers();
+			//self.postNextMessageToWorker(pxPerCell);
 		});
 		
 		return worker;

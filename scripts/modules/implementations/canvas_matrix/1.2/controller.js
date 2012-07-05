@@ -24,7 +24,7 @@ CI.Module.prototype._types.canvas_matrix.Controller.prototype = {
 		if(!(actions = this.module.definition.dataSend))	
 			return;
 		
-	
+	return;
 		$(this.module.getDomView()).on('mousemove', 'canvas', $.debounce(250, function(e) {
 			
 			var cellX = 1;
