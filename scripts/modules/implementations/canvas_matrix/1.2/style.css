@@ -1,18 +1,18 @@
-
-.ci-module-canvas_matrix .ci-module-content table {
-	width: 100%;
+.matrix-container, .scale-container, .canvasmatrix-container {
 	height: 100%;
 }
 
-.ci-module-canvas_matrix .ci-module-content h3 {
-	text-align: center;
-	margin-bottom: 0px;
-	margin-top: 0px;
-	padding-bottom: 3px;
-	padding-top: 3px;
+.canvasmatrix-container {
+	width: 100%;
+	font-size: 0px;
 }
 
-.ci-module-canvas_matrix .ci-module-content td {
-	vertical-align: middle;
-	text-align: center;
+.scale-container {
+	width: 40px;
+	margin-right: 0px;
+	float: right;
+}
+
+.matrix-container {
+	float: left;
 }

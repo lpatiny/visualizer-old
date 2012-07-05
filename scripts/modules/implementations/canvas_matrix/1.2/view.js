@@ -21,14 +21,19 @@ CI.Module.prototype._types.canvas_matrix.View.prototype = {
 		this.canvas = document.createElement("canvas");
 		this.canvasContext = this.canvas.getContext('2d');
 		
-		this.canvasContainer = $("<div />").css({'height': '100%', width: '100%'});
-		this.scaleContainer = $("<div />").css({'height': '100%', width: '100%'});
+		this.scaleCanvas = document.createElement("canvas");
+		this.scaleCanvasContext = this.scaleCanvas.getContext('2d');
 		
-		this.dom = $("<div />").css({'height': '100%', width: '100%'}).append(this.canvasContainer.append(this.canvas)).append(this.scaleContainer);
+		
+		this.canvasContainer = $("<div />").addClass('matrix-container');
+		this.scaleContainer = $("<div />").addClass('scale-container');
+		
+		this.dom = $("<div />").addClass('canvasmatrix-container').append(this.canvasContainer.append(this.canvas)).append(this.scaleContainer.append(this.scaleCanvas));
 		this.module.getDomContent().html(this.dom);
 		
+		
 		this.squareLoading = 100;
-		this.availableZooms = [1,2,3,4,5,6,7, 8, 9, 10, 15, 20, 25];//,4,5,7,10,15,20,25,30,35,50];
+		this.availableZooms = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20];
 		
 		this.workers = {};
 		this.buffers = {};
@@ -64,6 +69,7 @@ CI.Module.prototype._types.canvas_matrix.View.prototype = {
 	},
 	
 	inDom: function() {
+		this.canvasContainer.width(this.dom.width() - 55);
 		this.onResize(true);
 		this.initWorkers();
 	},
@@ -140,7 +146,32 @@ CI.Module.prototype._types.canvas_matrix.View.prototype = {
 	getPxPerCell: function(force) {
 		if(this.pxPerCell && !force)
 			return this.pxPerCell;
-		return this.pxPerCell = this.getOriginalPxPerCell();
+		this.pxPerCell = this.getOriginalPxPerCell();
+		
+		var currentIndex;
+		for(var i = 0; i < this.availableZooms.length; i++) {
+			if(this.availableZooms[i] == this.pxPerCell) {
+				currentIndex = i;
+				break;
+			}
+		}
+		
+		
+		var arrBefore = this.availableZooms.slice(0, currentIndex);
+		var arrAfter = this.availableZooms.slice(currentIndex + 1);
+		console.log(arrAfter);
+		this.availableZoomsForFetch = [];
+		for(var i = 0, len = (arrBefore.length + arrAfter.length); i < len; i++) {
+			
+			if((i % 2 && arrBefore.length > 0) || arrAfter.length == 0)
+				this.availableZoomsForFetch.push(arrBefore.pop());
+			else
+				this.availableZoomsForFetch.push(arrAfter.shift());
+		}
+		
+		console.log(this.availableZoomsForFetch);
+		
+		return this.pxPerCell;
 	},
 	
 	getOriginalPxPerCell: function() {
@@ -173,9 +204,9 @@ CI.Module.prototype._types.canvas_matrix.View.prototype = {
 	},
 	
 	tanh: function(arg) {
-		var scaleX = 5;
+		var scaleX = 15;
 		arg /= scaleX;
-		return this.availableZooms[this.availableZooms.length - 1] * 1.5 * (Math.exp(arg) - Math.exp(-arg)) / (Math.exp(arg) + Math.exp(-arg));
+		return this.availableZooms[this.availableZooms.length - 1] * 2.5 * arg;
 	},
 	
 	// Get the XY shift (in case you have zoomed on the canvas)
@@ -228,6 +259,7 @@ CI.Module.prototype._types.canvas_matrix.View.prototype = {
 			self.buffers = [];
 			self.buffersDone = [];
 			
+			self.redoScale(data.min, data.max);
 			self.launchWorkers();
 			//self.redoScale(self.minValue, self.maxValue, self.module.getConfiguration().colors);		
 		});
@@ -251,15 +283,7 @@ CI.Module.prototype._types.canvas_matrix.View.prototype = {
 	
 	incrementPxPerCellFetch: function() {
 		var next = false;
-		for(var i in this.availableZooms) {
-			if(next)
-				return this.currentPxFetch = this.availableZooms[i];
-				
-			if(this.availableZooms[i] == this.currentPxFetch)
-				next = true;
-		}
-		
-		return false; 
+		return this.currentPxFetch = this.availableZoomsForFetch.shift();
 	},
 	
 	launchWorkers: function() {
@@ -363,6 +387,28 @@ CI.Module.prototype._types.canvas_matrix.View.prototype = {
 	},
 	
 	
+	redoScale: function(min, max) {
+		
+		var colors = this.getColors();
+		this.scaleCanvas.height = this.scaleContainer.height() - 20;
+		this.scaleCanvas.width = 40;
+		
+		var gradHeight = this.scaleCanvas.height - 30;
+		var step = (max - min) / (colors.length - 1);
+		var stepPx = gradHeight / (colors.length - 1);
+		
+		var lineargradient = this.scaleCanvasContext.createLinearGradient(0, 0, 0, gradHeight);
+	
+		for(var i = 0; i < colors.length; i++) {
+			lineargradient.addColorStop(i / (colors.length - 1), colors[i]);
+			this.scaleCanvasContext.fillText(Math.round(100 * i * step) / 100, 5, stepPx * i <= 0 ? 15 : stepPx * i - 5);	
+		}  
+	
+		this.scaleCanvasContext.fillStyle = lineargradient; 
+  		this.scaleCanvasContext.fillRect(28, 5, 10, gradHeight);
+	},
+	
+	
 		/*
 		
 		
@@ -442,31 +488,6 @@ CI.Module.prototype._types.canvas_matrix.View.prototype = {
 		}
 	},
 	
-	redoScale: function(min, max, colors) {
-		
-		var scaleCanvas = document.createElement('canvas');
-		var ctx = scaleCanvas.getContext('2d');
-		var cont = this.module.getDomContent().find('.canvas-container');
-		scaleCanvas.height = cont.height() - 5;
-		scaleCanvas.width = 40;
-		
-		var gradHeight = scaleCanvas.height - 15;
-		var step = (max - min) / (colors.length - 1);
-		var stepPx = gradHeight / (colors.length - 1);
-		
-		var lineargradient = ctx.createLinearGradient(0, 0, 0, gradHeight);
-	
-		for(var i = 0; i < colors.length; i++) {
-			lineargradient.addColorStop(i / (colors.length - 1), colors[i]);
-			ctx.fillText(Math.round(100 * i * step) / 100, 5, stepPx * i <= 0 ? 15 : stepPx * i - 5);	
-		}  
-	
-		ctx.fillStyle = lineargradient; 
-  		ctx.fillRect(28, 5, 10, gradHeight);
-  	
-		cont.after(scaleCanvas);
-		
-	},
 	
 	onResize: function(width, height, force) {
 		
