@@ -40,9 +40,11 @@ CI.Module.prototype._types.display_value.View.prototype = {
 		var moduleValue;
 		var view = this;
 		var cfg = this.module.getConfiguration();
+		
 		if(moduleColor = this.module.getDataFromRel('color')) {
 			color = moduleColor.getData();
-			view.module.getDomWrapper().css('background-color', color);
+		
+			view.module.getDomContent().css('backgroundColor', color);
 		}
 		
 		if(!(moduleValue = this.module.getDataFromRel('value')) || ((moduleValue = moduleValue.getData()) == null)) {
