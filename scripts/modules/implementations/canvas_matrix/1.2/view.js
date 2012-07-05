@@ -44,6 +44,23 @@ CI.Module.prototype._types.canvas_matrix.View.prototype = {
 				self.changeZoom(self.accumulatedDelta / 1000, e.offsetX, e.offsetY);
 		});
 		
+		
+		
+		$(this.canvasContainer).drag(function(e1, e2) {
+			
+			e1.preventDefault();
+			var baseShift = self.baseShift;
+			var shift = self.getXYShift();
+			shift.x = baseShift.x + e2.deltaX;
+			shift.y = baseShift.y + e2.deltaY;
+			self.doCanvasErase();
+			self.doCanvasRedraw();
+		});
+		
+		$(this.canvasContainer).drag("start",function(e1, e2) {
+			e1.preventDefault();
+			self.baseShift = $.extend({}, self.getXYShift());
+		});
 	},
 	
 	inDom: function() {
