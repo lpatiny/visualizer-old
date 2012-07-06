@@ -8,7 +8,7 @@ CI.WebWorker = {
 		
 		if(CI.WebWorker._workers[name] !== undefined)
 			return;
-		
+		console.log(scriptUrl);
 		CI.WebWorker._workers[name] = new Worker(scriptUrl);
 		CI.WebWorker._callbacks[name] = [];
 		
@@ -33,7 +33,9 @@ CI.WebWorker = {
 			return;
 		
 		var date = Date.now();
-		CI.WebWorker._workers[name].postMessage({ time: date, message: message});
+		console.log('send : ' + name);
+		//console.log(CI.WebWorker._workers[name]);
+		CI.WebWorker._workers[name].postMessage({ time: date, message: message });
 		CI.WebWorker._callbacks[name].push({ time: date, callback: callback });
 	},
 	

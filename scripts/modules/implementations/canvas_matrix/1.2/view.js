@@ -1,4 +1,4 @@
- /*
+	 /*
  * view.js
  * version: dev
  *
@@ -46,7 +46,7 @@ CI.Module.prototype._types.canvas_matrix.View.prototype = {
 			var delta = e.originalEvent.detail || e.originalEvent.wheelDelta;
 			self.accumulatedDelta += delta;
 			if(delta !== undefined)
-				self.changeZoom(self.accumulatedDelta / 1000, e.offsetX, e.offsetY);
+				self.changeZoom(self.accumulatedDelta / 1000, (e.offsetX || e.pageX - $(e.target).offset().left), (e.offsetY || e.pageY - $(e.target).offset().top));
 		});
 		
 		
@@ -139,7 +139,7 @@ CI.Module.prototype._types.canvas_matrix.View.prototype = {
 		
 		if(!this.buffers[bufferKey])
 			return;
-		
+			
 		this.canvasContext.putImageData(this.buffers[bufferKey], bufferX * this.squareLoading * pxPerCell + shift.x, bufferY * this.squareLoading * pxPerCell + shift.y);
 	},
 	
@@ -159,7 +159,7 @@ CI.Module.prototype._types.canvas_matrix.View.prototype = {
 		
 		var arrBefore = this.availableZooms.slice(0, currentIndex);
 		var arrAfter = this.availableZooms.slice(currentIndex + 1);
-		console.log(arrAfter);
+		
 		this.availableZoomsForFetch = [];
 		for(var i = 0, len = (arrBefore.length + arrAfter.length); i < len; i++) {
 			
@@ -168,8 +168,6 @@ CI.Module.prototype._types.canvas_matrix.View.prototype = {
 			else
 				this.availableZoomsForFetch.push(arrAfter.shift());
 		}
-		
-		console.log(this.availableZoomsForFetch);
 		
 		return this.pxPerCell;
 	},
@@ -193,7 +191,8 @@ CI.Module.prototype._types.canvas_matrix.View.prototype = {
 			var zoomRatio = newPxPerCell / this.pxPerCell;
 			
 			var shift = this.getXYShift();
-			
+			console.log(mouseX);
+			console.log(shift.x);
 			shift.x = mouseX - (mouseX - shift.x) * zoomRatio;
 			shift.y = mouseY - (mouseY - shift.y) * zoomRatio;
 			
@@ -245,12 +244,13 @@ CI.Module.prototype._types.canvas_matrix.View.prototype = {
 		
 		// Init the getminmaxmatrix worker
 		// TODO: do it automatically
-		if(!CI.WebWorker.hasWorkerInit('getminmaxmatrix'))
-			CI.WebWorker.create('getminmaxmatrix', './scripts/webworker/scripts/getminmaxmatrix.js');
+		//if(!CI.WebWorker.hasWorkerInit('getminmaxmatrix'))
 			
 		timeStart = Date.now();
 		var self = this;
+		
 		CI.WebWorker.send('getminmaxmatrix', moduleValue.value.data, function(data) {
+			
 			self.minValue = data.min;
 			self.maxValue = data.max;
 			
@@ -260,6 +260,8 @@ CI.Module.prototype._types.canvas_matrix.View.prototype = {
 			self.buffersDone = [];
 			
 			self.redoScale(data.min, data.max);
+			
+			
 			self.launchWorkers();
 			//self.redoScale(self.minValue, self.maxValue, self.module.getConfiguration().colors);		
 		});
@@ -329,7 +331,6 @@ CI.Module.prototype._types.canvas_matrix.View.prototype = {
 		}
 		
 		return false;
-		console.log(Date.now() - timeStart);
 	},
 	
 	doPostNextMessageToWorker: function(pxPerCell, indexX, indexY) {

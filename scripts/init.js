@@ -18,6 +18,8 @@ CI = new Object();
 	$(document).ready(function() {
 		
 		CI.WebWorker.create('jsonparser', './scripts/webworker/scripts/jsonparser.js');
+		CI.WebWorker.create('getminmaxmatrix', './scripts/webworker/scripts/getminmaxmatrix.js');
+		
 		ajaxManager = new CI.Util.AjaxManager();
 	//	ajaxManager.setProxyUrl('http://localhost:8888/git/visualizer/proxify.php?url=<url>');
 		

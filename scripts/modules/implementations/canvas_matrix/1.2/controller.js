@@ -35,7 +35,10 @@ CI.Module.prototype._types.canvas_matrix.Controller.prototype = {
 			var pxPerCell = module.view.getPxPerCell();
 			var shift = module.view.getXYShift();
 			
-				
+			
+			e.offsetX = (e.offsetX || e.pageX - $(e.target).offset().left); 
+			e.offsetY = (e.offsetY || e.pageY - $(e.target).offset().top);
+			
 			var x = Math.floor((e.offsetX - shift.x) / pxPerCell) - 1;
 			var y = Math.floor((e.offsetY - shift.y) / pxPerCell) - 1;
 			
