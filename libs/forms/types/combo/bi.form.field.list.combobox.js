@@ -54,23 +54,7 @@ $.extend(BI.Forms.Fields.List.Combo.prototype, {
 		this.main.fields[index].field.html(text);
 	},
 	
-	setValue: function(index, value) {
-		var index2 = index;
-		var field = this;
-		
-		this._loadedCallback.push(function() {
-			field.currentIndex = index2;
-			var tree, node;
-			tree = field.main.domExpander.children().dynatree("getTree");
-			
-			if(tree.getNodeByKey && (node = tree.getNodeByKey(value))) {
-				node.activate();
-				node.deactivate();
-			}
-		});
-		
-		this.doValCallback();
-	},
+	
 
 	addField: BI.Forms.FieldGeneric.addField,
 	removeField: BI.Forms.FieldGeneric.removeField	

@@ -33,6 +33,7 @@ CI.DataSource.prototype = {
 			
 			if(typeof allSources == "undefined")
 				return;
+
 			for(var i = 0; i < allSources.length; i++)
 				allSources[i].setData(varVal);
 		});
@@ -42,9 +43,9 @@ CI.DataSource.prototype = {
 	
 	setData: function(data) {
 		
-		
-		if(this.buildData(data))
+		if(this.buildData(data) !== false)
 			return this.module.model.onDataChange(this.sourceName);
+
 		
 		return false;
 	},
@@ -64,7 +65,7 @@ CI.DataSource.prototype = {
 			
 			if(this.sourceAccepts.type[i] == dataType || data == CI.DataType._PENDING)
 				return this.data = data;
-				
+			
 			else if(asObject && CI.DataType.getType(data) == 'object') {
 				
 				for(var j in data) {

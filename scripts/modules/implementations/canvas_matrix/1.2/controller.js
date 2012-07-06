@@ -60,7 +60,7 @@ CI.Module.prototype._types.canvas_matrix.Controller.prototype = {
 				if(actions[i].event == "onPixelHover") {
 					
 
-					var hashmap = false;
+					var hashmap = undefined;
 					switch(actions[i].rel) {
 						case 'row':
 							//yLabel[y].id = x + ", " + y;
@@ -73,22 +73,23 @@ CI.Module.prototype._types.canvas_matrix.Controller.prototype = {
 						break;
 						
 						case 'intersect':
-							hashmap = false;
+							hashmap = undefined;
 							value = dataKeyed;
 						break;
 					}
 					
 					(function(h, jpath, name, value, hashmap) {
 						
-						if(!!hashmap) {
+						if(hashmap !== undefined) {
 							var data = CI.DataType.getValueFromJPath(hashmap, jpath, function(value) {
 								CI.API.setSharedVar(name, value);
 							});
 							
-						} else if(!!value)
+						} else if(value !== undefined) {
 							var data = CI.DataType.getValueFromJPath(value, jpath, function(value) {
 								CI.API.setSharedVar(name, value);
 							});
+						}
 						
 						
 					}) (j, actions[j].jpath, actions[j].name, value, hashmap);

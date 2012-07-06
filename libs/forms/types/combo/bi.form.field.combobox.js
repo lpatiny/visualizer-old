@@ -121,12 +121,12 @@ BI.Forms.Fields.Combo.prototype = {
 			},
 			
 			onPostInit: function() {
+				
 				field.doValCallback();
 			},
 			
 			debugLevel: 0
 		});
-		
 	},
 	
 	
@@ -138,6 +138,26 @@ BI.Forms.Fields.Combo.prototype = {
 			}
 		}
 	},
+	
+	
+	setValue: function(index, value) {
+		var index2 = index;
+		var field = this;
+		
+		this._loadedCallback.push(function() {
+			field.currentIndex = index2;
+			var tree, node;
+			tree = field.main.domExpander.children().dynatree("getTree");
+			
+			if(tree.getNodeByKey && (node = tree.getNodeByKey(value))) {
+				node.activate();
+				node.deactivate();
+			}
+		});
+		
+		this.doValCallback();
+	},
+	
 	
 	parseLazyRead: function(dom) {
 	

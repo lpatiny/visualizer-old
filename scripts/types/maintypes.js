@@ -247,7 +247,7 @@ CI.DataType.Structures = {
 
 CI.DataType.getType = function(element) {
 	
-	if(!element)
+	if(element == undefined)
 		return;
 		
 	var type = typeof element;
@@ -259,6 +259,7 @@ CI.DataType.getType = function(element) {
 		else
 			return element.type;
 	}
+	
 	/*if(type == "undefined")		
 		throw {notify: true, display: false, message: "The type cannot be undefined"};
 	if(type == "function")
@@ -292,7 +293,7 @@ CI.DataType._PENDING = new Object();
 
 CI.DataType.fetchElementIfNeeded = function(element, callback) {
 	
-	if(!element)
+	if(element === false || element == undefined)
 		return;
 		
 	var type = element.type, ajaxType;
