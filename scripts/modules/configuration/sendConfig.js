@@ -145,6 +145,11 @@ $(document).bind('configModule', function(event, module) {
 			
 			Entry.save();
 			CI.API.resendAllVars();
+			
+			if(module.view.erase)
+				module.view.erase();
+			module.view.init();
+			module.view.inDom();
 			module.updateView();
 		});
 		

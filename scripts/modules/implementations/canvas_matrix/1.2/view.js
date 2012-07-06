@@ -259,9 +259,12 @@ CI.Module.prototype._types.canvas_matrix.View.prototype = {
 			self.buffers = [];
 			self.buffersDone = [];
 			
-			self.redoScale(data.min, data.max);
+			if(!self.getHighContrast()) {
+				self.minValue = 0;
+				self.maxValue = 1;
+			}
 			
-			
+			self.redoScale(self.minValue, self.maxValue);
 			self.launchWorkers();
 			//self.redoScale(self.minValue, self.maxValue, self.module.getConfiguration().colors);		
 		});
@@ -361,7 +364,7 @@ CI.Module.prototype._types.canvas_matrix.View.prototype = {
 	initWorker: function(pxPerCell) {
 		
 		var worker = new Worker('./scripts/modules/implementations/canvas_matrix/1.2/worker.js');
-		worker.postMessage({ title: "init", message: {pxPerCell: pxPerCell, colors: this.getColors(), squareLoading: this.squareLoading } });
+		worker.postMessage({ title: "init", message: {pxPerCell: pxPerCell, colors: this.getColors(), squareLoading: this.squareLoading, highcontrast: this.getHighContrast() } });
 		
 		var self = this;
 		worker.addEventListener('message', function(event) {
@@ -374,8 +377,7 @@ CI.Module.prototype._types.canvas_matrix.View.prototype = {
 			self.buffers[self.getBufferKey(pxPerCell, buffIndexX, buffIndexY)] = data.data;
 			if(self.getPxPerCell() == pxPerCell)
 				self.doCanvasDrawBuffer(buffIndexX, buffIndexY);
-				
-				
+			
 			self.launchWorkers();
 			//self.postNextMessageToWorker(pxPerCell);
 		});
@@ -387,6 +389,9 @@ CI.Module.prototype._types.canvas_matrix.View.prototype = {
 		return this.colors || (this.colors = this.module.getConfiguration().colors)
 	},
 	
+	getHighContrast: function() {
+		return this.highContrast || (this.highContrast = this.module.getConfiguration().highContrast)
+	},
 	
 	redoScale: function(min, max) {
 		
@@ -409,6 +414,18 @@ CI.Module.prototype._types.canvas_matrix.View.prototype = {
   		this.scaleCanvasContext.fillRect(28, 5, 10, gradHeight);
 	},
 	
+	erase: function() {
+		
+		this.dom.remove();
+		this.highContrast = false;
+		this.colors = false;
+		
+		for(var i in this.workers)
+			this.workers[i].terminate();
+			
+		this.workers = [];
+		this.buffers = [];
+	},
 	
 		/*
 		

@@ -5,7 +5,7 @@ function getColorFromValue(value) {
 	
 	var minValue = min;
 	var maxValue = max;
-	if(1 == 1) {
+	if(!highContrast) {
 		minValue = 0;
 		maxValue = 1;
 	}
@@ -107,7 +107,7 @@ function drawCell(value, startX, startY, color, bufferData, nbValX) {
 }
 
 
-var data, min, max, colors, pxPerCell, squareLoading;
+var data, min, max, colors, pxPerCell, squareLoading, highContrast;
 onmessage = function(event) {
 	var d = event.data;
 	
@@ -115,6 +115,7 @@ onmessage = function(event) {
 		pxPerCell = d.message.pxPerCell;
 		colors = d.message.colors;
 		squareLoading = d.message.squareLoading;
+		highContrast = d.message.highcontrast;
 		
 	} else if(d.title == 'changeData') {
 		data = d.message.data;
