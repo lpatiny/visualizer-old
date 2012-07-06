@@ -24,35 +24,29 @@ CI.Module.prototype._types.canvas_matrix.Controller.prototype = {
 		if(!(actions = this.module.definition.dataSend))	
 			return;
 		
-	return;
+		
 		$(this.module.getDomView()).on('mousemove', 'canvas', $.debounce(250, function(e) {
-			
-			var cellX = 1;
-			var cellY = 1;
-			
+		
 			var moduleValue;
-			if(!(moduleValue = module.getDataFromRel('matrix').getData()))
+			if(!(moduleValue = module.getDataFromRel('matrix')))
 				return;
+			
+			moduleValue = moduleValue.getData();
+			var pxPerCell = module.view.getPxPerCell();
+			var shift = module.view.getXYShift();
+			
+				
+			var x = Math.floor((e.offsetX - shift.x) / pxPerCell) - 1;
+			var y = Math.floor((e.offsetY - shift.y) / pxPerCell) - 1;
 			
 			moduleValue = moduleValue.value;
 			var xLabel = moduleValue.xLabel;
 			var yLabel = moduleValue.yLabel;
 			var gridData = moduleValue.data;
 			
-			//Positions relative to top-left of canvas
-			var xpx = e.pageX - $(e.target).offset().left;
-			var ypx = e.pageY - $(e.target).offset().top;
-			
-			//offset by the position of the grid within the canvas
-			xpx += module.view.moduleCenterX * module.view.gridImage.width - $(e.target).width()/2
-			ypx += module.view.moduleCenterY * module.view.gridImage.height - $(e.target).height()/2
-			
-			//grid coordinates
-			var x = Math.floor(xpx / module.view.lastCellWidth);
-			var y = Math.floor(ypx / module.view.lastCellHeight);
-			if (x<0 || y<0 || x>=gridData.length || y>=gridData[0].length)
+			if (x < 0 || y < 0 || y >= gridData.length || x >= gridData[0].length)
 				return;
-				
+			
 			var dataKeyed = gridData[x][y];
 			var value = false;
 			
