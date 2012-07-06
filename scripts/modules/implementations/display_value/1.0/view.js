@@ -51,7 +51,7 @@ CI.Module.prototype._types.display_value.View.prototype = {
 			if(cfg.defaultvalue)
 				view.fillWithVal(cfg.defaultvalue);
 		} else {
-			if(moduleValue)
+			if(moduleValue !== undefined)
 				CI.DataType.toScreen(moduleValue, this.module, function(val) {
 					view.fillWithVal(val);
 				})
