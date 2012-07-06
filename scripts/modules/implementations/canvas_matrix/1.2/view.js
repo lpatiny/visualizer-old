@@ -263,7 +263,7 @@ CI.Module.prototype._types.canvas_matrix.View.prototype = {
 				self.minValue = 0;
 				self.maxValue = 1;
 			}
-			
+			console.log(self.minValue + " " + self.maxValue);
 			self.redoScale(self.minValue, self.maxValue);
 			self.launchWorkers();
 			//self.redoScale(self.minValue, self.maxValue, self.module.getConfiguration().colors);		
