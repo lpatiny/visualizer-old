@@ -32,10 +32,10 @@ CI.Module.prototype._types.canvas_matrix.View.prototype = {
 		this.module.getDomContent().html(this.dom);
 		
 		
-		this.squareLoading = 100;
+		this.squareLoading = 250;
 		this.availableZooms = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20];
 		
-		this.workers = {};
+		this.workers;
 		this.buffers = {};
 		
 		var self = this;
@@ -47,6 +47,7 @@ CI.Module.prototype._types.canvas_matrix.View.prototype = {
 			self.accumulatedDelta += delta;
 			if(delta !== undefined)
 				self.changeZoom(self.accumulatedDelta / 1000, (e.offsetX || e.pageX - $(e.target).offset().left), (e.offsetY || e.pageY - $(e.target).offset().top));
+				
 		});
 		
 		
@@ -60,6 +61,7 @@ CI.Module.prototype._types.canvas_matrix.View.prototype = {
 			shift.y = baseShift.y + e2.deltaY;
 			self.doCanvasErase();
 			self.doCanvasRedraw();
+			self.launchWorkers(true);
 		});
 		
 		$(this.canvasContainer).drag("start",function(e1, e2) {
@@ -105,27 +107,51 @@ CI.Module.prototype._types.canvas_matrix.View.prototype = {
 	
 	getBufferIndices: function(pxPerCell) {
 		
-			
-		var shift = this.getXYShift();
+		var currentPxPerCell = this.getPxPerCell();
+		var ratioIndex = currentPxPerCell / pxPerCell;
+				var shift = this.getXYShift();
 		
 		var minXIndex = 0;
 		if(shift.x < 0)
-			var minXIndex = Math.floor(shift.x / pxPerCell);
-			
+			var minXIndex = Math.floor(- shift.x / currentPxPerCell / this.squareLoading);
+		
 		var minYIndex = 0;
 		if(shift.y < 0)
-			var minYIndex = Math.floor(shift.y / pxPerCell);
+			var minYIndex = Math.floor(- shift.y / currentPxPerCell / this.squareLoading);
 		
-		var maxXIndex = Math.min(this.canvasNbX);//, (this.canvas.width + shift.x) / pxPerCell);
-		var maxYIndex = Math.min(this.canvasNbY);//, (this.canvas.height + shift.y) / pxPerCell);
+		var maxXIndex = Math.min(this.canvasNbX / this.squareLoading - 1, (this.canvas.width - shift.x) / pxPerCell / this.squareLoading);//, (this.canvas.width + shift.x) / pxPerCell);
+		var maxYIndex = Math.min(this.canvasNbY / this.squareLoading - 1, (this.canvas.height - shift.y) / pxPerCell / this.squareLoading);//, (this.canvas.height + shift.y) / pxPerCell);
 		
-		return { 
-			minXIndexBuffer: Math.floor(minXIndex / this.squareLoading),  
-			minYIndexBuffer: Math.floor(minYIndex / this.squareLoading), 
+		var currentIndices = { 
+			minXIndexBuffer: minXIndex,  
+			minYIndexBuffer: minYIndex, 
 		 
-			maxXIndexBuffer: Math.ceil(maxXIndex / this.squareLoading) - 1, 
-			maxYIndexBuffer: Math.ceil(maxYIndex / this.squareLoading) - 1
-		};  
+			maxXIndexBuffer: Math.ceil(maxXIndex), 
+			maxYIndexBuffer: Math.ceil(maxYIndex)
+		}; 
+		
+		if(currentPxPerCell > pxPerCell) {
+			
+			var ultraMaxX = Math.ceil(this.canvasNbX / this.squareLoading) - 1;
+			var ultraMaxY = Math.ceil(this.canvasNbY / this.squareLoading) - 1;
+			
+			var diff = (currentIndices.maxXIndexBuffer - currentIndices.minXIndexBuffer);
+			var diff2 = (currentIndices.maxYIndexBuffer - currentIndices.minYIndexBuffer);
+			
+			currentIndices.minXIndexBuffer = Math.floor(Math.max(0, currentIndices.minXIndexBuffer - diff * (ratioIndex - 1)));
+			currentIndices.maxXIndexBuffer = Math.floor(Math.min(ultraMaxX, currentIndices.maxXIndexBuffer + diff * (ratioIndex - 1) - 1));
+			currentIndices.minYIndexBuffer = Math.floor(Math.max(0, currentIndices.minXIndexBuffer - diff2 * (ratioIndex - 1)));
+			currentIndices.maxYIndexBuffer = Math.floor(Math.min(ultraMaxY, currentIndices.maxYIndexBuffer + diff2 * (ratioIndex - 1) - 1));
+		}
+		
+		return currentIndices;
+		/*
+		 else if(currentPxPerCell < pxPerCell) {
+			return currentIndices;
+		} else
+			return currentIndices;
+		*/
+ 
 	},
 	
 	getBufferKey: function(pxPerCell, x, y) {
@@ -147,8 +173,14 @@ CI.Module.prototype._types.canvas_matrix.View.prototype = {
 		if(this.pxPerCell && !force)
 			return this.pxPerCell;
 		this.pxPerCell = this.getOriginalPxPerCell();
+		this.resetZoomPrefetch(this.pxPerCell);
+		return this.pxPerCell;
+	},
+	
+	resetZoomPrefetch: function() {
 		
 		var currentIndex;
+		console.log(this.pxPerCell);
 		for(var i = 0; i < this.availableZooms.length; i++) {
 			if(this.availableZooms[i] == this.pxPerCell) {
 				currentIndex = i;
@@ -156,20 +188,17 @@ CI.Module.prototype._types.canvas_matrix.View.prototype = {
 			}
 		}
 		
-		
-		var arrBefore = this.availableZooms.slice(0, currentIndex);
-		var arrAfter = this.availableZooms.slice(currentIndex + 1);
-		
+		var arrBefore = this.availableZooms.slice(currentIndex - 2, currentIndex).reverse();
+		var arrAfter = this.availableZooms.slice(currentIndex + 1, currentIndex + 3);
 		this.availableZoomsForFetch = [];
+		
 		for(var i = 0, len = (arrBefore.length + arrAfter.length); i < len; i++) {
 			
 			if((i % 2 && arrBefore.length > 0) || arrAfter.length == 0)
-				this.availableZoomsForFetch.push(arrBefore.pop());
+				this.availableZoomsForFetch.push(arrBefore.shift());
 			else
 				this.availableZoomsForFetch.push(arrAfter.shift());
 		}
-		
-		return this.pxPerCell;
 	},
 	
 	getOriginalPxPerCell: function() {
@@ -191,13 +220,14 @@ CI.Module.prototype._types.canvas_matrix.View.prototype = {
 			var zoomRatio = newPxPerCell / this.pxPerCell;
 			
 			var shift = this.getXYShift();
-			console.log(mouseX);
-			console.log(shift.x);
+			
 			shift.x = mouseX - (mouseX - shift.x) * zoomRatio;
 			shift.y = mouseY - (mouseY - shift.y) * zoomRatio;
 			
 			this.pxPerCell = newPxPerCell;
+			
 			this.doCanvasErase();
+			this.launchWorkers(true);
 			this.doCanvasRedraw();
 		}
 	},
@@ -263,7 +293,6 @@ CI.Module.prototype._types.canvas_matrix.View.prototype = {
 				self.minValue = 0;
 				self.maxValue = 1;
 			}
-			console.log(self.minValue + " " + self.maxValue);
 			self.redoScale(self.minValue, self.maxValue);
 			self.launchWorkers();
 			//self.redoScale(self.minValue, self.maxValue, self.module.getConfiguration().colors);		
@@ -276,10 +305,10 @@ CI.Module.prototype._types.canvas_matrix.View.prototype = {
 	
 	initWorkers: function() {
 		
-		for(var i = 0, len = this.availableZooms.length; i < len; i++) {
-			if(!this.workers[this.availableZooms[i]])
-				this.workers[this.availableZooms[i]] = this.initWorker(this.availableZooms[i]);
-		}
+		//for(var i = 0, len = this.availableZooms.length; i < len; i++) {
+		//	if(!this.workers[this.availableZooms[i]])
+				this.workers/*[this.availableZooms[i]]*/ = this.initWorker(/*this.availableZooms[i]*/);
+	//	}
 	},
 	
 	getCurrentPxPerCellFetch: function() {
@@ -291,13 +320,20 @@ CI.Module.prototype._types.canvas_matrix.View.prototype = {
 		return this.currentPxFetch = this.availableZoomsForFetch.shift();
 	},
 	
-	launchWorkers: function() {
+	launchWorkers: function(restartAtNormal) {
 		
-		var pxPerCell = this.getCurrentPxPerCellFetch();
+		this.cachedPxPerCell = this.pxPerCell;
+		if(restartAtNormal) {
+			var pxPerCell = this.getPxPerCell();
+			this.resetZoomPrefetch(pxPerCell);
+			this.pxPerCell = this.cachedPxPerCell;
+			
+		} else
+			var pxPerCell = this.getCurrentPxPerCellFetch();
 		
+		console.log(this.availableZoomsForFetch);
 		//for(var i = 0, len = this.availableZooms.length; i < len; i++)
 		if(!this.postNextMessageToWorker(pxPerCell)) {
-			
 			if(this.incrementPxPerCellFetch())
 				this.launchWorkers();
 			else
@@ -305,10 +341,13 @@ CI.Module.prototype._types.canvas_matrix.View.prototype = {
 		}
 	},
 	
+	//http://localhost:8888/git/visualizer/?viewURL=http%3A//script.epfl.ch/servletScript/JavaScriptServlet%3Faction%3DLoadFile%26filename%3Dlpatiny/data//Demo/Basic/LargeMatrix.view%26key%3DZv1Ib2VDf6&dataURL=http%3A//script.epfl.ch/servletScript/JavaScriptServlet%3Faction%3DLoadFile%26filename%3Dlpatiny/result/2012-07-06/2012-07-06_09-11-38oE4j5XDDPd%26key%3DieGxx34DhR&saveViewURL=http%3A//script.epfl.ch/servletScript/JavaScriptServlet%3Faction%3DSaveFile%26filename%3Dlpatiny/data//Demo/Basic/LargeMatrix.view%26key%3Dh5fKTxoIWD
+	
 	postNextMessageToWorker: function(pxPerCell) {
 		
 		var bufferIndices = this.getBufferIndices(pxPerCell);
-		
+		console.log(bufferIndices.minXIndexBuffer + " " + bufferIndices.maxXIndexBuffer + " " + bufferIndices.minYIndexBuffer + " " + bufferIndices.maxYIndexBuffer);
+		console.log(pxPerCell);
 		for(var i = bufferIndices.minXIndexBuffer; i <= bufferIndices.maxXIndexBuffer; i++) {
 			for(var j = bufferIndices.minYIndexBuffer; j <= bufferIndices.maxYIndexBuffer; j++) {
 				var key = this.getBufferKey(pxPerCell, i, j);
@@ -322,16 +361,6 @@ CI.Module.prototype._types.canvas_matrix.View.prototype = {
 		
 		var maxXBuffer = Math.ceil(this.canvasNbX / this.squareLoading) - 1;
 		var maxYBuffer = Math.ceil(this.canvasNbY / this.squareLoading) - 1;
-		
-		for(var i = 0; i <= maxXBuffer; i++) {
-			for(var j = 0; j <= maxYBuffer; j++) {
-				var key = this.getBufferKey(pxPerCell, i, j);
-				if(!this.buffers[key]) {
-					this.doPostNextMessageToWorker(pxPerCell, i, j);
-					return true;
-				}
-			}
-		}
 		
 		return false;
 	},
@@ -348,23 +377,23 @@ CI.Module.prototype._types.canvas_matrix.View.prototype = {
 				
 			if((indexY + 1) * this.squareLoading > this.canvasNbY)
 				h = (this.canvasNbY % this.squareLoading);
-			 
+			
 			this.buffers[this.getBufferKey(pxPerCell, indexX, indexY)] = this.canvasContext.createImageData(w * pxPerCell, h * pxPerCell);
 		}
 			
-		this.workers[pxPerCell].postMessage({ title: "doPx", message: { indexX: indexX, indexY: indexY, buffer: this.buffers[this.getBufferKey(pxPerCell, indexX, indexY)], nbValX: w }})
+		this.workers.postMessage({ title: "doPx", message: { pxPerCell: pxPerCell, indexX: indexX, indexY: indexY, buffer: this.buffers[this.getBufferKey(pxPerCell, indexX, indexY)], nbValX: w }})
 	},
 	
 	doChangeWorkersData: function() {
 
-		for(var i in this.workers)
-			this.workers[i].postMessage({ title: 'changeData', message: { data: this.gridData, min: this.minValue, max: this.maxValue }});
+		//for(var i in this.workers)
+			this.workers.postMessage({ title: 'changeData', message: { data: this.gridData, min: this.minValue, max: this.maxValue }});
 	},
 	
 	initWorker: function(pxPerCell) {
 		
 		var worker = new Worker('./scripts/modules/implementations/canvas_matrix/1.2/worker.js');
-		worker.postMessage({ title: "init", message: {pxPerCell: pxPerCell, colors: this.getColors(), squareLoading: this.squareLoading, highcontrast: this.getHighContrast() } });
+		worker.postMessage({ title: "init", message: { colors: this.getColors(), squareLoading: this.squareLoading, highcontrast: this.getHighContrast() } });
 		
 		var self = this;
 		worker.addEventListener('message', function(event) {
@@ -420,8 +449,8 @@ CI.Module.prototype._types.canvas_matrix.View.prototype = {
 		this.highContrast = false;
 		this.colors = false;
 		
-		for(var i in this.workers)
-			this.workers[i].terminate();
+		//for(var i in this.workers)
+			this.workers.terminate();
 			
 		this.workers = [];
 		this.buffers = [];

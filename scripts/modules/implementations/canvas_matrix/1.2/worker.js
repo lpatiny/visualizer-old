@@ -112,7 +112,7 @@ onmessage = function(event) {
 	var d = event.data;
 	
 	if(d.title == 'init') {
-		pxPerCell = d.message.pxPerCell;
+		//pxPerCell = d.message.pxPerCell;
 		colors = d.message.colors;
 		squareLoading = d.message.squareLoading;
 		highContrast = d.message.highcontrast;
@@ -122,7 +122,9 @@ onmessage = function(event) {
 		min = d.message.min;
 		max = d.message.max;
 		
+		
 	} else if(d.title == 'doPx') {
+		pxPerCell = d.message.pxPerCell;
 		postMessage({ pxPerCell: pxPerCell, indexX: d.message.indexX, indexY: d.message.indexY, data: generate(d.message.indexX, d.message.indexY, d.message.buffer, d.message.nbValX) });
 	}
 }
