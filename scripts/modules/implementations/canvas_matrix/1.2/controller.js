@@ -39,15 +39,15 @@ CI.Module.prototype._types.canvas_matrix.Controller.prototype = {
 			e.offsetX = (e.offsetX || e.pageX - $(e.target).offset().left); 
 			e.offsetY = (e.offsetY || e.pageY - $(e.target).offset().top);
 			
-			var x = Math.floor((e.offsetX - shift.x) / pxPerCell) - 1;
-			var y = Math.floor((e.offsetY - shift.y) / pxPerCell) - 1;
+			var x = Math.floor((e.offsetX - shift.x) / pxPerCell);
+			var y = Math.floor((e.offsetY - shift.y) / pxPerCell);
 			
 			moduleValue = moduleValue.value;
 			var xLabel = moduleValue.xLabel;
 			var yLabel = moduleValue.yLabel;
 			var gridData = moduleValue.data;
 			
-			if (x < 0 || y < 0 || y >= gridData.length || x >= gridData[0].length)
+			if (x < 0 || y < 0 || y > gridData.length || x > gridData[0].length)
 				return;
 			
 			var dataKeyed = gridData[x][y];
