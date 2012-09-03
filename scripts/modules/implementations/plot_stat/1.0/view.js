@@ -91,15 +91,18 @@ CI.Module.prototype._types.plot_stat.View.prototype = {
 				for(var i = 0, k = moduleValue.series.length; i < k; i++) {
 					
 					for(var j = 0, l = moduleValue.series[i].length; j < l; j++) {
-						var val = moduleValue.series[i][j];
-						
+						var val = moduleValue.series[i][j];		
 						if(val.value)
 							val = val.value;
+						else if(typeof val == "object")
+							val = null;
+						
 						data[j + 1].push(val);	
 					}
 				}
 				
 				this.data = data;
+				
 				this.chartData = google.visualization.arrayToDataTable(data);
 				
 
