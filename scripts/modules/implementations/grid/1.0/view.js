@@ -86,23 +86,26 @@ CI.Module.prototype._types.grid.View.prototype = {
 	},
 	
 
-	buildElement: function(source, arrayToPush, jpaths) {
+	buildElement: function(source, arrayToPush, jpaths, colorJPath) {
 		var jpath;
 		var box = this.module;
 		
 		for(var i = 0, length = source.length; i < length; i++) {
 			var element = {};
 			element.data = {};
+			element._color;
+			
+			if(colorJPath)
+				element._color = CI.DataType.getValueFromJPath(source[i], colorJPath);
+				
 			for(var j in jpaths) {
 				jpath = jpaths[j];
 				if(jpath.jpath)
 					jpath = jpath.jpath;
 
-
 				CI.DataType.getValueFromJPath(source[i], jpath, function(data) {
 					element.data[j] = CI.DataType.asyncToScreenHtml(data, box);
-				});
-				
+				});				
 			}
 			
 			
