@@ -6,9 +6,6 @@
  * Dual licensed under the MIT or GPL Version 2 licenses.
  */
 
-
-
-
 (function() {
       google.load('visualization', '1.0', {'packages':['corechart']});
       // Set a callback to run when the Google Visualization API is loaded.
@@ -16,8 +13,6 @@
       		console.log('Chart API ready');
       });
  })();
- 
- 
  
 if(typeof CI.Module.prototype._types.plot_stat == 'undefined')
 	CI.Module.prototype._types.plot_stat = {};
@@ -33,6 +28,8 @@ CI.Module.prototype._types.plot_stat.View.prototype = {
 		this.module.getDomContent().html(this.dom);
 	},
 	
+	inDom: function() {},
+
 	onResize: function() {
 		
 		if(this.chart)
@@ -111,15 +108,15 @@ CI.Module.prototype._types.plot_stat.View.prototype = {
 				CI.Util.DOMDeferred.done(function() {
 
 					var dom = $("#" + chartId).get(0);
-					
-					switch(cfg.type) {
-						case 'xyChart': 
+
+					switch(cfg.charttype) {
+						case 'linechart': 
 							view.chart = new google
 								.visualization
 								.ScatterChart(dom);
 						break;
 						default:
-						case 'barChart':
+						case 'barchart':
 							view.chart = new google
 								.visualization
 								.BarChart(dom);

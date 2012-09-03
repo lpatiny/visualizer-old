@@ -225,7 +225,7 @@ CI.Module.prototype = {
 	 */
 	getConfiguration: function() {
 		
-		return this.cfgModule;
+		return this.definition.configuration;
 	},
 	
 	

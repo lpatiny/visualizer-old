@@ -80,6 +80,15 @@ CI.Module.prototype._types.plot_stat.Controller.prototype = {
 		section.addFieldGroup(groupfield);
 		
 		var field = groupfield.addField({
+			type: 'Combo',
+			name: 'charttype'
+		});
+		field.implementation.setOptions([{ title: "Bar Chart", key: "barchart"}, { title: "Line chart", key: "linechart"}, { title: "Scatter plot", key: "scatterplot"}]);
+		field.setTitle(new CI.Title('Chart type'));
+		
+
+
+		var field = groupfield.addField({
 			type: 'Text',
 			name: 'linewidth'
 		});
@@ -92,6 +101,7 @@ CI.Module.prototype._types.plot_stat.Controller.prototype = {
 		});
 		field.setTitle(new CI.Title('Point size'));
 		
+
 		return true;
 	},
 	
@@ -99,12 +109,14 @@ CI.Module.prototype._types.plot_stat.Controller.prototype = {
 	
 		var cfg = this.module.getConfiguration();
 		var linewidth = cfg.linewidth || 0;
+		var charttype = cfg.charttype || "linechart";
 		var pointsize = cfg.pointsize || 7;
 		
 		return {
 			module: [{
 				linewidth: [linewidth],
-				pointsize: [pointsize]
+				pointsize: [pointsize],
+				charttype: [charttype]
 			}]
 		}
 	},
@@ -115,11 +127,15 @@ CI.Module.prototype._types.plot_stat.Controller.prototype = {
 		var group = confSection[0].module[0];
 		
 		var linewidth = group.linewidth[0];
+		var charttype = group.charttype[0];
 		var pointsize = group.pointsize[0];
-		
+
 		this.module.definition.configuration = {
 			linewidth: linewidth,
-			pointsize: pointsize
+			pointsize: pointsize,
+			charttype: charttype
 		};
+
+		
 	}
 }

@@ -150,6 +150,7 @@ $(document).bind('configModule', function(event, module) {
 			if(module.view.erase)
 				module.view.erase();
 			module.view.init();
+			
 			module.view.inDom();
 			module.updateView();
 		});
