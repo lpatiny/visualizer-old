@@ -145,7 +145,7 @@ CI.Module.prototype._types.grid.Controller.prototype = {
 		
 		var field = groupfield.addField({
 			type: 'Combo',
-			name: 'colorjPath'
+			name: 'colorjpath'
 		});
 		//options.unshift({ title: 'None', key: 'none'});
 		field.implementation.setOptions(jpaths);
@@ -197,7 +197,7 @@ CI.Module.prototype._types.grid.Controller.prototype = {
 			
 			gencfg: [{
 				nblines: [nblines],
-				coljpath: [colorjPath]
+				colorjpath: [colorjPath]
 			}],
 			
 			cols: [{
@@ -220,7 +220,7 @@ CI.Module.prototype._types.grid.Controller.prototype = {
 		this.module.getConfiguration().colsjPaths = cols;
 		
 		this.module.getConfiguration().nbLines = confSection[0].gencfg[0].nblines[0];
-		this.module.getConfiguration().colorjPath = confSection[0].gencfg[0].coljpath[0];
+		this.module.getConfiguration().colorjPath = confSection[0].gencfg[0].colorjpath[0];
 		/*var coltitle = group.colnumber;
 		var coljpath = group.valjPath;
 		

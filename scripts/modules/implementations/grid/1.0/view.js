@@ -22,6 +22,8 @@ CI.Module.prototype._types.grid.View.prototype = {
 		this.dom = $(html.join(''));
 		this.module.getDomContent().html(this.dom);
 	},
+
+	inDom: function() {},
 	
 	onResize: function() {
 		
@@ -105,7 +107,7 @@ CI.Module.prototype._types.grid.View.prototype = {
 					jpath = jpath.jpath;
 
 					CI.DataType.asyncToScreenHtml(source[i], box, jpath).done(function(val) {
-						
+
 
 						element.data[j] = val;
 					});

@@ -14,6 +14,8 @@ CI.DataType.Structures = {
 	'png': { "type": "string" },
 	'number': { "type": "number" },
 	'mf': { "type": 'string' },
+	'jcamp': { "type": "string" },
+
 	'chart': {
 
 		"type": "object",
