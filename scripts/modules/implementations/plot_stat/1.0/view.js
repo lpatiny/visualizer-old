@@ -29,10 +29,7 @@ CI.Module.prototype._types.plot_stat.View = function(module) {
 CI.Module.prototype._types.plot_stat.View.prototype = {
 	
 	init: function() {	
-		var html = [];
-		html.push('<div class="ci-plot"><div id="module-' + this.module.id + '"></div></div>');
-		this.dom = $(html.join(''));
- 	     //
+		this.dom = $('<div class="ci-plot"></div>');
 		this.module.getDomContent().html(this.dom);
 	},
 	
@@ -49,95 +46,22 @@ CI.Module.prototype._types.plot_stat.View.prototype = {
 		
 		if(!(moduleValue = this.module.getDataFromRel('chart')))
 			return;
-		
-		
-		var cfg = this.module.getConfiguration();
 			
 		moduleValue = moduleValue.getData();
 		var type = CI.DataType.getType(moduleValue);
-		var moduleValue = CI.DataType.getValueIfNeeded(moduleValue);
 		
-		try {
-			console.log(type);
-			switch(type) {
-					
-					
-				case 'barChart':
-				case 'xyChart':
-					
-					var data = [[ moduleValue.xAxis.label ]];
-					
-					if (moduleValue.serieLabels && moduleValue.serieLabels.length>0) {
-						for(var i = 0, k = moduleValue.serieLabels.length; i < k; i++) {
-							data[0].push(moduleValue.serieLabels[i]);
-						}
-					}
-					
-					for(var i = 0, k = moduleValue.x.length; i < k; i++) {
-						data.push([moduleValue.x[i]]);
-					}
-					
-					for(var i = 0, k = moduleValue.series.length; i < k; i++) {
-						
-						for(var j = 0, l = moduleValue.series[i].length; j < l; j++) {
-							var val = moduleValue.series[i][j];
-							
-							if(val.value)
-								val = val.value;
-							data[j + 1].push(val);	
-						}
-					}
-					
-					this.data = data;
-					this.chartData = google.visualization.arrayToDataTable(data);
-					
-					switch(type) {
-						
-						case 'xyChart': 
-							
-							this.chart = new google
-								.visualization
-								.ScatterChart(document.getElementById('module-' + this.module.id));
-						
-						break;
-						case 'barChart':
-						
-							this.chart = new google
-								.visualization
-								.BarChart(document.getElementById('module-' + this.module.id));
-					}
-				
-				
-					google.visualization.events.addListener(this.chart, 'onmouseover', function(e) {
-						var row = e.row;
-						var col = e.column;
-						var rowData = moduleValue.series[col - 1][row];
-						view.module.controller.hoverEvent(rowData);
-					});
-	
-					this.chartOptions = {
-					          title: moduleValue.title,
-					          hAxis: {title: moduleValue.xAxis.label, minValue: moduleValue.xAxis.minValue, maxValue: moduleValue.xAxis.maxValue},
-					          vAxis: {title: moduleValue.yAxis.label},
-					          legend: 'none',
-					          pointSize: cfg.pointsize || 7,
-					          lineWidth: cfg.linewidth || 0
-					       };
-				       
-					this.drawChart();
-				return;
-			}
-		} catch(e) {
-			this.dom.mask("Error while creating the chart");
-			console.log(e);
-		}		
+		CI.DataType.toScreen(moduleValue, this.module).done(function(html) {
+			view.dom.html(html);
+			CI.Util.ResolveDOMDeferred();
+		});
+
 	},
 	
 	
 	drawChart: function() {
 		
-		this.chartOptions.width = this.module.domContent.parent().width();
-		this.chartOptions.height = this.module.domContent.parent().height();
+		this.chartOptions.width = this.module.domContent.width();
+		this.chartOptions.height = this.module.domContent.height();
 		this.chart
 			.draw(this.chartData, this.chartOptions);		
 
@@ -148,8 +72,88 @@ CI.Module.prototype._types.plot_stat.View.prototype = {
 	},
 	
 	typeToScreen: {
-		
+
+		'chart': function(deferred, moduleValue) {
+				var view = this;
+				var cfg = this.module.getConfiguration();
 	
+		//	try {
+				moduleValue = CI.DataType.getValueIfNeeded(moduleValue);	
+				var data = [[ moduleValue.xAxis.label ]];
+				
+				if (moduleValue.serieLabels && moduleValue.serieLabels.length>0) {
+					for(var i = 0, k = moduleValue.serieLabels.length; i < k; i++) {
+						data[0].push(moduleValue.serieLabels[i]);
+					}
+				}
+				
+				for(var i = 0, k = moduleValue.x.length; i < k; i++) {
+					data.push([moduleValue.x[i]]);
+				}
+				
+				for(var i = 0, k = moduleValue.series.length; i < k; i++) {
+					
+					for(var j = 0, l = moduleValue.series[i].length; j < l; j++) {
+						var val = moduleValue.series[i][j];
+						
+						if(val.value)
+							val = val.value;
+						data[j + 1].push(val);	
+					}
+				}
+				
+				this.data = data;
+				this.chartData = google.visualization.arrayToDataTable(data);
+				
+
+				var chartId = 'chart_' + (++CI.DataType._chartid);
+
+				CI.Util.DOMDeferred.done(function() {
+
+					var dom = $("#" + chartId).get(0);
+					
+					switch(cfg.type) {
+						case 'xyChart': 
+							view.chart = new google
+								.visualization
+								.ScatterChart(dom);
+						break;
+						default:
+						case 'barChart':
+							view.chart = new google
+								.visualization
+								.BarChart(dom);
+					}
+					
+					google.visualization.events.addListener(view.chart, 'onmouseover', function(e) {
+						var row = e.row;
+						var col = e.column;
+						var rowData = moduleValue.series[col - 1][row];
+						view.module.controller.hoverEvent(rowData);
+					});
+
+					view.drawChart();
+
+				});
+
+				deferred.resolve('<div id="' + chartId + '"></div>');
+
+				view.chartOptions = {
+				          title: moduleValue.title,
+				          hAxis: {title: moduleValue.xAxis.label, minValue: moduleValue.xAxis.minValue, maxValue: moduleValue.xAxis.maxValue},
+				          vAxis: {title: moduleValue.yAxis.label},
+				          legend: 'none',
+				          pointSize: cfg.pointsize || 7,
+				          lineWidth: cfg.linewidth || 0
+				       };
+			       
+				
+			//} catch(e) {
+			//	console.log(this);
+			//	this.dom.mask("Error while creating the chart");
+				
+			//}
+		}
 	}
 }
 

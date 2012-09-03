@@ -64,8 +64,8 @@ CI.Module.prototype._types.plot_stat.Controller.prototype = {
 	
 	configurationReceive: {
 		"chart": {
-			type: ['xyChart', 'barChart'],
-			label: 'Any displayable chart (currently xyChart and barChart)',
+			type: ['chart'],
+			label: 'Formatted data for a chart',
 			description: ''
 		}	
 	},

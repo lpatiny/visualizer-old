@@ -14,6 +14,54 @@ CI.DataType.Structures = {
 	'png': { "type": "string" },
 	'number': { "type": "number" },
 	'mf': { "type": 'string' },
+	'chart': {
+
+		"type": "object",
+		"elements": {
+			"serieLabels": {
+				"type": "array",
+				"elements": "string"
+			},
+
+
+			"series": {
+				"type": "array",
+				"elements": {
+					"type": "array",
+					"elements": {
+						"type": "object",
+						"elements": {
+							"value": "number",
+						},
+						"otherElementsPossible": true
+					}
+				}
+			},
+
+			"title": "string",
+			"x": {
+				"type": "array",
+				"elements": "number"
+			},
+
+			"xAxis": {
+				"type": "object",
+				"elements": {
+					"label": "string",
+					"maxValue": "number",
+					"minValue": "number"
+				}
+			},
+
+			"yAxis": {
+				"type": "object",
+				"elements": {
+					"label": "string"
+				}
+			}
+		}
+	},
+
 	'chemical': {
 		"type": "object",
 		"elements": {
@@ -268,7 +316,7 @@ CI.DataType.getType = function(element) {
 		else if(CI.DataType.Structures[element.type])
 			return element.type;
 		else
-			return CI.LogError("Type could not be found")
+			return console.error("Type " + element.type + " could not be found")
 	}
 	
 
@@ -578,6 +626,7 @@ CI.DataType.asyncToScreenHtml = function(element, box, jpath) {
 
 
 CI.DataType._toScreen = function(element, box) {
+
 	var dif = $.Deferred();
 	CI.DataType.fetchElementIfNeeded(element).done(function(data) { CI.DataType._valueToScreen(dif, data, box); });
 	return dif.promise();
@@ -587,12 +636,13 @@ CI.DataType.toScreen = CI.DataType._toScreen;
 CI.DataType._valueToScreen = function(def, data, box) {
 
 	var repoFuncs = box.view.typeToScreen;
+
 	var type = CI.DataType.getType(data);
 
 	CI.DataType.getValueIfNeeded(data);
 
 	if(typeof repoFuncs[type] == 'function')
-		return repoFuncs[type](def, data);
+		return repoFuncs[type].call(box.view, def, data);
 	
 	if(CI.Type[type] && typeof CI.Type[type].toScreen == 'function')
 		return CI.Type[type].toScreen(def, data);
@@ -685,7 +735,18 @@ CI.Type["mf"] = {
 	}
 };
 
+
+
+CI.Type["chart"] = {
+	toScreen: function(def, value) {
+
+		console.log(value);
+		
+	}
+};
+
 CI.DataType._jcampid = 0;
+CI.DataType._chartid = 0;
 CI.DataType._asyncLoading = 0;
 
 CI.Type.gif = CI.Type.picture;
