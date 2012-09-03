@@ -69,20 +69,19 @@ CI.Module.prototype._types.grid.View.prototype = {
 			Table.addColumn(Column);
 			Columns[j] = Column;
 		}
-		
-		this.list = CI.DataType.getValueIfNeeded(moduleValue);
-		
+	
+		var list = CI.DataType.getValueIfNeeded(moduleValue);
 		var Content = new CI.Tables.Content();
 		var elements = [];
-		this.buildElement(this.list, elements, jpaths);
+		view.buildElement(list, elements, jpaths);
 		for(var i = 0, length = elements.length; i < length; i++)
 			Content.addElement(elements[i]);
-		
 		Table.setContent(Content);
-		Table.init(this.dom);
+		Table.init(view.dom);
 		
+
+		CI.Util.ResolveDOMDeferred();
 		
-		$(document).trigger('checkAsyncLoad', [ this.dom ]);
 	},
 	
 
@@ -95,17 +94,21 @@ CI.Module.prototype._types.grid.View.prototype = {
 			element.data = {};
 			element._color;
 			
+
 			if(colorJPath)
 				element._color = CI.DataType.getValueFromJPath(source[i], colorJPath);
 				
+
 			for(var j in jpaths) {
 				jpath = jpaths[j];
 				if(jpath.jpath)
 					jpath = jpath.jpath;
 
-				CI.DataType.getValueFromJPath(source[i], jpath, function(data) {
-					element.data[j] = CI.DataType.asyncToScreenHtml(data, box);
-				});				
+					CI.DataType.asyncToScreenHtml(source[i], box, jpath).done(function(val) {
+						
+
+						element.data[j] = val;
+					});
 			}
 			
 			

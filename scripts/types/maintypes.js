@@ -4,8 +4,16 @@ CI.DataType = {};
 
 CI.DataType.Structures = {
 	
-	'mol2D': "string",
-	'mf': 'string',
+	'object': { "type": "object" },
+	'mol2D': { "type": "string" },
+	'gif': { "type": "string" },
+	'picture': { "type": "string" },
+	'string': { "type": "string" },
+	'gif': { "type": "string" },
+	'jpg': { "type": "string" },
+	'png': { "type": "string" },
+	'number': { "type": "number" },
+	'mf': { "type": 'string' },
 	'chemical': {
 		"type": "object",
 		"elements": {
@@ -244,30 +252,31 @@ CI.DataType.Structures = {
 };
 
 
-
+/* Returns the type of an element */
 CI.DataType.getType = function(element) {
 	
 	if(element == undefined)
 		return;
 		
 	var type = typeof element;
+
 	if(type == 'object') {
 		if(element instanceof Array)
-			return 'array';
+			return "array";
 		if(typeof element.type == "undefined")
-			return 'object';
-		else
+			return "object";
+		else if(CI.DataType.Structures[element.type])
 			return element.type;
+		else
+			return CI.LogError("Type could not be found")
 	}
 	
-	/*if(type == "undefined")		
-		throw {notify: true, display: false, message: "The type cannot be undefined"};
-	if(type == "function")
-		throw {notify: true, display: false, message: "The type cannot be a function"};*/
-	return type;	
+
+	// Native types: int, string, boolean
+	return type;
 }
 
-
+/*
 CI.DataType.SubElements = {
 	
 	"chemical": {
@@ -275,7 +284,7 @@ CI.DataType.SubElements = {
 		"Molecular mass": { "type": "int", "jpath": "mf.0.mw" }
 	}
 }
-	
+*/	
 
 CI.DataType.getValueIfNeeded = function(element) {
 	if(element.value && element.type)
@@ -291,43 +300,38 @@ CI.DataType.getValueIfNeeded = function(element) {
 
 CI.DataType._PENDING = new Object();
 
-CI.DataType.fetchElementIfNeeded = function(element, callback) {
+
+
+CI.DataType.fetchElementIfNeeded = function(element) {
 	
 	if(element === false || element == undefined)
-		return;
+		return $.Deferred().reject();
 		
-	var type = element.type, ajaxType;
+	var type = element.type, ajaxType, def;
 	if(!element.value && element.url) {
 		
 		ajaxType = typeof CI.DataType.Structures[type] == "object" ? 'json' : 'text';
 		
-		$.ajax({
+		return $.ajax({
 			url: element.url,
 			dataType: ajaxType,
 			type: "get",
 			timeout: 120000,
 			success: function(data) {
 				element.value = data;
-				callback(element);
 			}
-		});
+		}).promise();
 		
-		callback(CI.DataType._PENDING);
-		return CI.DataType._PENDING;
 	} else {
-		
-		if(callback) {
-			callback(element);
-			return false;
-		}
-		return false;
+		def = $.Deferred()
+		return def.resolve(element);
 	}
 	
 	return false;
 }
 
 
-CI.DataType.getValueFromJPath = function(element, jpath, callback, wholeObject) {
+CI.DataType.getValueFromJPath = function(element, jpath, wholeObject) {
 	
 	if(!jpath.split)
 		jpath = '';
@@ -335,28 +339,24 @@ CI.DataType.getValueFromJPath = function(element, jpath, callback, wholeObject) 
 	var jpath2 = jpath.split('.');
 	jpath2.shift();
 
-	return CI.DataType._getValueFromJPath(element, jpath2, callback);
+	return CI.DataType._getValueFromJPath(element, jpath2);
 }
 
-CI.DataType._getValueFromJPath = function(element, jpath, callback) {
+CI.DataType._getValueFromJPath = function(element, jpath) {
 	var el = CI.DataType.getValueIfNeeded(element);
 	var type;
-	
-	if(element == CI.DataType._PENDING) {
-		if(callback)
-			callback(element);
-		return element;
-	}
-	
 	var jpathElement = jpath.shift();
+
+	if(jpathElement) {
+
+		el = el[jpathElement];
+		return CI.DataType.fetchElementIfNeeded(el).pipe(function(elChildren) {
+			return CI.DataType._getValueFromJPath(elChildren, jpath);
+		});
+
+	} else
+		return $.Deferred().resolve(element);
 	
-	if(jpathElement == undefined && callback)
-		callback(element);
-		
-	el = el[jpathElement];
-	return CI.DataType.fetchElementIfNeeded(el, function(elChildren) {
-		CI.DataType._getValueFromJPath(elChildren, jpath, callback);
-	});
 }
 
 
@@ -493,7 +493,6 @@ CI.DataType.getJPathsFromElement = function(element, jpaths) {
 		switch(typeof element) {
 			case 'object':
 				var structure = CI.DataType.getStructureFromElement(element, structure);
-				console.log(structure);
 				CI.DataType.getJPathsFromStructure(structure, null, jpaths);
 			break;
 			
@@ -528,11 +527,14 @@ CI.DataType._doFetchElementAttributeCallback = function(element, box, asyncId, a
 
 
 CI.DataType._doFetchElementHTMLCallback = function(element, box, asyncId) {
-	CI.DataType.fetchElementIfNeeded(element, function(val) {
-		CI.DataType._valueToScreen(element, box, function(val) {
+
+
+	CI.DataType.getValueFromJPath(source[i], jpath).done(function(data) {
+		CI.DataType._toScreen(data, box).done(function(val) {
 			$("#" + asyncId).html(val);
 		});
 	});
+
 }
 
 
@@ -556,322 +558,136 @@ CI.DataType.asyncToScreenAttribute = function(element, attribute, box) {
 }
 
 
-CI.DataType.asyncToScreenHtml = function(element, box) {
+CI.DataType.asyncToScreenHtml = function(element, box, jpath) {
 	
 	// Needs fetching
 	if(element.type && !element.value && element.url) {
+
 		var html = "";
 		html += '<span id="callback-load-';
 		html += ++CI.DataType.asyncId;
 		html += ' class="loading">Loading...</span>';
-		
-		CI.DataType._doFetchElementHTMLCallback(element, box, CI.DataType.asyncId);
-		  
-		return html;
+		CI.DataType._doFetchElementHTMLCallback(element, box, CI.DataType.asyncId, jpath);
+
+		return $.Deferred.resolve(html);
 	} else
 		// returns element.value if fetched
-		return CI.DataType._toScreen(element, box);
+		return CI.DataType.getValueFromJPath(element, jpath).pipe(function(data) { return CI.DataType._toScreen(data, box) });
 		
 }
 
 
-CI.DataType._toScreen = function(element, box, callback) {
-	
-	//var value = CI.DataType.getValueIfNeeded(element);
-	if(!(value = CI.DataType.fetchElementIfNeeded(element, function(val) {
-			if(callback)
-				CI.DataType._valueToScreen(element, box, callback);
-		}), box, callback)) 
-			return CI.DataType._valueToScreen(element, box, callback);
+CI.DataType._toScreen = function(element, box) {
+	var dif = $.Deferred();
+	CI.DataType.fetchElementIfNeeded(element).done(function(data) { CI.DataType._valueToScreen(dif, data, box); });
+	return dif.promise();
 }
 
 CI.DataType.toScreen = CI.DataType._toScreen;
+CI.DataType._valueToScreen = function(def, data, box) {
 
-CI.DataType._valueToScreen = function(value, box, callback) {
-	
 	var repoFuncs = box.view.typeToScreen;
-	var type = CI.DataType.getType(value);
-	var valueToDisplay = CI.DataType.getValueIfNeeded(value); 
+	var type = CI.DataType.getType(data);
+
+	CI.DataType.getValueIfNeeded(data);
+
+	if(typeof repoFuncs[type] == 'function')
+		return repoFuncs[type](def, data);
 	
-	if(!type)
-		return;
-		
-	if(typeof repoFuncs[type] == 'function') {
-		return repoFuncs[type](valueToDisplay, callback);
-	}	
-	
-	if(CI.Type[type] && typeof CI.Type[type].toScreen == 'function') {
-		return CI.Type[type].toScreen(valueToDisplay, callback)
-	}
-	
-	if(callback)
-		callback("__unimplemented");	
+	if(CI.Type[type] && typeof CI.Type[type].toScreen == 'function')
+		return CI.Type[type].toScreen(def, data);
 }
 
-CI.Type = {
-	
-	string: {
-		
-		toScreen: function(val, callback) { if(callback) callback(val); else return val; }
-	},
-	
-	number: {
-		
-		toScreen: function(val, callback) { if(callback) callback(val); else return val; }
-	},
-	
-	chemical: {
-		
-		getIUPAC: function(source, clbk) {
-			return CI.DataType.getValueFromJPath(source, "element.iupac.0.value", clbk);
-		},
-		
-		toScreen: function(val, callback) {
-			var data = CI.Type.chemical.getIUPAC(val, callback);
-			if(!callback)
-				return data;
-		}
-		
-	},
-	
-	
-	picture: {
-		
-		toScreen: function(val, clbk) {
-			var val = '<img src="' + val + '" />';
-			if(clbk)
-				clbk(val);
-			else
-				return val;
-			
-		}	
-		
-	},
-	
-	molfile2D: {
-	
-		toScreen: function(molfile) {
-			
-			var mol = unescape(dom.data('value'));
-			
-			dom.attr('id', 'mol2d_' + (++CI.dataType._mol2did));
-			
-			var canvas = new ChemDoodle.ViewerCanvas('mol2d_' + (CI.dataType._mol2did), 100, 100);
-			canvas.specs.backgroundColor = "transparent";
-			canvas.specs.bonds_width_2D = .6;
-			canvas.specs.bonds_saturationWidth_2D = .18;
-			canvas.specs.bonds_hashSpacing_2D = 2.5;
-			canvas.specs.atoms_font_size_2D = 10;
-			canvas.specs.atoms_font_families_2D = ['Helvetica', 'Arial', 'sans-serif'];
-			canvas.specs.atoms_displayTerminalCarbonLabels_2D = true;
-			
-			var molLoaded = ChemDoodle.readMOL(mol);
-			molLoaded.scaleToAverageBondLength(14.4);
-			canvas.loadMolecule(molLoaded);
-		}
-	},
-	
-	jcamp: {
-		toScreen: function(value, callback) {
-			
-			var val = '<canvas data-async-type="jcamp"  class="asyncLoading" data-jcamp="' + escape(value) + '"></canvas>';
-			if(callback)
-				return callback(val);
-			return val;
-		}
-	},
-	
-	mf: {
-		toScreen: function(value, callback) {
-			var val = value.replace(/\[([0-9]+)/g,"[<sup>$1</sup>").replace(/([a-zA-Z)])([0-9]+)/g,"$1<sub>$2</sub>").replace(/\(([0-9+-]+)\)/g,"<sup>$1</sup>");
-			if(callback)
-				return callback(val);
-			return val;
-		}
-	}
-}
+CI.Type = {};
 
+CI.Type["string"] = {
+	toScreen: function(def, val) { def.resolve(val); }
+};
+	
+CI.Type["number"] = {		
+	toScreen: function(def, val) { def.resolve(val); }
+};
+
+CI.Type["chemical"] = {
+
+	getIUPAC: function(def, source) {
+		CI.DataType.getValueFromJPath(source, "element.iupac.0.value").done(def.resolve);
+	},
+	
+	toScreen: function(def, val) {
+
+		CI.Type[CI.DataType.Structures.chemical].getIUPAC(def, val);
+	}
+};
+	
+
+
+CI.Type["picture"] = {		
+	
+	toScreen: function(def, val) {
+
+		def.resolve('<img src="' + CI.DataType.getValueIfNeeded(val) + '" />');
+	}
+};
+	
+
+
+
+
+CI.Type["mol2d"] = {		
+	
+	toScreen: function(def, molfile) {
+
+		var mol = unescape(dom.data('value'));
+		
+
+
+		dom.attr('id', 'mol2d_' + (++CI.dataType._mol2did));
+		
+		var canvas = new ChemDoodle.ViewerCanvas('mol2d_' + (CI.dataType._mol2did), 100, 100);
+		canvas.specs.backgroundColor = "transparent";
+		canvas.specs.bonds_width_2D = .6;
+		canvas.specs.bonds_saturationWidth_2D = .18;
+		canvas.specs.bonds_hashSpacing_2D = 2.5;
+		canvas.specs.atoms_font_size_2D = 10;
+		canvas.specs.atoms_font_families_2D = ['Helvetica', 'Arial', 'sans-serif'];
+		canvas.specs.atoms_displayTerminalCarbonLabels_2D = true;
+		
+		var molLoaded = ChemDoodle.readMOL(mol);
+		molLoaded.scaleToAverageBondLength(14.4);
+		canvas.loadMolecule(molLoaded);
+	}
+};
+	
+
+CI.Type["jcamp"] = {
+		
+	toScreen: function(def, value) {
+
+		var id = 'jcamp_' + (++CI.DataType._jcampid);
+
+		CI.Util.DOMDeferred.done(function() {
+				var spectra = new ChemDoodle.PerspectiveCanvas(id, '500', '500');
+				$("#" + id).data('spectra', spectra);
+				spectra.specs.plots_showYAxis = true;
+				spectra.specs.plots_flipXAxis = false;
+				var jcampLoaded = ChemDoodle.readJCAMP(value);
+		  		spectra.loadSpectrum(jcampLoaded);
+		});
+
+		def.resolve('<canvas data-async-type="jcamp" id="' + id + '"></canvas>');
+	}
+};
+
+CI.Type["mf"] = {
+	toScreen: function(def, value) {
+		return def.resolve(CI.DataType.getValueIfNeeded(value).replace(/\[([0-9]+)/g,"[<sup>$1</sup>").replace(/([a-zA-Z)])([0-9]+)/g,"$1<sub>$2</sub>").replace(/\(([0-9+-]+)\)/g,"<sup>$1</sup>"));
+	}
+};
 
 CI.DataType._jcampid = 0;
 CI.DataType._asyncLoading = 0;
 
-CI.DataType.asyncLoading = {
-	
-	jcamp: function(dom) {
-		
-		var data = unescape(dom.data('jcamp'));
-		
-		dom.attr('id', 'jcamp_' + (++CI.DataType._jcampid));
-		var spectra = new ChemDoodle.PerspectiveCanvas('jcamp_' + (CI.DataType._jcampid), '500', '500');
-		dom.data('spectra', spectra);
-		spectra.specs.plots_showYAxis = true;
-		spectra.specs.plots_flipXAxis = false;
-		var jcampLoaded = ChemDoodle.readJCAMP(data);
-		
-  		spectra.loadSpectrum(jcampLoaded);
-	  		
-	}
-	
-}
-
-
-$(document).bind('checkAsyncLoad', function(event, dom) {
-
-	$(dom).find('.asyncLoading').each(function() {
-		var loadType = $(this).data('async-type');
-		var fct = CI.DataType.asyncLoading[loadType];
-		
-		if(typeof fct == "function")
-			fct($(this));
-	});
-});
-
-
-
 CI.Type.gif = CI.Type.picture;
 CI.Type.jpeg = CI.Type.picture;
 CI.Type.png = CI.Type.picture;
-
-
-/*
-CI.Types.mf = {	
-	getjPath: function(jpaths) {
-		return jpaths;
-	},
-	
-	instanciate: function(data) {
-		
-	},
-};
-
-
-CI.Types.chemical = function(source, url, parent) {
-	this.source = source;
-	this.url = url;
-	this.parent = parent;
-	this.loaded = true;
-	this.callbacks = [];
-	CI.dataType.instanciate(source);
-	this.jsonLoader = new CI.Util.JsonLoader(url, this);
-}
-
-
-CI.Types.chemical.prototype = {
-	
-	getjPath: function(jpaths) {
-		return CI.Types.jPathFromJson(this.source, jpaths, "");
-	},
-	
-	valueFromjPath: function(jPath, array, elId, view) {
-		
-		if(!this.loaded)
-			return CI.Types.addCallbackLoader(jPath, this, array, elId, view);
-		return CI.Types._valueFromJPathAndJson(jPath, this.source);	
-	},
-	
-	getIUPAC: function(fct, pos) {
-		return this.valueFromjPath('');
-	},
-	
-	getMW: function(fct) {
-		return this.valueFromjPath('mf[0].mw');	
-	},
-	
-	getMF: function() {
-		return this.valueFromjPath('mf[0].value.value');
-	},
-	
-	getDensity: function() {
-		return this.valueFromjPath('density[0].low');
-	},
-	
-	getImageUrl: function() {
-		return this.valueFromjPath('mol[0].gif.url');
-	},
-	
-	doCallbacks: function() {
-		for(var i = 0; i < this.callbacks.length; i++)
-			this.callbacks[i].call(this);
-	}
-}
-
-
-
-
-CI.Types.matrix = function(source, url) {
-	this.source = source;
-	this.url = url;
-	this.callbacks = [];
-}
-
-CI.Types.matrix.prototype = {
-	
-	getjPath: function(jpaths) {
-		return {xLabels: true, yLabels: true, data: true};
-	},
-	
-	valueFromjPath: function(jPath) {
-		return CI.Types._valueFromJPathAndJson(jPath, this.source);	
-	}
-}
-
-CI.Types.molfile2D = {
-	
-	getjPath: function(jpaths) {
-		return jpaths;
-	}
-	
-}
-
-
-CI.Types.molfile3D = {
-	
-	
-	getjPath: function(jpaths) {
-		return jpaths;
-	}
-}
-
-
-
-
-
-CI.Types.jcamp = function(source, url, parent) {
-	this.source = source;
-	this.value = source;
-	this.url = url;
-	this.parent = parent;
-	this.loaded = false;
-	this.callbacks = [];
-	CI.dataType.instanciate(source);
-	this.type = "jcamp";
-	
-	this.jsonLoader = new CI.Util.JsonLoader(url, this, true);
-}
-
-
-CI.Types.jcamp.prototype = {
-	
-	getjPath: function(jpaths) {
-		return jpaths;
-	},
-	
-	valueFromjPath: function(jPath, array, elId, view) {
-		
-		
-		if(!this.loaded) {
-	
-			return CI.Types.addCallbackLoader(jPath, this, array, elId, view);
-			
-		}
-		return CI.Types._valueFromJPathAndJson(jPath, this.source);
-	},	
-	
-	doCallbacks: function() {
-		for(var i = 0; i < this.callbacks.length; i++)
-			this.callbacks[i].call(this);
-	}
-}
-
-*/
-

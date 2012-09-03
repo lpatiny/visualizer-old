@@ -49,7 +49,6 @@ CI.Module.prototype._types.grid.Model.prototype = {
 				this.dataValue[dataName][i] = CI.Types.getValueFromJPath(jpath, this.dataValue[dataName][i]);	
 			}
 		}
-		
 		/* Triggers a module update */
 		this.module.updateView();
 	},

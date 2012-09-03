@@ -103,7 +103,7 @@ CI.Module.prototype._types.grid.Controller.prototype = {
 	
 	configurationReceive: {
 		list: {
-			type: ['array'],
+			type: ["array"],
 			label: 'List',
 			description: 'Any list of displayable element'
 		}		

@@ -28,9 +28,7 @@ CI.DataSource.prototype = {
 	_bindEvent: function() {
 		
 		$(document).bind('sharedDataChanged', function(event, varName, varVal) {
-			
 			var allSources = CI.DataSource.prototype._dataSources[varName];
-			
 			if(typeof allSources == "undefined")
 				return;
 
@@ -53,20 +51,21 @@ CI.DataSource.prototype = {
 	buildData: function(data) {
 		
 		var dataRebuilt = {};
+		
 		if(!(this.sourceAccepts.type instanceof Array))
 			this.sourceAccepts.type = [this.sourceAccepts.type];
 	
 		var dataType = CI.DataType.getType(data);
-		
 		var mustRebuild = false;
-		var asObject = typeof this.sourceAccepts.asObject != "undefined" && this.sourceAccepts.asObject;
-	
+
 		for(var i = 0; i < this.sourceAccepts.type.length; i++) {
-			
-			if(this.sourceAccepts.type[i] == dataType || data == CI.DataType._PENDING)
+			console.log(this.sourceAccepts.type[i]);// == dataType
+			if(this.sourceAccepts.type[i] == dataType) {
+				console.log('sdfsdf');
 				return this.data = data;
-			
-			else if(asObject && CI.DataType.getType(data) == 'object') {
+			}
+/*			
+			else if(asObject && CI.DataType.getType(data) == CI.DataType.Structures.Object) {
 				
 				for(var j in data) {
 					if(CI.DataType.getType(data[j]) == this.sourceAccepts.type[i]) {
@@ -75,6 +74,7 @@ CI.DataSource.prototype = {
 					}
 				}
 			}
+			*/
 		}
 		
 			
