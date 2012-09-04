@@ -333,3 +333,8 @@ div.ci-module-header-toolbar ul li.ci-configure {
 	height: 12px;
 	margin-top: 2px;
 }
+
+
+div.ci-module-wrapper.ci-module-spectra_displayer .ci-module-content {
+	overflow: hidden;
+}

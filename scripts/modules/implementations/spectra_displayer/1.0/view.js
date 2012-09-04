@@ -32,7 +32,7 @@ CI.Module.prototype._types.spectra_displayer.View.prototype = {
 	onResize: function(width, height) {
 		var data;
 		if((data = this.dom.find('canvas').data('spectra')) != undefined) 
-			data.resize(width, height);
+			data.resize(width, height - 5);
 	},
 	
 	onProgress: function() {

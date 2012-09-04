@@ -49,7 +49,7 @@ CI.Grid = {
 		module.getDomWrapper().resizable({
 			grid: [CI.Grid.definition.xWidth, CI.Grid.definition.yHeight],
 			resize: function() {
-console.log('has resized');
+
 				CI.Grid.moduleResize(module);
 				CI.Grid.checkDimensions();
 			},
@@ -61,6 +61,7 @@ console.log('has resized');
 			
 			stop: function() {
 				CI.Util.unmaskIframes();
+				CI.Grid.moduleResize(module);
 				module.resizing = false;
 			},
 			
