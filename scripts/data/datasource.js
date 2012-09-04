@@ -55,7 +55,7 @@ CI.DataSource.prototype = {
 		this.data = null;
 		if(this.module.view.blank)
 			this.module.view.blank();
-	}
+	},
 
 	setData: function(data) {
 		if(this.buildData(data) !== false)

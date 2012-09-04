@@ -79,7 +79,7 @@ html, body {
 
 
 
-#ci-left > h3 {
+#ci-left h3 {
 	background: #f0f0f0;
 	padding: 6px;
 	cursor: pointer;
@@ -101,7 +101,7 @@ td.ci-expand {
 }
 
 
-#ci-left > h3 > span {
+#ci-left h3 > span {
 	margin-right: 5px;
 }
 
@@ -129,13 +129,14 @@ td.ci-expand {
 }
 
 
-#ci-left .ci-varname {
+#ci-left .ConfMenuElement {
 	font-weight: bold;
-	font-size: 1.2em;
+	text-align: center;
 	background: #f0f0f0;
 	padding: 3px;
 	margin-bottom: 3px;
 	font-style: italic;
+	cursor: pointer;
 }
 
 

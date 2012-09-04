@@ -43,7 +43,7 @@ CI.Module.prototype._types.canvas_matrix.Controller.prototype = {
 				return;
 			
 			return [xLabel[x], yLabel[y], gridData[x][y]];
-	}
+	},
 
 	init: function() {
 		

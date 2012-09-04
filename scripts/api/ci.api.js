@@ -21,14 +21,14 @@ CI.API.blankSharedVar = function(varName) {
 // Stores a deferred
 CI.API.setSharedVar = function(varName, varData) {
 	
-	var filter = CI.API.getSharedFilters(varName);
+	var filters = CI.API.getSharedFilters(varName);
 	var def = $.Deferred();
-	for(var i = 0, l = filter.length; i < l; i++)
-		def.pipe(filter[i]);
+	for(var i = 0, l = filters.length; i < l; i++)
+		def.pipe(filters[i]);
 
 	CI.sharedData[varName] = def;
 	def.resolve(varData);
-	$(document).trigger('sharedDataChanged', [varName, varData]);
+	$(document).trigger('sharedDataChanged', [varName, def]);
 }
 
 CI.API.getSharedVar = function(varName) {
@@ -71,7 +71,7 @@ CI.API.setSharedVarFromJPath = function(name, value, jpath) {
 
 CI.API.getSharedFilters = function(varName) {
 
-
+	return [];
 
 
 }

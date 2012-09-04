@@ -42,10 +42,9 @@ CI.ConfigVisualizer = function() {
 	}
 	
 		
-	var html = [];
-	
-	html.push('<h3><span class="triangle-down"></span>Configuration</h3>');
-	
+	var html = $("<div />");
+	var configurationElement = new CI.ConfMenuSupElement({ title: 'Configuration' });
+
 	var btnzone = new CI.Buttons.Zone({
 		vAlign: 'vertical',
 		hAlign: 'center'
@@ -69,66 +68,24 @@ CI.ConfigVisualizer = function() {
 	btn.setColor('blue');
 	btnzone.addButton(btn);
 	
-	
-	html.push(btnzone.render());
-	
-	
-	html.push('</div><h3><span class="triangle-down"></span>Shared variables</h3><div>');
-	for(var i in allSharedVars) {
-		html.push('<li>');
-			html.push('<div class="ci-varname">');
-			html.push(i);
-			html.push('</div>');
-		
-			html.push('<div class="ci-varsent">');
-			html.push('Modules that send this variable<ul>');
-			for(var j = 0; j < allSharedVars[i].send.length; j++) {
-				html.push('<li>');
-				html.push(allSharedVars[i].send[j].moduleName);
-				html.push('</li>');
-			}
-			
-			
-			if(allSharedVars[i].send.length == 0)
-				html.push('<li>No module sends this variable</li>');
-				
-			html.push('</ul></div>');
-		
-		
-			html.push('<div class="ci-varreceived">');
-			html.push('Modules that receive this variable<ul>');
-			for(var j = 0; j < allSharedVars[i].receive.length; j++) {
-				html.push('<li>');
-				html.push(allSharedVars[i].receive[j].moduleName);
-				html.push('</li>');
-			}
-			
-			if(allSharedVars[i].receive.length == 0)
-				html.push('<li>No module receives this variable</li>');
-				
-			html.push('</ul></div>');
-		
-		html.push('</li>');
-	}
-	html.push('</div>');
-	
-	html.push('<h3><span class="triangle-down"></span>Add a module</h3><div id="ci-addmodule">');
-	
-	
+	configurationElement.addElement(btnzone);
+	html.append(configurationElement.render());
+
+	var menuvars = new CI.ConfMenuSupElement({ title: 'Shared Variables' });
+	for(var i in allSharedVars)
+		menuvars.addElement(new CI.ConfMenuElement({ title: i }));
+
+	html.append(menuvars.render());
+
+	var addModuleElement = new CI.ConfMenuSupElement({ title: 'Add a module' });
 	for(var i in CI.Module.prototype._types) {
-		
 		var moduleInfos = CI.Module.prototype._types[i].Controller.prototype.moduleInformations;
-		html.push('<div class="module" data-module="');
-		html.push(i);
-		html.push('">');
-		html.push(moduleInfos.moduleName);
-		html.push('</div>');
+		addModuleElement.addElement(new CI.ConfMenuElement({ title: moduleInfos.moduleName, dblclickhandler: function() { alert(1); }  }));
 	}
-	
-	html.push('</div>');
-	
-	
-	$("#ci-left").html(html.join(''));
+
+	html.append(addModuleElement.render());
+
+	$("#ci-left").html(html);
 	
 	/*
 	(function() {
@@ -219,12 +176,6 @@ CI.ConfigVisualizer = function() {
 		};
 		
 		Entry.addModuleFromJSON(module, true);
-	});
-	
-	$("#ci-left").on('click', 'h3', function() {
-		var h3 = $(this);
-		h3.next().toggle();
-		h3.children('span').toggleClass('triangle-down triangle-right');
 	});
 	
 	
