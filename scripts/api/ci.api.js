@@ -29,7 +29,6 @@ CI.API.setSharedVar = function(varName, varData) {
 	CI.sharedData[varName] = def;
 	def.resolve(varData);
 
-	console.log(varData);
 	$(document).trigger('sharedDataChanged', [varName, def]);
 }
 

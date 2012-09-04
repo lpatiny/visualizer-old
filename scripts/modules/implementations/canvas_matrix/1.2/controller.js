@@ -17,15 +17,15 @@ CI.Module.prototype._types.canvas_matrix.Controller = function(module) {
 CI.Module.prototype._types.canvas_matrix.Controller.prototype = {
 	
 	
-	getMatrixElementFromEvent: function() {
+	getMatrixElementFromEvent: function(e) {
 
 			var moduleValue;
 			if(!(moduleValue = this.module.getDataFromRel('matrix')))
 				return;
 			
 			moduleValue = moduleValue.getData();
-			var pxPerCell = module.view.getPxPerCell();
-			var shift = module.view.getXYShift();
+			var pxPerCell = this.module.view.getPxPerCell();
+			var shift = this.module.view.getXYShift();
 			
 			
 			e.offsetX = (e.offsetX || e.pageX - $(e.target).offset().left); 
@@ -55,12 +55,7 @@ CI.Module.prototype._types.canvas_matrix.Controller.prototype = {
 		if(!(actions = this.module.definition.dataSend))	
 			return;
 		
-		$(this.module.getDomContent()).on('mousemove', 'canvas', function(e) {
-
-			for(var i in actions)
-				if(actions[i].event == "onPixelHover")
-					CI.API.blankSharedVar(actions[i].name);
-
+		$(this.module.getDomContent()).on('mousemove', 'canvas',
 			// Debounce the hover event
 			$.debounce(250, function(e) {
 				
@@ -74,11 +69,19 @@ CI.Module.prototype._types.canvas_matrix.Controller.prototype = {
 								value = keyed[1];
 						else if(actions[i].rel == "intersect")
 								value = keyed[2];
+
+
 						CI.API.setSharedVarFromJPath(actions[i].name, value, actions[i].jpath);
 					}
 				}
+			})).on('mousemove', 'canvas', function() {
+
+			for(var i in actions)
+				if(actions[i].event == "onPixelHover")
+					CI.API.blankSharedVar(actions[i].name);
+
 			});
-		});
+		
 		
 
 

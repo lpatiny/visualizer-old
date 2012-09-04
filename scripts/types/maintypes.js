@@ -16,6 +16,14 @@ CI.DataType.Structures = {
 	'mf': 'string',
 	'jcamp': "string",
 
+
+	'matrix': {
+
+		'type': 'object'
+
+	},
+
+
 	'chart': {
 
 		"type": "object",

@@ -52,9 +52,9 @@ CI.Module.prototype._types.display_value.View.prototype = {
 				view.fillWithVal(cfg.defaultvalue);
 		} else {
 			if(moduleValue !== undefined)
-				CI.DataType.toScreen(moduleValue, this.module, function(val) {
+				CI.DataType.toScreen(moduleValue, this.module).done(function(val) {
 					view.fillWithVal(val);
-				})
+				});
 		}
 	},
 	
