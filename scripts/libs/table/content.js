@@ -36,8 +36,11 @@ window[_namespaces['table']].Tables.Content.prototype = {
 			if(!this.doSearch(this.elements[i]))
 				continue;
 			j++;
-			if(j < (this.page - 1) * this.pagination || j >= this.page * this.pagination)
+
+			if(j <= (this.page - 1) * this.pagination || j >= this.page * this.pagination)
 				continue;
+
+
 			console.log('sdfsdfsdf');
 			html.push(this.buildElement(this.elements[i], 0, 0, this.elements.length == i + 1));
 		}
