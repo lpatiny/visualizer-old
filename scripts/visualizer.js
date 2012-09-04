@@ -381,8 +381,8 @@ CI.ConfigVisualizer = function() {
 
 
 	function configSharedVariable() {
-
-		$("<div />").dialog().biForm({}, function() {
+console.log(this);
+		$("<div />").dialog({ modal: true, width: '80%', title: 'Configure variable ' + this }).biForm({}, function() {
 
 			var inst = this;			
 			var section = new BI.Forms.Section('cfg', { multiple: false });
@@ -445,7 +445,7 @@ CI.ConfigVisualizer = function() {
 				}
 			};
 
-			this.fillJson(fill);
+	//		this.fillJson(fill);
 
 
 

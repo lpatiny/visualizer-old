@@ -12,11 +12,15 @@ CI.ConfMenuElement.prototype = {
 
 	render: function() {
 
+
 		var dom = $('<div class="ConfMenuElement">' + this.options.title + '</div>');
 		if(this.options.clickhandler)
 			dom.bind("click", this.options.clickhandler);
-		if(this.options.dblclickhandler)
-			dom.bind("dblclick", this.options.dblclickhandler);
+		if(this.options.dblclickhandler) {
+			var dblclickhandler = $.proxy(this.options.dblclickhandler, this.options.title);
+			console.log(dblclickhandler);
+			dom.bind("dblclick", dblclickhandler);
+		}
 		
 		this.dom = dom;
 		return this.dom;
