@@ -56,7 +56,7 @@ CI.Module = function(definition) {
 		
 		if(!(moduleConstruct && moduleConstruct.View && moduleConstruct.Controller && moduleConstruct.Model)) {
 			throw 'Module ' + moduleType + ' not fully implemented';
-			return 
+			return;
 		}
 		
 		//Initialises the MVC pattern for the module
@@ -100,7 +100,7 @@ CI.Module = function(definition) {
 		html += '</div>';
 		html += '<div class="ci-module-header-toolbar">';
 		html += '<ul>';
-		html += '<li class="ci-configure">Config</li>';
+		html += '<li class="ci-configure"></li>';
 		html += '<li class="ci-remove">X</li>';
 		html += '</ul>';
 		html += '</div>';

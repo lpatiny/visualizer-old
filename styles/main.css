@@ -325,3 +325,11 @@ div.ci-module-wrapper .ci-module-content {
 .canvas-container {
 	float: left;
 }
+
+
+div.ci-module-header-toolbar ul li.ci-configure {
+	background: url('./wheels.png');
+	width: 12px;
+	height: 12px;
+	margin-top: 2px;
+}
