@@ -40,11 +40,10 @@ CI.DataSource.prototype = {
 				return;
 			}
 
-			varVal.then(function(val) {
+			varVal.done(function(val) {
+
 				for(var i = 0; i < allSources.length; i++)
 					allSources[i].setData(val);
-			}, null, function(val) {
-					allSources[i].setProgress(val);
 			});
 		});
 	},
