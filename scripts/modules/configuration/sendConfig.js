@@ -3,9 +3,7 @@
 
 $(document).bind('configModule', function(event, module) {
 	
-	$.fancybox('<div id="cfgModule"></div>', { autoSize: false, width: 700, height: 1000 });
-	
-	$("#cfgModule").biForm({}, function() {
+	$('<div id="cfgModule"></div>').dialog({ modal: true, width: '80%', title: "Edit module preferences"}).biForm({}, function() {
 		
 		var inst = this;
 		
@@ -153,6 +151,8 @@ $(document).bind('configModule', function(event, module) {
 			
 			module.view.inDom();
 			module.updateView();
+
+			inst.getDom().dialog('close');
 		});
 		
 		
@@ -197,6 +197,8 @@ $(document).bind('configModule', function(event, module) {
 		
 		this.fillJson(fill);
 		
+
+		this.getDom().dialog('option', 'position', 'center');
 	});
 	
 	

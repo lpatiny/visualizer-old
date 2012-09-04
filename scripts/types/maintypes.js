@@ -731,6 +731,49 @@ CI.Type["mol2d"] = {
 };
 	
 
+
+
+
+CI.Type["mol3d"] = {		
+	
+	toScreen: function(def, molfile) {
+
+
+		var id = CI.Util.getNextUniqueId();
+		CI.Util.DOMDeferred.done(function() {
+
+			var mg = new ChemDoodle.MolGrabberCanvas3D(id, 600, 400);
+			mg.specs.projectionWidthHeightRatio_3D = 600 / 400;
+			mg.specs.set3DRepresentation('Stick');
+			mg.setSearchTerm('penicillin');
+			mg.handle = null;
+			mg.timeout = 15;
+			mg.startAnimation = ChemDoodle._AnimatorCanvas.prototype.startAnimation;
+			mg.stopAnimation = ChemDoodle._AnimatorCanvas.prototype.stopAnimation;
+			//mg.isRunning = ChemDoodle._AnimatorCanvas.prototype.isRunning;
+			mg.dblclick = ChemDoodle.RotatorCanvas.prototype.dblclick;
+			mg.nextFrame = function(delta){
+				var matrix = [];
+				mat4.identity(matrix);
+				var change = delta/1000;
+			        var increment = Math.PI/15;
+				mat4.rotate(matrix, increment*change, [ 1, 0, 0 ]);
+				mat4.rotate(matrix, increment*change, [ 0, 1, 0 ]);
+				mat4.rotate(matrix, increment*change, [ 0, 0, 1 ]);
+				mat4.multiply(this.rotationMatrix, matrix);
+			}
+			
+			mg.startAnimation();
+		});
+
+		def.resolve('<canvas id="' + id + '"></canvas>');
+	}
+};
+	
+
+
+
+
 CI.Type["jcamp"] = {
 		
 	toScreen: function(def, value) {
