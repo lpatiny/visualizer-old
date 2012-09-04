@@ -37,10 +37,10 @@ CI.Grid = {
 		var moduleSize = module.getSize();
 		
 		module.getDomWrapper().appendTo(CI.Grid._el).css({
-			top: modulePos.top * CI.Grid.definition.yHeight,
-			left: modulePos.left * CI.Grid.definition.xWidth,
-			width: moduleSize.width * CI.Grid.definition.xWidth,
-			height: moduleSize.height * CI.Grid.definition.yHeight
+			top: Math.round(modulePos.top) * CI.Grid.definition.yHeight,
+			left: Math.round(modulePos.left) * CI.Grid.definition.xWidth,
+			width: Math.round(moduleSize.width) * CI.Grid.definition.xWidth,
+			height: Math.round(moduleSize.height) * CI.Grid.definition.yHeight
 		});
 		
 		module.inDom();
