@@ -382,9 +382,9 @@ CI.ConfigVisualizer = function() {
 
 	function configSharedVariable(event, element) {
 
-		var title = element.getTitle();
+		var varname = element.getTitle();
 
-		$("<div />").dialog({ modal: true, width: '80%', title: 'Configure variable ' + title }).biForm({}, function() {
+		$("<div />").dialog({ modal: true, width: '80%', title: 'Configure variable ' + varname }).biForm({}, function() {
 
 			var inst = this;			
 			var section = new BI.Forms.Section('filters', { multiple: false });
@@ -420,7 +420,7 @@ CI.ConfigVisualizer = function() {
 
 				inst.getDom().dialog('close');
 
-				Entry.getConfiguration().variableFilters[title] = data;
+				Entry.getConfiguration().variableFilters[varname] = data;
 				Entry.save();
 			});
 			
@@ -433,8 +433,8 @@ CI.ConfigVisualizer = function() {
 			var config = Entry.getConfiguration();
 			var filters = config.variableFilters;
 
-			if(filters[title])
-				filters = filters[title];
+			if(filters[varname])
+				filters = filters[varname];
 			else
 				filters = [];
 

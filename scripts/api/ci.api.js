@@ -28,6 +28,8 @@ CI.API.setSharedVar = function(varName, varData) {
 
 	CI.sharedData[varName] = def;
 	def.resolve(varData);
+
+	console.log(varData);
 	$(document).trigger('sharedDataChanged', [varName, def]);
 }
 
@@ -63,7 +65,7 @@ CI.API.resendAllVars = function() {
 
 CI.API.setSharedVarFromJPath = function(name, value, jpath) {
 	
-	CI.DataType.getValueFromJPath(value, jpath, function(returned) {
+	CI.DataType.getValueFromJPath(value, jpath).done(function(returned) {
 		CI.API.setSharedVar(name, returned);
 	});
 }
