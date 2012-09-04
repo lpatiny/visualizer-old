@@ -80,7 +80,27 @@ CI.ConfigVisualizer = function() {
 	var addModuleElement = new CI.ConfMenuSupElement({ title: 'Add a module' });
 	for(var i in CI.Module.prototype._types) {
 		var moduleInfos = CI.Module.prototype._types[i].Controller.prototype.moduleInformations;
-		addModuleElement.addElement(new CI.ConfMenuElement({ title: moduleInfos.moduleName, dblclickhandler: function() { alert(1); }  }));
+		addModuleElement.addElement(new CI.ConfMenuElement({ title: moduleInfos.moduleName, key: i, dblclickhandler: function(event, element) { 
+
+				var module = {
+					type: element.get('key'),
+					title: "Untitled module",
+					position: {
+						left: 1,
+						right: 1	
+					},
+					
+					size: {
+						width: 30,
+						height: 30
+					}
+				};
+				
+				Entry.addModuleFromJSON(module, true);
+
+
+
+		 }  }));
 	}
 
 	html.append(addModuleElement.render());
@@ -155,31 +175,6 @@ CI.ConfigVisualizer = function() {
 	$("#ci-left").next().bind('click', function() {
 		$("#ci-left").toggle();	
 	});
-	
-	
-	$("#ci-addmodule").on('dblclick', 'div', function() {
-	
-		var moduleId = $(this).data('module');
-		
-		var module = {
-			type: moduleId,
-			title: "Untitled module",
-			position: {
-				left: 1,
-				right: 1	
-			},
-			
-			size: {
-				width: 30,
-				height: 30
-			}
-		};
-		
-		Entry.addModuleFromJSON(module, true);
-	});
-	
-	
-	
 	
 	
 	function configureEntryPoint() {

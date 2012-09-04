@@ -24,7 +24,11 @@ CI.ConfMenuElement.prototype = {
 		return this.dom;
 	},
 
-	getTitle: function() { return this.options.title }
+	getTitle: function() { return this.options.title },
+
+	get: function(param) {
+		return this.options[param] || false;
+	}
 
 }
 
