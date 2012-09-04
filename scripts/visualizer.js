@@ -380,9 +380,11 @@ CI.ConfigVisualizer = function() {
 	}
 
 
-	function configSharedVariable() {
-console.log(this);
-		$("<div />").dialog({ modal: true, width: '80%', title: 'Configure variable ' + this }).biForm({}, function() {
+	function configSharedVariable(event, element) {
+
+		var title = element.getTitle();
+
+		$("<div />").dialog({ modal: true, width: '80%', title: 'Configure variable ' + title }).biForm({}, function() {
 
 			var inst = this;			
 			var section = new BI.Forms.Section('cfg', { multiple: false });

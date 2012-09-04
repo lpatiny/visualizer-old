@@ -12,19 +12,20 @@ CI.ConfMenuElement.prototype = {
 
 	render: function() {
 
-
+		var that = this;
 		var dom = $('<div class="ConfMenuElement">' + this.options.title + '</div>');
 		if(this.options.clickhandler)
 			dom.bind("click", this.options.clickhandler);
 		if(this.options.dblclickhandler) {
-			var dblclickhandler = $.proxy(this.options.dblclickhandler, this.options.title);
-			console.log(dblclickhandler);
-			dom.bind("dblclick", dblclickhandler);
+			dom.bind("dblclick", function(e) { that.options.dblclickhandler(e, that) });
 		}
 		
 		this.dom = dom;
 		return this.dom;
-	}
+	},
+
+	getTitle: function() { return this.options.title }
+
 }
 
 CI.ConfMenuSupElement = function(options) {
@@ -38,6 +39,7 @@ CI.ConfMenuSupElement.prototype = {
 		title: null,
 		openedState: 1
 	},
+
 
 	addElement: function(el) {
 
