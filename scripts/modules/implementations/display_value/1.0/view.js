@@ -47,7 +47,7 @@ CI.Module.prototype._types.display_value.View.prototype = {
 		}
 		
 		if(!(moduleValue = this.module.getDataFromRel('value')) || ((moduleValue = moduleValue.getData()) === null)) {
-			
+		console.log(moduleValue);	
 			if(cfg.defaultvalue)
 				view.fillWithVal(cfg.defaultvalue);
 		} else {

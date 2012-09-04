@@ -416,12 +416,14 @@ CI.DataType._getValueFromJPath = function(element, jpath) {
 	var el = CI.DataType.getValueIfNeeded(element);
 	var type;
 	var jpathElement = jpath.shift();
+
 	if(jpathElement) {
 		el = el[jpathElement];
-		return CI.DataType.fetchElementIfNeeded(el).done(function(elChildren) {
-			CI.DataType._getValueFromJPath(elChildren, jpath);
+		return CI.DataType.fetchElementIfNeeded(el).pipe(function(elChildren) {
+			return CI.DataType._getValueFromJPath(elChildren, jpath);
 		});
 	} else {
+		console.log(element);
 		return $.Deferred().resolve(element);
 	}
 }

@@ -80,12 +80,9 @@ CI.Module.prototype._types.grid.View.prototype = {
 			Content.addElement(elements[i]);
 		Table.setContent(Content);
 		Table.init(view.dom);
-		
 
 		CI.Util.ResolveDOMDeferred();
-		
 	},
-	
 
 	buildElement: function(source, arrayToPush, jpaths, colorJPath) {
 		var jpath;
