@@ -137,7 +137,10 @@ CI.Module.prototype._types.grid.Controller.prototype = {
 		field.setTitle(new CI.Title('Columns number'));
 		
 		
-		var data = this.module.getDataFromRel('list').getData();
+		var data = this.module.getDataFromRel('list');
+		if(data)
+			data = data.getData();
+		
 		var jpaths = [];
 		
 		if(data != null) 
