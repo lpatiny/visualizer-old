@@ -780,6 +780,7 @@ CI.Type["jcamp"] = {
 
 		var id = CI.Util.getNextUniqueId();
 		CI.Util.DOMDeferred.done(function() {
+			
 				var spectra = new ChemDoodle.PerspectiveCanvas(id, '500', '500');
 				$("#" + id).data('spectra', spectra);
 				spectra.specs.plots_showYAxis = true;
@@ -787,6 +788,7 @@ CI.Type["jcamp"] = {
 
 				var jcampLoaded = ChemDoodle.readJCAMP(value.value);
 		  		spectra.loadSpectrum(jcampLoaded);
+
 		});
 
 		def.resolve('<canvas id="' + id + '"></canvas>');

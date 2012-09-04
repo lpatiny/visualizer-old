@@ -49,6 +49,7 @@ CI.Grid = {
 		module.getDomWrapper().resizable({
 			grid: [CI.Grid.definition.xWidth, CI.Grid.definition.yHeight],
 			resize: function() {
+console.log('has resized');
 				CI.Grid.moduleResize(module);
 				CI.Grid.checkDimensions();
 			},

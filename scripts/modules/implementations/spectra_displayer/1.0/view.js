@@ -60,9 +60,9 @@ CI.Module.prototype._types.spectra_displayer.View.prototype = {
 		CI.DataType.toScreen(moduleValue, view.module).done(function(val) {
 			view.dom.html(val);
 			CI.Util.ResolveDOMDeferred();
+			CI.Grid.moduleResize(view.module);			
 		});
 
-		CI.Grid.moduleResize(this.module);
 	},
 	
 	getDom: function() {
