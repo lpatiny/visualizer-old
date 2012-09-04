@@ -68,10 +68,14 @@ CI.API.setSharedVarFromJPath = function(name, value, jpath) {
 	});
 }
 
-
 CI.API.getSharedFilters = function(varName) {
-
-	return [];
-
-
+	var filters = Entry.getConfiguration().variableFilters;
+	var toReturn = [];
+	if(filters[varName]) {
+		var filters = filters[varName];
+		for(var i = 0; i < filters.length; i++)
+			if(CI.VariableFilters[filters[i]])
+				toReturn.push(CI.VariableFilters[filters[i]].process);
+	}
+	return toReturn;
 }

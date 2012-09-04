@@ -30,6 +30,10 @@ CI.EntryPoint = function(structure, data, options, onLoad) {
 		if(!structure.configuration)
 			structure.configuration = {};
 		
+		if(!structure.configuration.variableFilters)
+			structure.configuration.variableFilters = {};
+
+
 		if(structure.configuration.showMenuBarOnStart)
 			$("#ci-expand-left").trigger('click');
 			

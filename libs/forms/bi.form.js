@@ -52,6 +52,10 @@ BI.Forms.Form.prototype = {
 	
 		BI.Forms.Section.prototype.showControls(this);
 	},
+
+	getDom: function() {
+		return this.dom;
+	},
 	
 	buildHtml: function() {
 		var html = [];

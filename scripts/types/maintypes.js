@@ -463,7 +463,7 @@ CI.DataType.getJPathsFromStructure = function(structure, title, jpathspool, keys
 		
 		// Pretyped structures
 		// Like chemical: "chemical"
-		if(CI.DataType.Structures[structure]) {
+		if(typeof CI.DataType.Structures[structure] == "object") {
 			
 			CI.DataType.getJPathsFromStructure(CI.DataType.Structures[structure], title, jpathspool, keystr);
 			

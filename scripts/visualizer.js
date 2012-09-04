@@ -387,35 +387,40 @@ CI.ConfigVisualizer = function() {
 		$("<div />").dialog({ modal: true, width: '80%', title: 'Configure variable ' + title }).biForm({}, function() {
 
 			var inst = this;			
-			var section = new BI.Forms.Section('cfg', { multiple: false });
+			var section = new BI.Forms.Section('filters', { multiple: false });
 			this.addSection(section);
 			var title = new CI.Title();
-			title.setLabel('General configuration');
+			title.setLabel('Variable filters');
 			section.setTitle(title);
 			
 			var groupfield = new BI.Forms.GroupFields.List('general');
 			section.addFieldGroup(groupfield);
-			
+
+
+			var allOptions = [];			
+			for(var i in CI.VariableFilters) {
+				allOptions.push({ title: CI.VariableFilters[i].name, key: i });
+			}
+
+
 			var field = groupfield.addField({
-				type: 'Text',
-				name: 'title'
+				type: 'Combo',
+				name: 'filters',
+				multiple: true
 			});
-			field.setTitle(new CI.Title('Title'));
-			
+			field.setTitle(new CI.Title('Filter'));
+			field.implementation.setOptions(allOptions);
+
+
 			var save = new CI.Buttons.Button('Save', function() {
 				
 				inst.dom.trigger('stopEditing');
 				var value = inst.getValue();
-				var data = value.cfg[0].general[0];
-				
-				var config = Entry.getConfiguration();
-			
-				config.showMenuBarOnStart = data.menubar[0][0] == 'display';
-				config.showModuleHeaderOnHover = data.moduleheaders[0][0] == 'showonhover';
-				config.title = data.title[0];
-				config.moduleBackground = data.modulebg[0];
-				
-				Entry.setConfiguration(config);
+				var data = value.filters[0].general[0].filters;
+
+				inst.getDom().dialog('close');
+
+				Entry.getConfiguration().variableFilters[title] = data;
 				Entry.save();
 			});
 			
@@ -423,39 +428,32 @@ CI.ConfigVisualizer = function() {
 			this.addButtonZone().addButton(save);
 		
 
-
+		}, function() {
 
 			var config = Entry.getConfiguration();
-			
-			var title = config.title || 'Visualizer title';
-			var menubar = config.showMenuBarOnStart ? ['display'] : [false];
-			var moduleheader = config.showModuleHeaderOnHover ? ['showonhover'] : [false];
-			var modulebg = config.moduleBackground || '#ffffff';
-			
-			
-			var vars = { title: [title], menubar: [menubar], modulebg: [modulebg], moduleheaders: [moduleheader] };
-				
+			var filters = config.variableFilters;
+
+			if(filters[title])
+				filters = filters[title];
+			else
+				filters = [];
+
 			var fill = { 
 				sections: {
-					cfg: [
+					filters: [
 						{
 							groups: {
-								general: [vars]
+								general: [{
+									filters: filters
+								}]
 							}
 						}
 					]
 				}
 			};
 
-	//		this.fillJson(fill);
-
-
-
-
-
+			this.fillJson(fill);
 		});
-
-
 
 	}
 }
