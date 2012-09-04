@@ -17,18 +17,10 @@ CI.Module.prototype._types.canvas_matrix.Controller = function(module) {
 CI.Module.prototype._types.canvas_matrix.Controller.prototype = {
 	
 	
-	init: function() {
-		
-		var module = this.module;
-		var actions;
-		if(!(actions = this.module.definition.dataSend))	
-			return;
-		
-		
-		$(this.module.getDomContent()).on('mousemove', 'canvas', $.debounce(250, function(e) {
-		
+	getMatrixElementFromEvent: function() {
+
 			var moduleValue;
-			if(!(moduleValue = module.getDataFromRel('matrix')))
+			if(!(moduleValue = this.module.getDataFromRel('matrix')))
 				return;
 			
 			moduleValue = moduleValue.getData();
@@ -50,59 +42,68 @@ CI.Module.prototype._types.canvas_matrix.Controller.prototype = {
 			if (x < 0 || y < 0 || y > gridData.length || x > gridData[0].length)
 				return;
 			
-			var dataKeyed = gridData[x][y];
-			var value = false;
-			
-			for(var i in actions) {
-				
-				var j = i;
-				
-				if(actions[i].event == "onPixelHover") {
-					
+			return [xLabel[x], yLabel[y], gridData[x][y]];
+	}
 
-					var hashmap = undefined;
-					switch(actions[i].rel) {
-						case 'row':
-							//yLabel[y].id = x + ", " + y;
-							hashmap = yLabel[y];	
-						break;
-						
-						case 'col':
-							//yLabel[x].id = x + ", " + y;
-							hashmap = xLabel[x];
-						break;
-						
-						case 'intersect':
-							hashmap = undefined;
-							value = dataKeyed;
-						break;
+	init: function() {
+		
+		var module = this.module;
+		var controller = this;
+		var actions;
+
+		// Nothing to send ?
+		if(!(actions = this.module.definition.dataSend))	
+			return;
+		
+		$(this.module.getDomContent()).on('mousemove', 'canvas', function(e) {
+
+			for(var i in actions)
+				if(actions[i].event == "onPixelHover")
+					CI.API.blankSharedVar(actions[i].name);
+
+			// Debounce the hover event
+			$.debounce(250, function(e) {
+				
+				var keyed = controller.getMatrixElementFromEvent(e);
+				var value = false;
+				for(var i in actions) {
+					if(actions[i].event == "onPixelHover") {
+						if(actions[i].rel == "row")
+								value = keyed[0];
+						else if(actions[i].rel == "col")
+								value = keyed[1];
+						else if(actions[i].rel == "intersect")
+								value = keyed[2];
+						CI.API.setSharedVarFromJPath(actions[i].name, value, actions[i].jpath);
 					}
-					
-					(function(h, jpath, name, value, hashmap) {
-						
-						if(hashmap !== undefined) {
-							var data = CI.DataType.getValueFromJPath(hashmap, jpath, function(value) {
-								CI.API.setSharedVar(name, value);
-							});
-							
-						} else if(value !== undefined) {
-							var data = CI.DataType.getValueFromJPath(value, jpath, function(value) {
-								CI.API.setSharedVar(name, value);
-							});
-						}
-						
-						
-					}) (j, actions[j].jpath, actions[j].name, value, hashmap);
+				}
+			});
+		});
+		
+
+
+		$(this.module.getDomContent()).on('mousedown', 'canvas', function(e) {
+
+			// No need to blank the var here
+			// No event debouncing
+			var keyed = controller.getMatrixElementFromEvent(e);
+			var value = false;
+			for(var i in actions) {
+				if(actions[i].event == "onPixelHover") {
+					if(actions[i].rel == "row")
+							value = keyed[0];
+					else if(actions[i].rel == "col")
+							value = keyed[1];
+					else if(actions[i].rel == "intersect")
+							value = keyed[2];
+					CI.API.setSharedVarFromJPath(actions[i].name, value, actions[i].jpath);
 				}
 			}
-		}));
-			
-		if(actions.onPixelClick) {
-		}
-		var view = this.module.view;
-		// do something if you want !
+		});
 	},
 	
+
+
 	configurationSend: {
 
 		events: {
@@ -195,28 +196,13 @@ CI.Module.prototype._types.canvas_matrix.Controller.prototype = {
 		
 	},
 	
-	
 	doSaveConfiguration: function(confSection) {
-		
-		var group = confSection[0].colors[0];
-		
+		var group = confSection[0].colors[0];		
 		var colors = [];
 		for(var i = 0; i < group.length; i++)
 			colors.push(group[i].color);
-		
+	
 		this.module.getConfiguration().colors = colors;
 		this.module.getConfiguration().highContrast = confSection[0].opts[0].highcontrast[0][0];
-		
-		/*var coltitle = group.colnumber;
-		var coljpath = group.valjPath;
-		
-		
-		this.module.definition.configuration = {
-			colnumber: colnumber,
-			valjpath: valjpath,
-			colorjpath: colorjpath
-		};*/
 	}
-	
-
 }

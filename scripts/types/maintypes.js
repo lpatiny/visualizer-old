@@ -4,17 +4,17 @@ CI.DataType = {};
 
 CI.DataType.Structures = {
 	
-	'object': { "type": "object" },
-	'mol2D': { "type": "string" },
-	'gif': { "type": "string" },
-	'picture': { "type": "string" },
-	'string': { "type": "string" },
-	'gif': { "type": "string" },
-	'jpg': { "type": "string" },
-	'png': { "type": "string" },
-	'number': { "type": "number" },
-	'mf': { "type": 'string' },
-	'jcamp': { "type": "string" },
+	'object': "object",
+	'mol2D': "string",
+	'gif': "string" ,
+	'picture': "string",
+	'string': "string",
+	'gif': "string",
+	'jpg': "string",
+	'png': "string",
+	'number': "number",
+	'mf': 'string',
+	'jcamp': "string",
 
 	'chart': {
 
@@ -362,15 +362,27 @@ CI.DataType.fetchElementIfNeeded = function(element) {
 		
 		ajaxType = typeof CI.DataType.Structures[type] == "object" ? 'json' : 'text';
 		
-		return $.ajax({
+		return $.Deferred(function(dfd) {
+
+			$.ajax({
 			url: element.url,
 			dataType: ajaxType,
 			type: "get",
 			timeout: 120000,
-			success: function(data) {
+
+			success: function(data, text, jqxhr) {
 				element.value = data;
+				dfd.resolve(element);
+			},
+
+			complete: function() {
+
+			},
+
+			error: function() {
+
 			}
-		}).promise();
+		})}).promise();
 		
 	} else {
 		def = $.Deferred()
@@ -396,17 +408,14 @@ CI.DataType._getValueFromJPath = function(element, jpath) {
 	var el = CI.DataType.getValueIfNeeded(element);
 	var type;
 	var jpathElement = jpath.shift();
-
 	if(jpathElement) {
-
 		el = el[jpathElement];
-		return CI.DataType.fetchElementIfNeeded(el).pipe(function(elChildren) {
-			return CI.DataType._getValueFromJPath(elChildren, jpath);
+		return CI.DataType.fetchElementIfNeeded(el).done(function(elChildren) {
+			CI.DataType._getValueFromJPath(elChildren, jpath);
 		});
-
-	} else
+	} else {
 		return $.Deferred().resolve(element);
-	
+	}
 }
 
 
@@ -690,24 +699,24 @@ CI.Type["mol2d"] = {
 	
 	toScreen: function(def, molfile) {
 
-		var mol = unescape(dom.data('value'));
-		
 
+		var id = CI.Util.getNextUniqueId();
+		CI.Util.DOMDeferred.done(function() {
+			var canvas = new ChemDoodle.ViewerCanvas(id, 100, 100);
+			canvas.specs.backgroundColor = "transparent";
+			canvas.specs.bonds_width_2D = .6;
+			canvas.specs.bonds_saturationWidth_2D = .18;
+			canvas.specs.bonds_hashSpacing_2D = 2.5;
+			canvas.specs.atoms_font_size_2D = 10;
+			canvas.specs.atoms_font_families_2D = ['Helvetica', 'Arial', 'sans-serif'];
+			canvas.specs.atoms_displayTerminalCarbonLabels_2D = true;
 
-		dom.attr('id', 'mol2d_' + (++CI.dataType._mol2did));
-		
-		var canvas = new ChemDoodle.ViewerCanvas('mol2d_' + (CI.dataType._mol2did), 100, 100);
-		canvas.specs.backgroundColor = "transparent";
-		canvas.specs.bonds_width_2D = .6;
-		canvas.specs.bonds_saturationWidth_2D = .18;
-		canvas.specs.bonds_hashSpacing_2D = 2.5;
-		canvas.specs.atoms_font_size_2D = 10;
-		canvas.specs.atoms_font_families_2D = ['Helvetica', 'Arial', 'sans-serif'];
-		canvas.specs.atoms_displayTerminalCarbonLabels_2D = true;
-		
-		var molLoaded = ChemDoodle.readMOL(mol);
-		molLoaded.scaleToAverageBondLength(14.4);
-		canvas.loadMolecule(molLoaded);
+			var molLoaded = ChemDoodle.readMOL(molfile);
+			molLoaded.scaleToAverageBondLength(14.4);
+			canvas.loadMolecule(molLoaded);
+		});
+
+		def.resolve('<canvas id="' + id + '"></canvas>');
 	}
 };
 	
@@ -716,18 +725,18 @@ CI.Type["jcamp"] = {
 		
 	toScreen: function(def, value) {
 
-		var id = 'jcamp_' + (++CI.DataType._jcampid);
-
+		var id = CI.Util.getNextUniqueId();
 		CI.Util.DOMDeferred.done(function() {
 				var spectra = new ChemDoodle.PerspectiveCanvas(id, '500', '500');
 				$("#" + id).data('spectra', spectra);
 				spectra.specs.plots_showYAxis = true;
 				spectra.specs.plots_flipXAxis = false;
-				var jcampLoaded = ChemDoodle.readJCAMP(value);
+
+				var jcampLoaded = ChemDoodle.readJCAMP(value.value);
 		  		spectra.loadSpectrum(jcampLoaded);
 		});
 
-		def.resolve('<canvas data-async-type="jcamp" id="' + id + '"></canvas>');
+		def.resolve('<canvas id="' + id + '"></canvas>');
 	}
 };
 
@@ -746,10 +755,6 @@ CI.Type["chart"] = {
 		
 	}
 };
-
-CI.DataType._jcampid = 0;
-CI.DataType._chartid = 0;
-CI.DataType._asyncLoading = 0;
 
 CI.Type.gif = CI.Type.picture;
 CI.Type.jpeg = CI.Type.picture;

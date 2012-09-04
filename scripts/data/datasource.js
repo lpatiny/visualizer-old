@@ -28,40 +28,60 @@ CI.DataSource.prototype = {
 	_bindEvent: function() {
 		
 		$(document).bind('sharedDataChanged', function(event, varName, varVal) {
+
+			if(varVal == undefined) {
+				for(var i = 0; i < allSources.length; i++)
+					allSources[i].blank();
+				return;
+			}
+
 			var allSources = CI.DataSource.prototype._dataSources[varName];
+
 			if(typeof allSources == "undefined")
 				return;
 
-			for(var i = 0; i < allSources.length; i++)
-				allSources[i].setData(varVal);
+			varVal.then(function(val) {
+				for(var i = 0; i < allSources.length; i++)
+					allSources[i].setData(val);
+			}, null, function(val) {
+					allSources[i].setProgress(val);
+			});
 		});
 	},
 	
 	_dataSources: [],
 	
+	blank: function() {
+		this.data = null;
+		if(this.module.view.blank)
+			this.module.view.blank();
+	}
+
 	setData: function(data) {
-		
 		if(this.buildData(data) !== false)
 			return this.module.model.onDataChange(this.sourceName);
-
-		
 		return false;
 	},
-	
+
+	setProgress: function(data) {
+		if(this.module.view.onProgress)
+			this.module.view.onProgress();
+	},
+
 	buildData: function(data) {
 		
 		var dataRebuilt = {};
-		
+
 		if(!(this.sourceAccepts.type instanceof Array))
 			this.sourceAccepts.type = [this.sourceAccepts.type];
-	
+		
 		var dataType = CI.DataType.getType(data);
+
 		var mustRebuild = false;
 
 		for(var i = 0; i < this.sourceAccepts.type.length; i++) {
-			console.log(this.sourceAccepts.type[i]);// == dataType
+			
 			if(this.sourceAccepts.type[i] == dataType) {
-				console.log('sdfsdf');
 				return this.data = data;
 			}
 /*			

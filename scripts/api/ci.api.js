@@ -13,8 +13,21 @@
  */
 CI.API = {};
 
+CI.API.blankSharedVar = function(varName) {
+	CI.sharedData[varName] = null;
+	$(document).trigger('sharedDataChanged', [varName]);
+}
+
+// Stores a deferred
 CI.API.setSharedVar = function(varName, varData) {
-	CI.sharedData[varName] = varData;
+	
+	var filter = CI.API.getSharedFilters(varName);
+	var def = $.Deferred();
+	for(var i = 0, l = filter.length; i < l; i++)
+		def.pipe(filter[i]);
+
+	CI.sharedData[varName] = def;
+	def.resolve(varData);
 	$(document).trigger('sharedDataChanged', [varName, varData]);
 }
 
@@ -32,7 +45,7 @@ CI.API.getModulesFromSharedVar = function(varName) {
 	
 		for(var j = 0; j < source.length; j++) {
 			if(source[j].name == varName) {
-				allModules[i] = CI.modules[i]
+				allModules[i] = CI.modules[i];
 				break;
 			}
 		}
@@ -53,4 +66,12 @@ CI.API.setSharedVarFromJPath = function(name, value, jpath) {
 	CI.DataType.getValueFromJPath(value, jpath, function(returned) {
 		CI.API.setSharedVar(name, returned);
 	});
+}
+
+
+CI.API.getSharedFilters = function(varName) {
+
+
+
+
 }

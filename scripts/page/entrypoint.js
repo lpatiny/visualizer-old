@@ -99,7 +99,7 @@ CI.EntryPoint = function(structure, data, options, onLoad) {
 CI.EntryPoint.prototype = {
 
 	loaded: function(data, doNotCallback) {
-		console.log(data);
+		
 		this.data = data;
 	
 		if(this.entryData && this.entryData.variables) {

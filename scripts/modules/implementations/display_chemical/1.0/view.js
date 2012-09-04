@@ -27,6 +27,18 @@ CI.Module.prototype._types.display_chemical.View.prototype = {
 		
 	
 	},
+
+	inDom: function() {
+
+	},
+
+	blank: function() {
+		this.dom.html('');
+	},
+
+	onProgress: function() {
+		this.dom.html("Loading in progress");
+	},
 	
 	update: function() {
 

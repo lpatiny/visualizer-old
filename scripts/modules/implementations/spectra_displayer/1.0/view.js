@@ -35,28 +35,34 @@ CI.Module.prototype._types.spectra_displayer.View.prototype = {
 			data.resize(width, height);
 	},
 	
+	onProgress: function() {
+		this.dom.html("Progress. Please wait...");
+	},
+
+	blank: function() {
+		this.dom.html("");
+	},
+
 	update: function() {
-		
+			
 		var moduleValue;
 		var view = this;
 		
+		// Load the jcamp from the rel
 		if(!(moduleValue = this.module.getDataFromRel('jcamp')))
 			return;
-			
+
+		// Get the data associated to the datasource
 		moduleValue = moduleValue.getData();
-		
-		if(moduleValue == CI.DataType._PENDING) {
-			view.dom.html("Loading spectra...");
-			return;
-		}
-	
-		CI.DataType.toScreen(moduleValue, view.module, function(val) {
+
+		// Display the jcamp to the screen using the value and the module ref
+		// Check callee...
+		CI.DataType.toScreen(moduleValue, view.module).done(function(val) {
 			view.dom.html(val);
-			$(document).trigger('checkAsyncLoad', [ view.dom ]);
+			CI.Util.ResolveDOMDeferred();
 		});
-		
+
 		CI.Grid.moduleResize(this.module);
-			
 	},
 	
 	getDom: function() {

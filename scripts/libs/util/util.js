@@ -29,3 +29,9 @@ window[_namespaces['util']].Util.maskIframes = function() {
 window[_namespaces['util']].Util.unmaskIframes = function() {
 	$(".iframemask").remove();
 }
+
+
+window[_namespaces['util']].Util.uniqueid = 0;
+window[_namespaces['util']].Util.getNextUniqueId = function() {
+	return 'uniqid_' + (++window[_namespaces['util']].Util.uniqueid);
+}
