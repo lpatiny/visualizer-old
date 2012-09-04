@@ -1,7 +1,5 @@
 CI.ConfMenuElement = function(options) {
-
 	this.options = $.extend({}, this.defaults, options);
-	console.log(this.options);
 }
 
 CI.ConfMenuElement.prototype = {
@@ -17,10 +15,9 @@ CI.ConfMenuElement.prototype = {
 		var dom = $('<div class="ConfMenuElement">' + this.options.title + '</div>');
 		if(this.options.clickhandler)
 			dom.bind("click", this.options.clickhandler);
-
 		if(this.options.dblclickhandler)
-			dom.bind("dblclick", this.options.bblclickhandler);
-
+			dom.bind("dblclick", this.options.dblclickhandler);
+		
 		this.dom = dom;
 		return this.dom;
 	}
@@ -64,42 +61,3 @@ CI.ConfMenuSupElement.prototype = {
 	}
 }
 
-/*
-CI.ConfElement.prototype = {
-	buildWith: ["dblclickable", "contextmenu", "clickable", "hoverable"];	
-}
-
-
-CI.Util.objectBuilder = function() {}
-
-$.extend(CI.ConfElement.prototype, CI.Util.objectBuilder);
-
-
-CI.Util.objectBuilder.prototype = {
-
-	build: function() {
-
-		var allbuild = this.buildWidth;
-		if(!all) return;
-
-		for(var i in allBuild) {
-			CI.Util.buildable[allBuild[i]].setup();
-		}
-	}
-}
-
-
-CI.Util.dblClickable.prototype = {
-
-	dblClickableSet: function() {
-
-		this.getDom().bind('dblclick')
-		this.confirguration.dblclickable.handler
-
-	}
-
-
-
-
-
-}*/

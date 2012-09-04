@@ -73,7 +73,7 @@ CI.ConfigVisualizer = function() {
 
 	var menuvars = new CI.ConfMenuSupElement({ title: 'Shared Variables' });
 	for(var i in allSharedVars)
-		menuvars.addElement(new CI.ConfMenuElement({ title: i }));
+		menuvars.addElement(new CI.ConfMenuElement({ title: i, dblclickhandler: configSharedVariable }));
 
 	html.append(menuvars.render());
 
@@ -374,11 +374,88 @@ CI.ConfigVisualizer = function() {
 					]
 				}
 			};
-			console.log(fill);
+
 			this.fillJson(fill);
 		});
 	}
 
+
+	function configSharedVariable() {
+
+		$("<div />").dialog().biForm({}, function() {
+
+			var inst = this;			
+			var section = new BI.Forms.Section('cfg', { multiple: false });
+			this.addSection(section);
+			var title = new CI.Title();
+			title.setLabel('General configuration');
+			section.setTitle(title);
+			
+			var groupfield = new BI.Forms.GroupFields.List('general');
+			section.addFieldGroup(groupfield);
+			
+			var field = groupfield.addField({
+				type: 'Text',
+				name: 'title'
+			});
+			field.setTitle(new CI.Title('Title'));
+			
+			var save = new CI.Buttons.Button('Save', function() {
+				
+				inst.dom.trigger('stopEditing');
+				var value = inst.getValue();
+				var data = value.cfg[0].general[0];
+				
+				var config = Entry.getConfiguration();
+			
+				config.showMenuBarOnStart = data.menubar[0][0] == 'display';
+				config.showModuleHeaderOnHover = data.moduleheaders[0][0] == 'showonhover';
+				config.title = data.title[0];
+				config.moduleBackground = data.modulebg[0];
+				
+				Entry.setConfiguration(config);
+				Entry.save();
+			});
+			
+			save.setColor('blue');
+			this.addButtonZone().addButton(save);
+		
+
+
+
+			var config = Entry.getConfiguration();
+			
+			var title = config.title || 'Visualizer title';
+			var menubar = config.showMenuBarOnStart ? ['display'] : [false];
+			var moduleheader = config.showModuleHeaderOnHover ? ['showonhover'] : [false];
+			var modulebg = config.moduleBackground || '#ffffff';
+			
+			
+			var vars = { title: [title], menubar: [menubar], modulebg: [modulebg], moduleheaders: [moduleheader] };
+				
+			var fill = { 
+				sections: {
+					cfg: [
+						{
+							groups: {
+								general: [vars]
+							}
+						}
+					]
+				}
+			};
+
+			this.fillJson(fill);
+
+
+
+
+
+		});
+
+
+
+	}
 }
 
 
