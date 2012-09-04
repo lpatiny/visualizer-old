@@ -51,6 +51,8 @@ CI.Module.prototype._types.display_value.View.prototype = {
 			if(cfg.defaultvalue)
 				view.fillWithVal(cfg.defaultvalue);
 		} else {
+
+
 			if(moduleValue !== undefined)
 				CI.DataType.toScreen(moduleValue, this.module).done(function(val) {
 					view.fillWithVal(val);
@@ -70,6 +72,7 @@ CI.Module.prototype._types.display_value.View.prototype = {
 		}).html(val);
 	
 		this.dom.html(div);
+		CI.Util.ResolveDOMDeferred();
 	},
 	
 	getDom: function() {

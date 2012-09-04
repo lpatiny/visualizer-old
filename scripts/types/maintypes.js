@@ -5,7 +5,7 @@ CI.DataType = {};
 CI.DataType.Structures = {
 	
 	'object': "object",
-	'mol2D': "string",
+	'mol2d': "string",
 	'gif': "string" ,
 	'picture': "string",
 	'string': "string",
@@ -719,7 +719,7 @@ CI.Type["mol2d"] = {
 			canvas.specs.atoms_font_families_2D = ['Helvetica', 'Arial', 'sans-serif'];
 			canvas.specs.atoms_displayTerminalCarbonLabels_2D = true;
 
-			var molLoaded = ChemDoodle.readMOL(molfile);
+			var molLoaded = ChemDoodle.readMOL(molfile.value);
 			molLoaded.scaleToAverageBondLength(14.4);
 			canvas.loadMolecule(molLoaded);
 		});
