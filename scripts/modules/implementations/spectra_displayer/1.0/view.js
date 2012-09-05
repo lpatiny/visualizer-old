@@ -18,9 +18,8 @@ CI.Module.prototype._types.spectra_displayer.View.prototype = {
 	
 	init: function() {
 		
-		var html = [];
-		html.push('<div class="ci-canvas-jcamp"></div>');
-		this.dom = $(html.join(''));
+		
+		this.dom = $('<canvas id="' + CI.Util.getNextUniqueId() + '"></canvas>');
 		this.module.getDomContent().html(this.dom);
 	},
 	
@@ -56,8 +55,8 @@ CI.Module.prototype._types.spectra_displayer.View.prototype = {
 		moduleValue = moduleValue.getData();
 
 		// Display the jcamp to the screen using the value and the module ref
-		// Check callee...
-		CI.DataType.toScreen(moduleValue, view.module).done(function(val) {
+		
+		CI.DataType.toScreen(moduleValue, view.module, this.dom).done(function(val) {
 			view.dom.html(val);
 			CI.Util.ResolveDOMDeferred(view.module.getDomContent());
 			CI.Grid.moduleResize(view.module);			

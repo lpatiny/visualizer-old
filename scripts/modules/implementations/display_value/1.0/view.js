@@ -5,10 +5,6 @@
  * Copyright 2012 Norman Pellet - norman.pellet@epfl.ch
  * Dual licensed under the MIT or GPL Version 2 licenses.
  */
-
-
-
- 
  
 if(typeof CI.Module.prototype._types.display_value == 'undefined')
 	CI.Module.prototype._types.display_value = {};
@@ -24,10 +20,7 @@ CI.Module.prototype._types.display_value.View.prototype = {
 		html += '<div></div>';
 		this.dom = $(html).css('display', 'table').css('height', '100%').css('width', '100%');
 		this.module.getDomContent().html(this.dom);
-		/*var cfg = this.module.getConfiguration();
-		if(cfg.defaultvalue)
-			this.fillWithVal(cfg.defaultvalue);*/
-			
+		
 		this.update();
 	},
 	
@@ -43,10 +36,8 @@ CI.Module.prototype._types.display_value.View.prototype = {
 		var view = this;
 		var cfg = this.module.getConfiguration();
 		
-
 		if(moduleColor = this.module.getDataFromRel('color')) {
 			color = moduleColor.getData();
-			console.log(this.module.getDataFromRel('color').getData());
 			view.module.getDomContent().css('backgroundColor', color);
 		}
 		
@@ -54,8 +45,8 @@ CI.Module.prototype._types.display_value.View.prototype = {
 			
 			if(cfg.defaultvalue)
 				view.fillWithVal(cfg.defaultvalue);
-		} else {
 
+		} else {
 
 			if(moduleValue !== undefined)
 				CI.DataType.toScreen(moduleValue, this.module).done(function(val) {
@@ -78,8 +69,10 @@ CI.Module.prototype._types.display_value.View.prototype = {
 			width: '100%',
 			height: '100%'
 		}).html(val);
+
 		this.dom.html(div);
 		CI.Util.ResolveDOMDeferred();
+
 	},
 	
 	getDom: function() {

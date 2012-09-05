@@ -491,7 +491,6 @@ CI.DataType.getJPathsFromStructure = function(structure, title, jpathspool, keys
 	
 		}
 	}
-	
 }
 
 
@@ -645,26 +644,26 @@ CI.DataType.asyncToScreenHtml = function(element, box, jpath) {
 
 
 CI.DataType._toScreen = function(element, box) {
-
+	var slice = Array.prototype.slice;
+	var newargs = slice.call(arguments, 2);
 	var dif = $.Deferred();
-	CI.DataType.fetchElementIfNeeded(element).done(function(data) { CI.DataType._valueToScreen(dif, data, box); });
+
+	CI.DataType.fetchElementIfNeeded(element).done(function(data) { CI.DataType._valueToScreen(dif, data, box, newargs); });
 	return dif.promise();
 }
 
 CI.DataType.toScreen = CI.DataType._toScreen;
-CI.DataType._valueToScreen = function(def, data, box) {
+CI.DataType._valueToScreen = function(def, data, box, args) {
 
 	var repoFuncs = box.view.typeToScreen;
-
 	var type = CI.DataType.getType(data);
-
 	CI.DataType.getValueIfNeeded(data);
 
 	if(typeof repoFuncs[type] == 'function')
-		return repoFuncs[type].call(box.view, def, data);
+		return repoFuncs[type].call(box.view, def, data, args);
 	
 	if(CI.Type[type] && typeof CI.Type[type].toScreen == 'function')
-		return CI.Type[type].toScreen(def, data);
+		return CI.Type[type].toScreen(def, data, args);
 }
 
 CI.Type = {};
@@ -781,25 +780,28 @@ CI.Type["mol3d"] = {
 
 
 CI.Type["jcamp"] = {
+
+	doFromDom: function(dom, value) {
+
+			if(dom.length == 0)
+				return;
+
+			var spectra = new ChemDoodle.PerspectiveCanvas(dom.attr('id'), dom.parent().width(), dom.parent().height());
+			dom.data('spectra', spectra);
+			spectra.specs.plots_showYAxis = true;
+			spectra.specs.plots_flipXAxis = false;
+
+			var jcampLoaded = ChemDoodle.readJCAMP(value.value);
+	  		spectra.loadSpectrum(jcampLoaded);
+	},
+
+	toScreen: function(def, value, args) {
 		
-	toScreen: function(def, value) {
+		if(args[0])
+			return CI.Type.jcamp.doFromDom(args[0], value);
 
 		var id = CI.Util.getNextUniqueId();
-		CI.Util.DOMDeferred.progress(function(dom) {
-			
-				if($("#" + id, dom).length == 0)
-					return;
-
-				var spectra = new ChemDoodle.PerspectiveCanvas(id, '500', '500');
-				$("#" + id).data('spectra', spectra);
-				spectra.specs.plots_showYAxis = true;
-				spectra.specs.plots_flipXAxis = false;
-
-				var jcampLoaded = ChemDoodle.readJCAMP(value.value);
-		  		spectra.loadSpectrum(jcampLoaded);
-
-		});
-
+		CI.Util.DOMDeferred.progress(function(dom) { CI.Type.jcamp.doFromDom($("#" + id, dom), value); });
 		def.resolve('<canvas id="' + id + '"></canvas>');
 	}
 };
