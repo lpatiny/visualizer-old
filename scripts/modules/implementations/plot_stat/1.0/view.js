@@ -96,7 +96,7 @@ CI.Module.prototype._types.plot_stat.View.prototype = {
 							val = val.value;
 						else if(typeof val == "object")
 							val = null;
-						
+
 						data[j + 1].push(val);	
 					}
 				}
@@ -108,8 +108,12 @@ CI.Module.prototype._types.plot_stat.View.prototype = {
 
 				var chartId = 'chart_' + (++CI.DataType._chartid);
 
-				CI.Util.DOMDeferred.done(function() {
+				CI.Util.DOMDeferred.progress(function(dom) {
 
+
+					if($("#" + chartId, dom).length == 0)
+							return;
+						
 					var dom = $("#" + chartId).get(0);
 
 					switch(cfg.charttype) {
