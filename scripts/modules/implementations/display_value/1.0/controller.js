@@ -138,7 +138,17 @@ CI.Module.prototype._types.display_value.Controller.prototype = {
 			{title: 'Center', key: 'center'},
 			{title: 'Right', key: 'right'}
 		]);
-		
+
+		var field = groupfield.addField({
+			type: 'Combo',
+			name: 'valign'
+		});
+		field.setTitle(new CI.Title('Vertical align'));
+		field.implementation.setOptions([
+			{title: 'Top', key: 'top'},
+			{title: 'Middle', key: 'middle'},
+			{title: 'Bottom', key: 'bottom'}
+		]);
 		
 		return true;
 	},
@@ -151,6 +161,7 @@ CI.Module.prototype._types.display_value.Controller.prototype = {
 		var font = this.module.getConfiguration().font || "arial";
 		var fontsize = this.module.getConfiguration().fontsize || "";
 		var align = this.module.getConfiguration().align || "left";
+		var valign = this.module.getConfiguration().valign || "top";
 	
 		return {
 			module: [{
@@ -159,7 +170,8 @@ CI.Module.prototype._types.display_value.Controller.prototype = {
 			//	bcolor: [bcolor],
 				font: [font],
 				fsize: [fontsize],
-				align: [align]
+				align: [align],
+				valign: [valign]
 			}]
 		}
 	},
@@ -174,6 +186,7 @@ CI.Module.prototype._types.display_value.Controller.prototype = {
 		var font = group.font[0];
 		var fsize = group.fsize[0];
 		var align = group.align[0];
+		var valign = group.valign[0];
 		var defaultvalue = group.defaultvalue[0];
 		
 		this.module.definition.configuration = {
@@ -182,6 +195,7 @@ CI.Module.prototype._types.display_value.Controller.prototype = {
 			font: font,
 			fontsize: fsize,
 			align: align,
+			valign: valign,
 			defaultvalue: defaultvalue
 		};
 	}

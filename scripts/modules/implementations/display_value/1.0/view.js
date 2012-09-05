@@ -22,7 +22,7 @@ CI.Module.prototype._types.display_value.View.prototype = {
 	init: function() {	
 		var html = "";
 		html += '<div></div>';
-		this.dom = $(html);
+		this.dom = $(html).css('display', 'table').css('height', '100%').css('width', '100%');
 		this.module.getDomContent().html(this.dom);
 		/*var cfg = this.module.getConfiguration();
 		if(cfg.defaultvalue)
@@ -35,6 +35,8 @@ CI.Module.prototype._types.display_value.View.prototype = {
 		
 	},
 	
+	inDom: function() {},
+
 	update: function() {
 		
 		var moduleValue;
@@ -70,9 +72,12 @@ CI.Module.prototype._types.display_value.View.prototype = {
 			fontFamily: cfg.font || 'Arial',
 			fontSize: cfg.fontsize || '10pt',
 			color: cfg.frontcolor || '#000000',
-			textAlign: cfg.align || 'left'
+			display: 'table-cell',
+			'vertical-align': cfg.valign || 'top',
+			textAlign: cfg.align || 'center',
+			width: '100%',
+			height: '100%'
 		}).html(val);
-	
 		this.dom.html(div);
 		CI.Util.ResolveDOMDeferred();
 	},
