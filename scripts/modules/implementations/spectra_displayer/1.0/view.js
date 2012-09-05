@@ -59,7 +59,7 @@ CI.Module.prototype._types.spectra_displayer.View.prototype = {
 		// Check callee...
 		CI.DataType.toScreen(moduleValue, view.module).done(function(val) {
 			view.dom.html(val);
-			CI.Util.ResolveDOMDeferred();
+			CI.Util.ResolveDOMDeferred(view.module.getDomContent());
 			CI.Grid.moduleResize(view.module);			
 		});
 
