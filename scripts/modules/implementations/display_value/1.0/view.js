@@ -41,13 +41,15 @@ CI.Module.prototype._types.display_value.View.prototype = {
 		var view = this;
 		var cfg = this.module.getConfiguration();
 		
+
 		if(moduleColor = this.module.getDataFromRel('color')) {
 			color = moduleColor.getData();
+			console.log(this.module.getDataFromRel('color').getData());
 			view.module.getDomContent().css('backgroundColor', color);
 		}
 		
 		if(!(moduleValue = this.module.getDataFromRel('value')) || ((moduleValue = moduleValue.getData()) === null)) {
-		console.log(moduleValue);	
+			
 			if(cfg.defaultvalue)
 				view.fillWithVal(cfg.defaultvalue);
 		} else {

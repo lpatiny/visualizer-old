@@ -76,7 +76,7 @@ CI.VariableFilters = {
 			}
 
 			dfd = $.Deferred();
-			return dfd.resolve(rgbToHex(255 - value * 255, value * 255, 0));
+			return dfd.resolve(rgbToHex(Math.round(255 - value * 255), Math.round(value * 255), 0));
 		}
 	}
 }
