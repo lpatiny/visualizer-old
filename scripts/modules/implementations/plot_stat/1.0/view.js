@@ -56,7 +56,7 @@ CI.Module.prototype._types.plot_stat.View.prototype = {
 	
 	
 	drawChart: function() {
-		
+
 		this.chartOptions.width = this.module.domContent.width();
 		this.chartOptions.height = this.module.domContent.height();
 		this.chart
@@ -108,12 +108,23 @@ CI.Module.prototype._types.plot_stat.View.prototype = {
 
 				var chartId = 'chart_' + (++CI.DataType._chartid);
 
+
+				view.chartOptions = {
+				          title: moduleValue.title,
+				          hAxis: {title: moduleValue.xAxis.label, minValue: moduleValue.xAxis.minValue, maxValue: moduleValue.xAxis.maxValue},
+				          vAxis: {title: moduleValue.yAxis.label},
+				          legend: 'none',
+				          pointSize: cfg.pointsize || 7,
+				          lineWidth: cfg.linewidth || 0
+				       };
+			       
+			       
 				CI.Util.DOMDeferred.progress(function(dom) {
 
 
 					if($("#" + chartId, dom).length == 0)
 							return;
-						
+
 					var dom = $("#" + chartId).get(0);
 
 					switch(cfg.charttype) {
@@ -142,15 +153,6 @@ CI.Module.prototype._types.plot_stat.View.prototype = {
 
 				deferred.resolve('<div id="' + chartId + '"></div>');
 
-				view.chartOptions = {
-				          title: moduleValue.title,
-				          hAxis: {title: moduleValue.xAxis.label, minValue: moduleValue.xAxis.minValue, maxValue: moduleValue.xAxis.maxValue},
-				          vAxis: {title: moduleValue.yAxis.label},
-				          legend: 'none',
-				          pointSize: cfg.pointsize || 7,
-				          lineWidth: cfg.linewidth || 0
-				       };
-			       
 				
 			//} catch(e) {
 			//	console.log(this);
