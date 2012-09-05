@@ -29,7 +29,6 @@ window[_namespaces['table']].Tables.Content.prototype = {
 		
 		this.reIndexedElements = {};
 		this.index = 0;
-		
 		this.supNav = [];
 		
 		for(var i = 0; i < this.elements.length; i++) {
@@ -40,8 +39,6 @@ window[_namespaces['table']].Tables.Content.prototype = {
 			if(j <= (this.page - 1) * this.pagination || j >= this.page * this.pagination)
 				continue;
 
-
-			console.log('sdfsdfsdf');
 			html.push(this.buildElement(this.elements[i], 0, 0, this.elements.length == i + 1));
 		}
 		

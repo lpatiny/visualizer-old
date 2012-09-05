@@ -64,7 +64,7 @@ function generate(indexX, indexY, buffer, nbValX) {
 	var x = startX, y = startY;
 	
 	var bufferData = buffer.data;
-	
+
 	for(;x < endX; x++) {
 		y = startY;
 		for(;y < endY; y++) {
@@ -72,8 +72,13 @@ function generate(indexX, indexY, buffer, nbValX) {
 			if(!data[y] || !data[y][x]) {
 			//	throw "Errrrror !!!";
 				continue;
-			} else	
+			} else	{
 				var val = data[y][x];
+				if(val.value)
+					val = val.value;
+			}
+
+
 			var color = getColorFromValue(val);
 			drawCell(val, x - startX, y - startY, color, bufferData, nbValX);
 		}
@@ -123,7 +128,7 @@ onmessage = function(event) {
 		max = d.message.max;
 		
 		
-	} else if(d.title == 'doPx') {
+	} else if(d.title == 'doPx') { 
 		pxPerCell = d.message.pxPerCell;
 		postMessage({ pxPerCell: pxPerCell, indexX: d.message.indexX, indexY: d.message.indexY, data: generate(d.message.indexX, d.message.indexY, d.message.buffer, d.message.nbValX) });
 	}

@@ -52,6 +52,10 @@ CI.Module.prototype._types.grid.View.prototype = {
 				
 				var source = element._source;
 				view.module.controller.lineClick(source);
+			},
+
+			onPageChanged: function(newPage) {
+				CI.Util.ResolveDOMDeferred(Table.getDom());
 			}
 		});
 		
@@ -81,7 +85,7 @@ CI.Module.prototype._types.grid.View.prototype = {
 		Table.setContent(Content);
 		Table.init(view.dom);
 
-		CI.Util.ResolveDOMDeferred();
+		CI.Util.ResolveDOMDeferred(Table.getDom());
 	},
 
 	buildElement: function(source, arrayToPush, jpaths, colorJPath) {

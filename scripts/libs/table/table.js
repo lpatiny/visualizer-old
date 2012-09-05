@@ -17,7 +17,8 @@ window[_namespaces['table']].Tables.Table.prototype = {
 	defaults: {
 		cssPrefix: _namespaces['table'].toLowerCase(),
 		onLineHover: null,
-		onLineSelect: null
+		onLineSelect: null,
+		onPageChanged: null
 	},
 	
 	addColumn: function(col) {
@@ -57,6 +58,8 @@ window[_namespaces['table']].Tables.Table.prototype = {
 		this.page = page;
 		this.execFuncContent('setPage', [this.page]);
 		this.commitContent();
+		if(typeof this.options.onPageChanged)
+			this.options.onPageChanged(this.page);
 	},
 	
 	execFuncContent: function(funcName, vars) {
@@ -173,6 +176,10 @@ window[_namespaces['table']].Tables.Table.prototype = {
 		this.afterInit();
 	},
 	
+	getDom: function() {
+		return this.dom;
+	},
+
 	addPagination: function() {
 		
 		var inst = this;

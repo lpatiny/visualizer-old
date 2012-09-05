@@ -35,3 +35,26 @@ window[_namespaces['util']].Util.uniqueid = 0;
 window[_namespaces['util']].Util.getNextUniqueId = function() {
 	return 'uniqid_' + (++window[_namespaces['util']].Util.uniqueid);
 }
+
+
+
+CI.Event = function() {}
+slice = Array.prototype.slice;
+
+CI.Event.prototype.on = function(topic, callback) {
+	this.topics = this.topics || [];
+	this.topics[topic] = this.topics[topic] || $.Callbacks();
+	this.topics[topic].add.apply(this.topics[id], slice.call(arguments, 1));
+	return this;
+}
+
+CI.Event.prototype.off = function(topic) {
+	if(this.topics && this.topics[topic])
+		this.topics[topic].remove.apply(this.topics[topic], slice.apply(arguments, 1))
+	return this;
+}
+
+CI.Event.prototype.trigger = function(topic) {
+	if(this.topics && this.topics[topic])
+		this.topics[topic].fireWith(this, slice.call(arguments, i));
+}

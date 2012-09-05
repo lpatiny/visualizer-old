@@ -422,10 +422,8 @@ CI.DataType._getValueFromJPath = function(element, jpath) {
 		return CI.DataType.fetchElementIfNeeded(el).pipe(function(elChildren) {
 			return CI.DataType._getValueFromJPath(elChildren, jpath);
 		});
-	} else {
-		console.log(element);
+	} else
 		return $.Deferred().resolve(element);
-	}
 }
 
 
@@ -711,8 +709,13 @@ CI.Type["mol2d"] = {
 
 
 		var id = CI.Util.getNextUniqueId();
-		CI.Util.DOMDeferred.done(function() {
+		CI.Util.DOMDeferred.progress(function(dom) {
+
+			if($("#" + id, dom).length == 0)
+				return;
+
 			var canvas = new ChemDoodle.ViewerCanvas(id, 100, 100);
+
 			canvas.specs.backgroundColor = "transparent";
 			canvas.specs.bonds_width_2D = .6;
 			canvas.specs.bonds_saturationWidth_2D = .18;
@@ -740,7 +743,10 @@ CI.Type["mol3d"] = {
 
 
 		var id = CI.Util.getNextUniqueId();
-		CI.Util.DOMDeferred.done(function() {
+		CI.Util.DOMDeferred.progress(function(dom) {
+
+			if($("#" + id, dom).length == 0)
+				return;
 
 			var mg = new ChemDoodle.MolGrabberCanvas3D(id, 600, 400);
 			mg.specs.projectionWidthHeightRatio_3D = 600 / 400;
@@ -779,8 +785,11 @@ CI.Type["jcamp"] = {
 	toScreen: function(def, value) {
 
 		var id = CI.Util.getNextUniqueId();
-		CI.Util.DOMDeferred.done(function() {
+		CI.Util.DOMDeferred.progress(function(dom) {
 			
+				if($("#" + id, dom).length == 0)
+					return;
+
 				var spectra = new ChemDoodle.PerspectiveCanvas(id, '500', '500');
 				$("#" + id).data('spectra', spectra);
 				spectra.specs.plots_showYAxis = true;
@@ -806,7 +815,6 @@ CI.Type["mf"] = {
 CI.Type["chart"] = {
 	toScreen: function(def, value) {
 
-		console.log(value);
 		
 	}
 };

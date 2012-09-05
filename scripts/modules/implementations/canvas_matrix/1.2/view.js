@@ -331,7 +331,6 @@ CI.Module.prototype._types.canvas_matrix.View.prototype = {
 		} else
 			var pxPerCell = this.getCurrentPxPerCellFetch();
 		
-		console.log(this.availableZoomsForFetch);
 		//for(var i = 0, len = this.availableZooms.length; i < len; i++)
 		if(!this.postNextMessageToWorker(pxPerCell)) {
 			if(this.incrementPxPerCellFetch())
@@ -346,8 +345,7 @@ CI.Module.prototype._types.canvas_matrix.View.prototype = {
 	postNextMessageToWorker: function(pxPerCell) {
 		
 		var bufferIndices = this.getBufferIndices(pxPerCell);
-		console.log(bufferIndices.minXIndexBuffer + " " + bufferIndices.maxXIndexBuffer + " " + bufferIndices.minYIndexBuffer + " " + bufferIndices.maxYIndexBuffer);
-		console.log(pxPerCell);
+		
 		for(var i = bufferIndices.minXIndexBuffer; i <= bufferIndices.maxXIndexBuffer; i++) {
 			for(var j = bufferIndices.minYIndexBuffer; j <= bufferIndices.maxYIndexBuffer; j++) {
 				var key = this.getBufferKey(pxPerCell, i, j);

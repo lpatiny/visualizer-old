@@ -1,6 +1,5 @@
-CI.Util.ResolveDOMDeferred = function() {
-	CI.Util.DOMDeferred.resolve();
-	CI.Util.DOMDeferred = $.Deferred();
+CI.Util.ResolveDOMDeferred = function(dom) {
+	CI.Util.DOMDeferred.notify(dom);
 }
 
 CI.Util.DOMDeferred = $.Deferred();
