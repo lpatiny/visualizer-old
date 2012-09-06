@@ -106,7 +106,7 @@ CI.Module.prototype._types.plot_stat.View.prototype = {
 				this.chartData = google.visualization.arrayToDataTable(data);
 				
 
-				var chartId = 'chart_' + (++CI.DataType._chartid);
+				var chartId = CI.Util.getNextUniqueId();
 
 
 				view.chartOptions = {
@@ -118,7 +118,7 @@ CI.Module.prototype._types.plot_stat.View.prototype = {
 				          lineWidth: cfg.linewidth || 0
 				       };
 			       
-			       
+
 				CI.Util.DOMDeferred.progress(function(dom) {
 
 
@@ -151,14 +151,7 @@ CI.Module.prototype._types.plot_stat.View.prototype = {
 
 				});
 
-				deferred.resolve('<div id="' + chartId + '"></div>');
-
-				
-			//} catch(e) {
-			//	console.log(this);
-			//	this.dom.mask("Error while creating the chart");
-				
-			//}
+				deferred.resolve('<div id="' + chartId + '"></div>');	
 		}
 	}
 }

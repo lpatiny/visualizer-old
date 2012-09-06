@@ -115,10 +115,10 @@ window[_namespaces['table']].Tables.Table.prototype = {
 		});
 		
 		this.dom.children('tbody').on('mouseenter', 'tr', function() {
-			
+			console.log('mouseenter');
 			if($(this).hasClass('ci-table-pagination'))
 				return;
-			
+			console.time('test');
 			if(typeof inst.options.onLineHover == "function")
 				inst.options.onLineHover(inst.content.getElementById($(this).data('element-id')));
 		}).on('click', 'tr', function() {

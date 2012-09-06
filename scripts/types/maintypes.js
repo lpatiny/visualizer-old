@@ -785,7 +785,7 @@ CI.Type["jcamp"] = {
 
 			if(dom.length == 0)
 				return;
-
+console.time('load jcamp');
 			var spectra = new ChemDoodle.PerspectiveCanvas(dom.attr('id'), dom.parent().width(), dom.parent().height());
 			dom.data('spectra', spectra);
 			spectra.specs.plots_showYAxis = true;

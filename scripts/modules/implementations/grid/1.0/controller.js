@@ -143,7 +143,7 @@ CI.Module.prototype._types.grid.Controller.prototype = {
 		
 		if(data != null) 
 			CI.DataType.getJPathsFromElement(data[0], jpaths);
-		
+
 
 		var field = groupfield.addField({
 			type: 'Combo',
