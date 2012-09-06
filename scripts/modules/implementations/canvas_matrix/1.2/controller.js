@@ -57,9 +57,12 @@ CI.Module.prototype._types.canvas_matrix.Controller.prototype = {
 		
 		$(this.module.getDomContent()).on('mousemove', 'canvas',
 			// Debounce the hover event
-			$.debounce(250, function(e) {
+			$.debounce(25, function(e) {
 				
 				var keyed = controller.getMatrixElementFromEvent(e);
+				if(!keyed)
+					return;
+
 				var value = false;
 				for(var i in actions) {
 					if(actions[i].event == "onPixelHover") {

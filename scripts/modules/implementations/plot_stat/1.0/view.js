@@ -103,8 +103,10 @@ CI.Module.prototype._types.plot_stat.View.prototype = {
 				
 				this.data = data;
 				
+
 				this.chartData = google.visualization.arrayToDataTable(data);
-				
+
+
 
 				var chartId = CI.Util.getNextUniqueId();
 

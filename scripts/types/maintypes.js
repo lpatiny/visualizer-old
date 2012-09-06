@@ -545,28 +545,34 @@ CI.DataType.getJPathsFromElement = function(element, jpaths) {
 	if(!jpaths)
 		var jpaths = [];
 		
-	if(!element)
+	if(element === undefined)
 		return;
-		
+	
 	// We know the dynamic structure
 	// Apply to typed elements + to js objects
 	if(element.structure)
 		CI.DataType.getJPathsFromStructure(element.structure, null, jpaths);	
-	else if(element.type && CI.DataType.Structures[element.type])
+	else if(element.type && CI.DataType.Structures[element.type]) {
 		CI.DataType.getJPathsFromStructure(CI.DataType.Structures[element.type], null, jpaths);
-	else {
-		
+	} else {
+		console.log(typeof element);
 		switch(typeof element) {
+
+			default:
 			case 'object':
 				var structure = CI.DataType.getStructureFromElement(element, structure);
 				CI.DataType.getJPathsFromStructure(structure, null, jpaths);
 			break;
-			
+			/*
 			default:
 				return;
-			break;
+			break;*/
 		}
 	}
+
+	//console.log(jpaths);
+
+
 	/*
 	// Typed element
 	if(element.type && element.value) {

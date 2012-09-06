@@ -104,7 +104,6 @@ BI.Forms.Field.prototype = {
 	},
 	
 	setValue: function(index, value) {
-		console.log(value);
 		this.values[index] = value;
 	},
 		

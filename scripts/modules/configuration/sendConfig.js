@@ -80,7 +80,6 @@ $(document).bind('configModule', function(event, module) {
 		field.onChange(function(index) {
 			var value = this.getValue(index);
 			this.group.getField('jpath').implementation.setOptions(sendjpaths[value], index);
-			console.log('change');
 		});
 		
 		

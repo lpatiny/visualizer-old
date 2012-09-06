@@ -33,7 +33,7 @@ CI.WebWorker = {
 			return;
 		
 		var date = Date.now();
-		console.log('send : ' + name);
+		
 		//console.log(CI.WebWorker._workers[name]);
 		CI.WebWorker._workers[name].postMessage({ time: date, message: message });
 		CI.WebWorker._callbacks[name].push({ time: date, callback: callback });

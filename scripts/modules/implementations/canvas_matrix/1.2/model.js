@@ -56,7 +56,8 @@ CI.Module.prototype._types.canvas_matrix.Model.prototype = {
 		function getjPath(data) {
 			
 			var jpaths = [];
-			CI.DataType.getJPathsFromElement(data[0], jpaths);
+			CI.DataType.getJPathsFromElement(data, jpaths);
+			
 			return jpaths;
 		}
 		
@@ -71,14 +72,19 @@ CI.Module.prototype._types.canvas_matrix.Model.prototype = {
 			
 		switch(rel) {
 			case 'row':
-				var data = data.yLabel;
+				var data = data.yLabel[0];
 				return getjPath(data, accepts);
 			break;
 			case 'col':
-				var data = data.xLabel;
+				var data = data.xLabel[0];
 				return getjPath(data, accepts);
 			break;
 			
+			case 'intersect':
+				var data = data.data[0][0];
+				return getjPath(data, accepts);
+			break;
+
 			default:
 				return false;
 			break;

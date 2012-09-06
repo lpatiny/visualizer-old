@@ -19,6 +19,9 @@ CI = new Object();
 		
 		CI.WebWorker.create('jsonparser', './scripts/webworker/scripts/jsonparser.js');
 		CI.WebWorker.create('getminmaxmatrix', './scripts/webworker/scripts/getminmaxmatrix.js');
+		CI.WebWorker.create('googleVisualizationArrayToDataTable', './scripts/webworker/scripts/googleVisualizationArrayToDataTable.js');
+		
+		
 		
 		ajaxManager = new CI.Util.AjaxManager();
 	//	ajaxManager.setProxyUrl('http://localhost:8888/git/visualizer/proxify.php?url=<url>');
