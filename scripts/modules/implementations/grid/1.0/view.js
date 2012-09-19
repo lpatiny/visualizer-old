@@ -49,7 +49,6 @@ CI.Module.prototype._types.grid.View.prototype = {
 			},
 			
 			onLineClick: function(element) {
-				
 				var source = element._source;
 				view.module.controller.lineClick(source);
 			},
@@ -96,11 +95,9 @@ CI.Module.prototype._types.grid.View.prototype = {
 			var element = {};
 			element.data = {};
 			element._color;
-			
 
 			if(colorJPath)
 				element._color = CI.DataType.getValueFromJPath(source[i], colorJPath);
-				
 
 			for(var j in jpaths) {
 				jpath = jpaths[j];
