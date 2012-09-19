@@ -102,30 +102,26 @@ window[_namespaces['table']].Tables.Table.prototype = {
 		})
 		
 		this.dom.on('click', 'th', function() {
-			var el = $(this).find('.triangle-up:visible, .triangle-down:visible');
-			var asc = el.length > 0 ? el.hasClass('triangle-down') : true;
 			var col = inst.getColumn($(this).data('colname'));
 			
-			$(this).find('.triangle-up, .triangle-down').addClass('ci-table-hidden').filter('.triangle-' + (asc ? 'up' : 'down')).removeClass('ci-table-hidden');
+			//inst.selectColumn(col, true);
+			for(var i = 0, length = inst.cols.length; i < length; i++)
+				inst.cols[i].cancelSort(false);
+			var asc = col.doSort(asc);
+			//column.select(!column.isSelected());
 			
 			inst.content.sort(col, asc);
-			inst.selectColumn(col, true);
 			inst.commitContent();
-			
 		});
-		
+
 		this.dom.children('tbody').on('mouseenter', 'tr', function() {
-			console.log('mouseenter');
 			if($(this).hasClass('ci-table-pagination'))
 				return;
-			console.time('test');
 			if(typeof inst.options.onLineHover == "function")
 				inst.options.onLineHover(inst.content.getElementById($(this).data('element-id')));
 		}).on('click', 'tr', function() {
-			
 			if($(this).hasClass('ci-table-pagination'))
 				return;
-			
 			if(typeof inst.options.onLineClick == "function")
 				inst.options.onLineClick(inst.content.getElementById($(this).data('element-id')));
 		});
@@ -146,18 +142,6 @@ window[_namespaces['table']].Tables.Table.prototype = {
 	
 	getColumns: function() {
 		return this.cols;
-	},
-	
-	selectColumn: function(column, exclusive) {
-		
-		if(typeof column == "number")
-			column = this.cols[column];
-			
-		if(exclusive) 
-			for(var i = 0, length = this.cols.length; i < length; i++)
-				this.cols[i].select(false);
-		
-		column.select(!column.isSelected());
 	},
 	
 	commitContent: function() {
