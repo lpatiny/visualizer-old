@@ -28,6 +28,10 @@ CI.Module.prototype._types.display_value.View.prototype = {
 		
 	},
 	
+	blank: function() {
+		this.dom.empty();
+	},
+	
 	inDom: function() {},
 
 	update: function() {
