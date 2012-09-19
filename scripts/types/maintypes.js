@@ -1,6 +1,57 @@
 
+/*
+CI.Async = {};
+CI.Async.trigger = function() {
+
+}
+CI.Async.stack = [];
+
+CI.Async.instanceId = 0;
+CI.Async.createInstance = function() {
+	CI.Async.currentInstance = ++CI.Async.instanceId;
+}
+
+CI.Async.inDom = function(instanceId) {
+	for(var i in CI.Async.instancesElements[instanceId])
+		CI.Async.instancesElements[instanceId][i].getDeferred().resolve();
+}
+
+CI.Async.createAttribute = function(instanceId) {
+	var attr = new CI.TemporaryAttr();
+	CI.Async.instancesElements[instanceId].push(attr);
+}
+
+CI.Async.createDOM = function(instanceId) {
+	var attr = new CI.TemporaryDOM();
+	CI.Async.instancesElements[instanceId].push(attr);
+}
+
+CI.TemporaryAttr = function() {
+	this._class = ".callback-load-attr-";
+	this._class += ++CI.DataType.asyncId;
+	this._deferred = $.Deferred();
+
+	this._deferred.done(function() {
+		// Do
+		$(this._class).attr();
+	});
+}
+
+CI.TemporaryAttr.prototype = {
+
+	getClass: function() {
+		return this._class;
+	},
+
+	getDeferred: function() {
+		return this._deferred;
+	}
+}
+
+*/
 CI.DataType = {};
 
+CI.DataType.asyncId = 0;
 
 CI.DataType.Structures = {
 	
@@ -588,15 +639,6 @@ CI.DataType.getJPathsFromElement = function(element, jpaths) {
 
 
 
-CI.DataType._doFetchElementAttributeCallback = function(element, box, asyncId, attribute) {
-	CI.DataType.fetchElementIfNeeded(element, function(val) {
-		CI.DataType._valueToScreen(element, box, function(val) {
-			$("#" + asyncId).attr(attribute, val);
-		});
-	});
-}
-
-
 
 CI.DataType._doFetchElementHTMLCallback = function(element, box, asyncId) {
 
@@ -610,23 +652,24 @@ CI.DataType._doFetchElementHTMLCallback = function(element, box, asyncId) {
 }
 
 
-CI.DataType.asyncToScreenAttribute = function(element, attribute, box) {
+CI.DataType.asyncToScreenAttribute = function(source, attribute, jpath, element) {
+		
+	var def = $.Deferred();
+	var _class = "callback-load-attr-";
+	_class += ++CI.DataType.asyncId;
 	
-	// Needs fetching
-	if(!element.value && element.url) {
-		
-		var elementId = "";
-		elementId += "callbck-load-";
-		elementId += ++CI.DataType.asyncId;
-		
-		CI.DataType._doFetchElementAttributeCallback(element, box, CI.DataType.asyncId, attribute);
-		 
-		return elementId;
+	var def = CI.DataType.getValueFromJPath(source, jpath).done(function(value) {
+			if(element)
+				element.attr(attribute, value);
+			else
+				$("." + _class).attr(attribute, value);
+		});
+
+	if(source.type && !source.value && source.url) {
+		def._class = _class;
+		return def;
 	} else
-		// returns element.value if fetched
-		return CI.DataType._toScreen(element, box);
-		
-	
+		return def;
 }
 
 
@@ -645,7 +688,6 @@ CI.DataType.asyncToScreenHtml = function(element, box, jpath) {
 	} else
 		// returns element.value if fetched
 		return CI.DataType.getValueFromJPath(element, jpath).pipe(function(data) { return CI.DataType._toScreen(data, box) });
-		
 }
 
 

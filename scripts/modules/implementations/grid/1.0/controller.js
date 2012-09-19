@@ -53,6 +53,8 @@ CI.Module.prototype._types.grid.Controller.prototype = {
 			return;
 				
 		for(var i = 0; i < actions.length; i++) {
+
+			CI.API.blankSharedVar(actions[i].name);
 			if(actions[i].event == "onHover") {
 				CI.API.setSharedVarFromJPath(actions[i].name, element, actions[i].jpath);
 			}

@@ -30,12 +30,18 @@ CI.Module.prototype._types.grid.View.prototype = {
 	
 	},
 	
+	blank: function() {
+		this.dom.empty();
+	},
+
 	update: function() {
-		
+	
 		var moduleValue;
 		var view = this;
 		
 		var jpaths = this.module.getConfiguration().colsjPaths;
+		var colorJPath = this.module.getConfiguration().colorjPath;
+		
 		if(!(moduleValue = this.module.getDataFromRel('list')))
 			return;
 			
@@ -78,7 +84,7 @@ CI.Module.prototype._types.grid.View.prototype = {
 		var list = CI.DataType.getValueIfNeeded(moduleValue);
 		var Content = new CI.Tables.Content();
 		var elements = [];
-		view.buildElement(list, elements, jpaths);
+		view.buildElement(list, elements, jpaths, colorJPath);
 		for(var i = 0, length = elements.length; i < length; i++)
 			Content.addElement(elements[i]);
 		Table.setContent(Content);
@@ -97,7 +103,10 @@ CI.Module.prototype._types.grid.View.prototype = {
 			element._color;
 
 			if(colorJPath)
-				element._color = CI.DataType.getValueFromJPath(source[i], colorJPath);
+				element._color = CI.DataType.asyncToScreenAttribute(source[i], 'bgcolor', colorJPath).done(function(val) {
+					element._colorVal = val;
+				});
+
 
 			for(var j in jpaths) {
 				jpath = jpaths[j];
@@ -105,8 +114,6 @@ CI.Module.prototype._types.grid.View.prototype = {
 					jpath = jpath.jpath;
 
 					CI.DataType.asyncToScreenHtml(source[i], box, jpath).done(function(val) {
-
-
 						element.data[j] = val;
 					});
 			}
@@ -114,7 +121,7 @@ CI.Module.prototype._types.grid.View.prototype = {
 			
 			if(source[i].children) {
 				element.children  = [];
-				this.buildElement(source[i].children, element.children, jpaths);
+				this.buildElement(source[i].children, element.children, jpaths, colorJPath);
 			}
 			
 			element._source = source[i];

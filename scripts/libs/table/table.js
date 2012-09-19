@@ -170,29 +170,29 @@ window[_namespaces['table']].Tables.Table.prototype = {
 		var pages = Math.ceil(this.content.entryCount / this.pagination);
 		var page = this.page;
 		
-		var html = [];
+		if(pages == 1)
+			return;
+
+		var html = "";
+
+		html += '<tr class="ci-table-pagination"><td colspan="';
+		html += this.cols.length;
+		html += '">';
 		
-		html.push('<tr class="ci-table-pagination"><td colspan="');
-		html.push(this.cols.length);
-		html.push('">');
-		
-		for(var i = 1; i <= pages; i++) {
-			html.push('<span data-page="');
-			html.push(i);
-			html.push('" class="');
-			html.push(i == page ? 'ci-selected' : '');
-			html.push('">');
-			html.push(i);
-			html.push('</span>');
+		for(var i = 1; i <= pages; i++) {	
+			html += '<span data-page="';
+			html += i;
+			html += '" class="';
+			html += i == page ? 'ci-selected' : '';
+			html += '">';
+			html += i;
+			html += '</span>';
 		}
 		
-		html.push('</td></tr>');
-		
-		var bottom = $(html.join('')).on('click', 'span', function() {
-			
+		html += '</td></tr>';
+		var bottom = $(html).on('click', 'span', function() {
 			inst.setPage($(this).data('page'));
 		});
-		
 		this.body/*.prepend(top).*/.append(bottom);
 	}
 }

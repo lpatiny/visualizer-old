@@ -9,6 +9,8 @@ window[_namespaces['table']].Tables.Content = function() {
 	this.page;
 	this.entryCount = 0;
 	this.reIndexedElements = {};
+
+	this.domDeferred = [];
 }
 
 
@@ -46,7 +48,9 @@ window[_namespaces['table']].Tables.Content.prototype = {
 			html.push(this.buildElement(this.elements[i], 0, 0, this.elements.length == i + 1));
 		}
 		
-		this.table.setContentHtml(html.join(''));
+		var jqHtml = $(html.join(''));
+		this.table.setContentHtml(jqHtml);
+
 	},
 	
 	buildElement: function(element, parent, level, last) {
@@ -61,7 +65,14 @@ window[_namespaces['table']].Tables.Content.prototype = {
 		html.push(parent);
 		html.push('" class="');
 		html.push(parent !== 0 ? 'ci-table-hidden' : '');
-		html.push('">');
+		if(!element._colorVal)
+			html.push(" " + element._color);
+
+		html.push('"');
+
+		if(element._colorVal)
+			html.push(' style="background-color: ' + element._colorVal + '"');
+		html.push(">");
 		
 		var hasChildren = false;
 		
@@ -78,8 +89,8 @@ window[_namespaces['table']].Tables.Content.prototype = {
 			
 			var elVal = element.data[name];
 			html.push(columns[i].buildElement(((typeof elVal != "undefined") ? elVal : ''), i == 0, this.supNav, hasChildren, level));
-			
 		}
+
 		html.push('</tr>');
 		
 		if(element.children) {
