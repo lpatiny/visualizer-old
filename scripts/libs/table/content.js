@@ -135,8 +135,9 @@ window[_namespaces['table']].Tables.Content.prototype = {
 		this.elements.sort(function(a, b) {
 			if(!a.data[elName]) return 1;
 			if(!b.data[elName]) return -1;
-			return a.data[elName] > b.data[elName];
+			return a.data[elName] > b.data[elName] ? 1 : -1;
 		});
+
 		if(!asc)
 			this.elements.reverse();
 	},
