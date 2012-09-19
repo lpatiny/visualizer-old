@@ -17,21 +17,32 @@ CI.Module.prototype._types.grid.View = function(module) {
 CI.Module.prototype._types.grid.View.prototype = {
 	
 	init: function() {	
-		var html = [];
-		html.push('<div class="ci-displaylist-list"></div>');
-		this.dom = $(html.join(''));
+		this.dom = $('<div class="ci-displaylist-list"></div>');
+		this.domTable = $("<div />");
+		this.domSearch = $("<div />");
+		this.domExport = $("<div />");
+
+		var inst = this;
+		var searchInput = $("<input />").bind('keyup', function() {
+			if(inst.table)
+				inst.table.doSearch($(this).val());;
+		});
+
+		this.domSearch.append(searchInput);
+
+
+		this.dom.append(this.domSearch).append(this.domExport).append(this.domTable);
 		this.module.getDomContent().html(this.dom);
 	},
 
 	inDom: function() {},
 	
 	onResize: function() {
-		
-	
 	},
 	
 	blank: function() {
-		this.dom.empty();
+		this.domTable.empty();
+		this.table = null;
 	},
 
 	update: function() {
@@ -63,7 +74,7 @@ CI.Module.prototype._types.grid.View.prototype = {
 				CI.Util.ResolveDOMDeferred(Table.getDom());
 			}
 		});
-		
+		this.table = Table;
 		
 		var nbLines;
 		if(nbLines = this.module.getConfiguration().nbLines)
@@ -88,7 +99,7 @@ CI.Module.prototype._types.grid.View.prototype = {
 		for(var i = 0, length = elements.length; i < length; i++)
 			Content.addElement(elements[i]);
 		Table.setContent(Content);
-		Table.init(view.dom);
+		Table.init(view.domTable);
 
 		CI.Util.ResolveDOMDeferred(Table.getDom());
 	},

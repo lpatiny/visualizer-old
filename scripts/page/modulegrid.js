@@ -141,8 +141,6 @@ CI.Grid = {
 				bottomMax = Math.max(bottomMax, pos.top + size.height);
 		}
 
-		console.log(bottomMax);
-		
 		CI.Grid._el.css('height', (CI.Grid.defaults.yHeight * bottomMax + 1000));
 	},
 	

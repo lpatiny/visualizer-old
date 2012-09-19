@@ -107,16 +107,15 @@ window[_namespaces['table']].Tables.Content.prototype = {
 		return html.join('');
 	},
 	
-	doSearch: function(element) {
+	doSearch: function(element, term) {
 	
 		if(typeof this.search == "undefined" || this.search == null)
 			return true;
 		
 		var columns = this.table.getColumns();
-		var val;
 		for(var i = 0; i < columns.length; i++) {
-			if(typeof(val = element[columns[i].getName]) !== "undefined") {
-				if(this.seach.test(val))
+			if(typeof(val = element.data[columns[i].getName()]) !== "undefined") {
+				if(this.search.test(val))
 					return true;
 			}
 		}
@@ -141,6 +140,7 @@ window[_namespaces['table']].Tables.Content.prototype = {
 		for(var i = 0; i < metachars.length; i++)
 			search.replace(metachars[i], "\\" + metachars[i]);
 		search = search.toLowerCase();
+		console.log(search);
 		this.search = new RegExp(search);
 	},
 	

@@ -164,6 +164,12 @@ window[_namespaces['table']].Tables.Table.prototype = {
 		return this.dom;
 	},
 
+	doSearch: function(term) {
+		this.content.setSearch(term);
+		this.content.build();
+		this.commitContent();
+	},
+
 	addPagination: function() {
 		
 		var inst = this;
