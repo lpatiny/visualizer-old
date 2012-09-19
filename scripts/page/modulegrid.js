@@ -137,8 +137,11 @@ CI.Grid = {
 		for(var i in CI.modules) {
 			var pos = CI.modules[i].getPosition();
 			var size = CI.modules[i].getSize();
-			bottomMax = Math.max(bottomMax, pos.top + size.height);
+			if(pos.top && size.height)
+				bottomMax = Math.max(bottomMax, pos.top + size.height);
 		}
+
+		console.log(bottomMax);
 		
 		CI.Grid._el.css('height', (CI.Grid.defaults.yHeight * bottomMax + 1000));
 	},

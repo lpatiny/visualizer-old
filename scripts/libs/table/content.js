@@ -24,7 +24,7 @@ window[_namespaces['table']].Tables.Content.prototype = {
 	},
 	
 	build: function() {
-		var j = 0;
+		var j = -1;
 		var html = [];
 		
 		this.reIndexedElements = {};
@@ -32,11 +32,15 @@ window[_namespaces['table']].Tables.Content.prototype = {
 		this.supNav = [];
 		
 		for(var i = 0; i < this.elements.length; i++) {
-			if(!this.doSearch(this.elements[i]))
-				continue;
-			j++;
 
-			if(j <= (this.page - 1) * this.pagination || j >= this.page * this.pagination)
+			if(!this.doSearch(this.elements[i])) {
+				console.log('Search failed');
+				continue;
+			}
+
+			j++;
+			
+			if(j < (this.page - 1) * this.pagination || j >= this.page * this.pagination)
 				continue;
 
 			html.push(this.buildElement(this.elements[i], 0, 0, this.elements.length == i + 1));
