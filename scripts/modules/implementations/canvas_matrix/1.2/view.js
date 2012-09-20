@@ -434,7 +434,7 @@ CI.Module.prototype._types.canvas_matrix.View.prototype = {
 	
 		for(var i = 0; i < colors.length; i++) {
 			lineargradient.addColorStop(i / (colors.length - 1), colors[i]);
-			this.scaleCanvasContext.fillText(Math.round(100 * i * step) / 100, 5, stepPx * i <= 0 ? 15 : stepPx * i - 5);	
+			this.scaleCanvasContext.fillText(Math.round(100 * (i * step + min)) / 100, 5, stepPx * i <= 0 ? 15 : stepPx * i - 5);	
 		}  
 	
 		this.scaleCanvasContext.fillStyle = lineargradient; 
