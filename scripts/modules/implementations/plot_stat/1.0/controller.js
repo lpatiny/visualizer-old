@@ -83,10 +83,9 @@ CI.Module.prototype._types.plot_stat.Controller.prototype = {
 			type: 'Combo',
 			name: 'charttype'
 		});
-		field.implementation.setOptions([{ title: "Bar Chart", key: "barchart"}, { title: "Line chart", key: "linechart"}, { title: "Scatter plot", key: "scatterplot"}]);
+		field.implementation.setOptions([{ title: "Horizontal Bar Chart", key: "hbarchart"}, { title: "Vertical Bar Chart", key: "vbarchart"}, { title: "Line chart", key: "linechart"}]);
 		field.setTitle(new CI.Title('Chart type'));
-		
-
+	
 
 		var field = groupfield.addField({
 			type: 'Text',

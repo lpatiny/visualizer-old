@@ -102,15 +102,8 @@ CI.Module.prototype._types.plot_stat.View.prototype = {
 				}
 				
 				this.data = data;
-				
-
 				this.chartData = google.visualization.arrayToDataTable(data);
-
-
-
 				var chartId = CI.Util.getNextUniqueId();
-
-
 				view.chartOptions = {
 				          title: moduleValue.title,
 				          hAxis: {title: moduleValue.xAxis.label, minValue: moduleValue.xAxis.minValue, maxValue: moduleValue.xAxis.maxValue},
@@ -130,16 +123,28 @@ CI.Module.prototype._types.plot_stat.View.prototype = {
 					var dom = $("#" + chartId).get(0);
 
 					switch(cfg.charttype) {
+
+						case 'barchart':
+						case 'vbarchart':
+							view.chart = new google
+								.visualization
+								.ColumnChart(dom);
+
+
+						break;
+						case 'hbarchart':
+							view.chart = new google
+								.visualization
+								.BarChart(dom);
+
+						break;
+						default:
 						case 'linechart': 
 							view.chart = new google
 								.visualization
 								.ScatterChart(dom);
 						break;
-						default:
-						case 'barchart':
-							view.chart = new google
-								.visualization
-								.BarChart(dom);
+						
 					}
 					
 					google.visualization.events.addListener(view.chart, 'onmouseover', function(e) {

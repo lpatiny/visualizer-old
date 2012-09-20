@@ -27,8 +27,6 @@ BI.Forms.Fields.Table.Combo.prototype.buildHtml = function() {
 
 
 BI.Forms.Fields.Table.Combo.prototype.initHtml = function() {
-
-	var field = this;
 	this.loadTree();
 };
 
@@ -43,13 +41,9 @@ BI.Forms.Fields.Table.Combo.prototype.setText = function(index, value) {
 }
 
 BI.Forms.Fields.Table.Combo.prototype.addField = function(position) {
-	
-	
 	this._loadedCallback = [];
-	
 	var inst = this;
 	var div = $("<div></div>");
-	
 	this.divs.splice(position, 0, div)
 	return { field: div, html: div, index: position };
 }

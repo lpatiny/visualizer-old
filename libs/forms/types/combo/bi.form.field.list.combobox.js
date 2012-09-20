@@ -45,15 +45,16 @@ $.extend(BI.Forms.Fields.List.Combo.prototype, {
 			field.main.fieldContainer.children().eq(index).trigger('click');
 		});
 		
-		if(typeof this.options != "undefined")
-			this.loadTree();
+		this.loadTree();
 	},
 	
 	setText: function(index, text) {
 		this.main.fields[index].field.html(text);
 	},
 	
-	
+	expanderShowed: function(index) {
+		this.fillTree(index);
+	},
 
 	addField: BI.Forms.FieldGeneric.addField,
 	removeField: BI.Forms.FieldGeneric.removeField	
