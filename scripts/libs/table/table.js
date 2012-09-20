@@ -1,8 +1,7 @@
 
 if(!window[_namespaces['table']].Tables) window[_namespaces['table']].Tables = {};
 
-window[_namespaces['table']].Tables.Table = function(options) {
-	
+window[_namespaces['table']].Tables.Table = function(options) {	
 	this.options = $.extend(true, {}, window[_namespaces['table']].Tables.Table.prototype.defaults, options);
 	this.pagination = 20;
 	this.page = 1;
@@ -10,7 +9,6 @@ window[_namespaces['table']].Tables.Table = function(options) {
 	this.content;
 	this.cols = [];
 }
-
 
 window[_namespaces['table']].Tables.Table.prototype = {
 	
@@ -175,20 +173,15 @@ window[_namespaces['table']].Tables.Table.prototype = {
 		
 		if(this.paginationDOM)
 			this.paginationDOM.remove();
-console.log(this.content.entryCount);
 		var inst = this;
 		var pages = Math.ceil(this.content.entryCount / this.pagination);
 		var page = this.page;
-		
 		if(pages == 1)
 			return;
-
 		var html = "";
-
 		html += '<tr class="ci-table-pagination"><td colspan="';
 		html += this.cols.length;
-		html += '">';
-		
+		html += '">';		
 		for(var i = 1; i <= pages; i++) {	
 			html += '<span data-page="';
 			html += i;
@@ -210,4 +203,3 @@ console.log(this.content.entryCount);
 		return this.content.exportToTabDelimited();
 	}
 }
-
