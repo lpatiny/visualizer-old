@@ -64,7 +64,7 @@ CI.Module.prototype._types.spectra_displayer.View.prototype = {
 		// Get the data associated to the datasource
 		moduleValue = moduleValue.getData();
 		// Display the jcamp to the screen using the value and the module ref
-		CI.DataType.toScreen(moduleValue, view.module, this.dom).done(function(val) {
+		CI.DataType.toScreen(moduleValue, view.module, this.dom, {continuous: (this.module.getConfiguration().mode == 'curve') }).done(function(val) {
 			
 			view.dom.data('spectra').onZoomChange = function(minX, maxX) {
 				view.module.controller.zoomChanged(minX, maxX);

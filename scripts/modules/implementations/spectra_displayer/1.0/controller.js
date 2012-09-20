@@ -65,6 +65,41 @@ CI.Module.prototype._types.spectra_displayer.Controller.prototype = {
 
 	moduleInformations: {
 		moduleName: 'Jcamp display (CDWC)'
-	}
+	},
 
+
+
+	
+	doConfiguration: function(section) {
+		var groupfield = new BI.Forms.GroupFields.List('gencfg');
+		section.addFieldGroup(groupfield);
+
+		var field = groupfield.addField({
+			type: 'Options',
+			name: 'mode'
+		});
+
+		field.setTitle(new CI.Title('Mode'));
+		field.implementation.setOptions({ 'peaks': 'Display as peaks', 'curve': 'Display as a curve' });
+		return true;
+	},
+	
+	doFillConfiguration: function() {
+		
+		var mode = this.module.getConfiguration().mode || 'peaks';
+		
+		return {
+			
+			gencfg: [{
+				mode: [mode]
+			}]
+			
+		}
+		
+	},
+	
+	doSaveConfiguration: function(confSection) {
+		this.module.getConfiguration().mode = confSection[0].gencfg[0].mode[0];
+		console.log(this.module.getConfiguration().mode);
+	}
 }

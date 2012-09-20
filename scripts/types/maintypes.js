@@ -836,7 +836,7 @@ CI.Type["mol3d"] = {
 
 CI.Type["jcamp"] = {
 
-	doFromDom: function(dom, value) {
+	doFromDom: function(dom, value, opts) {
 
 			if(dom.length == 0)
 				return;
@@ -845,16 +845,19 @@ CI.Type["jcamp"] = {
 			dom.data('spectra', spectra);
 			spectra.specs.plots_showYAxis = true;
 			spectra.specs.plots_flipXAxis = false;
+			
+			var ctns = opts.continuous || false;
+			
 			var jcampLoaded = ChemDoodle.readJCAMP(value.value);
 	  		spectra.loadSpectrum(jcampLoaded);
-
-
+	  		spectra.getSpectrum().continuous = ctns;
+	  		spectra.repaint();
 	},
 
 	toScreen: function(def, value, args) {
 		
 		if(args[0])
-			return def.resolve(CI.Type.jcamp.doFromDom(args[0], value));
+			return def.resolve(CI.Type.jcamp.doFromDom(args[0], value, args[1]));
 
 		var id = CI.Util.getNextUniqueId();
 		CI.Util.DOMDeferred.progress(function(dom) { CI.Type.jcamp.doFromDom($("#" + id, dom), value); });

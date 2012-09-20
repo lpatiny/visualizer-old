@@ -72,13 +72,21 @@ BI.Forms.Fields.Options.prototype = {
 			html.push('</label>');
 		}
 		
+		var impl = this;
 		this._radioContainer.empty().html(html.join('')).children('input').customInput();
+		this._radioContainer.bind('click', 'input', function() {
+			var val = [];
+			impl._radioContainer.find('input:checked').each(function() {
+				val = $(this).val();
+			});
+			impl.main.changeValue(0, val);
+		});
+		
 	},
 	
-	
-	setValue: function(value) {
-		dom.children('input').val(value);
-		this.main.valueChanged(value);
+	setValue: function(index, value) {
+		this.main.dom.find('input[type=radio][value="' + value + '"]').attr('checked', 'checked');
+		this.main.changeValue(index, value);
 	},
 	
 	addField: function() {
