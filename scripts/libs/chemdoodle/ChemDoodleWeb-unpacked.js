@@ -8552,6 +8552,8 @@ ChemDoodle.monitor = (function(featureDetection, q, document) {
 		this.spectrum.setup();
 		this.specs.scale = 1;
 		this.repaint();
+		if(this.onZoomChange)
+			this.onZoomChange.call(this, this.spectrum.minX, this.spectrum.maxX);
 	};
 	c.PerspectiveCanvas.prototype.multitouchmove = function(e, numFingers) {
 		if (numFingers == 2) {

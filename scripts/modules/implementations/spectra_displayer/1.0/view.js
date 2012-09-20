@@ -53,7 +53,12 @@ CI.Module.prototype._types.spectra_displayer.View.prototype = {
 				return;
 			// Get the data associated to the datasource
 			moduleValue = moduleValue.getData();
-			view.dom.data('spectra').setBoundaries(moduleValue.value.from, moduleValue.value.to);
+
+			if(moduleValue == null)
+				return;
+
+			if(view.dom.data('spectra'))
+				view.dom.data('spectra').setBoundaries(moduleValue.value.from, moduleValue.value.to);
 
 			return;
 		}
@@ -61,7 +66,7 @@ CI.Module.prototype._types.spectra_displayer.View.prototype = {
 		// Load the jcamp from the rel
 		if(!(moduleValue = this.module.getDataFromRel('jcamp')))
 			return;
-		
+
 		// Get the data associated to the datasource
 		moduleValue = moduleValue.getData();
 		// Display the jcamp to the screen using the value and the module ref
@@ -70,7 +75,7 @@ CI.Module.prototype._types.spectra_displayer.View.prototype = {
 			view.dom.data('spectra').onZoomChange = function(minX, maxX) {
 				view.module.controller.zoomChanged(minX, maxX);
 			};
-
+			view.update('fromTo');
 			//CI.Util.ResolveDOMDeferred(view.module.getDomContent());
 			CI.Grid.moduleResize(view.module);			
 		});
