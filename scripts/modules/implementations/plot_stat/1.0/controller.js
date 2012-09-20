@@ -53,11 +53,9 @@ CI.Module.prototype._types.plot_stat.Controller.prototype = {
 				
 		for(var i = 0; i < actions.length; i++) {
 			if(actions[i].event == "onHover") {
-				(function(data, jpath, name) {
-					CI.DataType.getValueFromJPath(data, jpath, function(toSend) {
-						CI.API.setSharedVar(name, toSend);	
-					});
-				}) (data, actions[i].jpath, actions[i].name);
+				CI.API.blankSharedVar(actions[i].name);
+				
+				CI.API.setSharedVarFromJPath(actions[i].name, data, actions[i].jpath);
 			}
 		}
 	},

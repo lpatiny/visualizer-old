@@ -24,13 +24,11 @@ CI.API.setSharedVar = function(varName, varData) {
 	var filters = CI.API.getSharedFilters(varName);
 	var def1 = $.Deferred();
 	var def2 = def1;
-	for(var i = 0, l = filters.length; i < l; i++) {
+	for(var i = 0, l = filters.length; i < l; i++)
 		def2 = def2.pipe(filters[i]);
-	}
 
 	CI.sharedData[varName] = def1;
 	def1.resolve(varData);
-
 	$(document).trigger('sharedDataChanged', [varName, def2]);
 }
 

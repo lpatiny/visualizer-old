@@ -14,7 +14,6 @@ CI.DataSource = function(module, sourceName, sourceAccepts, jPath) {
 	this.sourceAccepts = sourceAccepts;
 	this.data = null;
 	this.jPath = jPath;
-
 	
 	if(typeof CI.DataSource.prototype._dataSources[sourceName] == "undefined")
 		CI.DataSource.prototype._dataSources[sourceName] = [];
@@ -48,7 +47,7 @@ CI.DataSource.prototype = {
 		});
 	},
 	
-	_dataSources: [],
+	_dataSources: {},
 	
 	blank: function() {
 		this.data = null;

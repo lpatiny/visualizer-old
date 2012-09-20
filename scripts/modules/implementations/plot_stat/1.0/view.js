@@ -148,9 +148,11 @@ CI.Module.prototype._types.plot_stat.View.prototype = {
 					}
 					
 					google.visualization.events.addListener(view.chart, 'onmouseover', function(e) {
+
 						var row = e.row;
 						var col = e.column;
 						var rowData = moduleValue.series[col - 1][row];
+						
 						view.module.controller.hoverEvent(rowData);
 					});
 
