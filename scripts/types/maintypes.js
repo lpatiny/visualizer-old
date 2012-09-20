@@ -647,10 +647,9 @@ CI.DataType.getJPathsFromElement = function(element, jpaths) {
 
 
 
-CI.DataType._doFetchElementHTMLCallback = function(element, box, asyncId) {
+CI.DataType._doFetchElementHTMLCallback = function(element, box, asyncId, jpath) {
 
-
-	CI.DataType.getValueFromJPath(source[i], jpath).done(function(data) {
+	CI.DataType.getValueFromJPath(element, jpath).done(function(data) {
 		CI.DataType._toScreen(data, box).done(function(val) {
 			$("#" + asyncId).html(val);
 		});
@@ -682,19 +681,22 @@ CI.DataType.asyncToScreenAttribute = function(source, attribute, jpath, element)
 
 CI.DataType.asyncToScreenHtml = function(element, box, jpath) {
 	
+	var asyncId = 'callback-load-' + (++CI.DataType.asyncId);
+	var html = "";
+		html += '<span id="';
+		html += asyncId;
+		html += '" class="loading">Loading...</span>';
+
 	// Needs fetching
-	if(element.type && !element.value && element.url) {
-
-		var html = "";
-		html += '<span id="callback-load-';
-		html += ++CI.DataType.asyncId;
-		html += ' class="loading">Loading...</span>';
-		CI.DataType._doFetchElementHTMLCallback(element, box, CI.DataType.asyncId, jpath);
-
-		return $.Deferred.resolve(html);
-	} else
+	/*if(!element.value && element.url) {
+		CI.DataType._doFetchElementHTMLCallback(element, box, 'callback-load-' + CI.DataType.asyncId, jpath);
+		var def = $.Deferred.resolve(html);
+	} else*/
 		// returns element.value if fetched
-		return CI.DataType.getValueFromJPath(element, jpath).pipe(function(data) { return CI.DataType._toScreen(data, box) });
+
+	var def = CI.DataType.getValueFromJPath(element, jpath).pipe(function(data) { var val = CI.DataType._toScreen(data, box); $("#callback-load-" + asyncId).html(val); return val; });
+	def.html = html;
+	return def; 	
 }
 
 

@@ -110,11 +110,13 @@ CI.Module.prototype._types['2d_list'].Controller.prototype = {
 		field.setTitle(new CI.Title('Columns number'));
 		
 		
-		var data = this.module.getDataFromRel('list').getData();
 		var jpaths = [];
-		
-		if(data != null) 
-			CI.DataType.getJPathsFromElement(data[0], jpaths);
+		if(data = this.module.getDataFromRel('list')) {
+			data = data.getData();
+			if(data != null)
+				CI.DataType.getJPathsFromElement(data[0], jpaths);
+		}
+
 		var field = groupfield.addField({
 			type: 'Combo',
 			name: 'valjPath'

@@ -28,6 +28,8 @@ CI.Module.prototype._types['2d_list'].View.prototype = {
 	
 	},
 	
+	inDom: function() {},
+
 	update: function() {
 		
 		var moduleValue;
@@ -42,47 +44,50 @@ CI.Module.prototype._types['2d_list'].View.prototype = {
 			return;
 		
 		moduleValue = moduleValue.getData();
-		this.list = CI.DataType.getValueIfNeeded(moduleValue);
-		
-		var html = '<table cellpadding="3" cellspacing="0">';
-		for(var i = 0; i < this.list.length; i++) {
-			colId = i % cols;
-			if(colId == 0) {
-				html += '<tr>';
+
+
+
+		CI.DataType.fetchElementIfNeeded(moduleValue).done(function(val) {
+			this.list = val;
+
+			var html = '<table cellpadding="3" cellspacing="0">';
+			for(var i = 0; i < this.list.length; i++) {
+				colId = i % cols;
+				if(colId == 0) {
+					html += '<tr>';
+				}
+				html += '<td ';
+				html += '>';
+
+				var thehtml;
+				async = CI.DataType.asyncToScreenHtml(this.list[i], view.module, valJpath);
+				async.done(function(val) {
+					thehtml = val;
+				});
+				if(!thehtml)
+					thehtml = async.html;
+				html += thehtml;
+
+
+				//html +=  CI.DataType.toScreen(CI.DataType.getValueFromJPath(this.list[i], valJpath), this.module);
+				html += '</td>';
+				if(colId == cols)
+					html += '</tr>';
 			}
-			html += '<td ';
 			
-			html += 'class="col-id-';
-			html += i;
-				
-			/*
-			if(colorJpath) {
-				html += ' style="background-color: ';
-				html += ;
-				html += '"';
-			}
-			*/
-			
-			html += '">';
-			//html +=  CI.DataType.toScreen(CI.DataType.getValueFromJPath(this.list[i], valJpath), this.module);
-			html += '</td>';
-			if(colId == cols)
+			if(i % cols != 0) {
+				while(i % cols != 0) {
+					html += '<td></td>';
+					i++;
+				}
 				html += '</tr>';
-				
-			
-			
-		}
-		
-		if(i % cols != 0) {
-			while(i % cols != 0) {
-				html += '<td></td>';
-				i++;
 			}
-			html += '</tr>';
-		}
-		html += '</table>';
-		this.dom.html(html);
-		
+			html += '</table>';
+			view.dom.html(html);
+		});
+
+/*
+
 		for(var i = 0; i < this.list.length; i++) {
 			var j = i;
 			CI.DataType.getValueFromJPath(this.list[i], colorJpath, function(val) {
@@ -97,7 +102,7 @@ CI.Module.prototype._types['2d_list'].View.prototype = {
 				view.dom.children('table').children('tbody').children().find('.col-id-' + j).html(val);	
 			});
 		}
-		
+		*/
 		$(document).trigger('checkAsyncLoad', [ this.dom ]);
 	},
 	

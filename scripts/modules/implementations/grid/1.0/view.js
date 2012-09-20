@@ -126,11 +126,14 @@ CI.Module.prototype._types.grid.View.prototype = {
 				if(jpath.jpath)
 					jpath = jpath.jpath;
 
-					CI.DataType.asyncToScreenHtml(source[i], box, jpath).done(function(val) {
+					async = CI.DataType.asyncToScreenHtml(source[i], box, jpath);
+					async.done(function(val) {
 						element.data[j] = val;
 					});
+					if(!element.data[j])
+						element.data[j] = async.html;
+					
 			}
-			
 			
 			if(source[i].children) {
 				element.children  = [];

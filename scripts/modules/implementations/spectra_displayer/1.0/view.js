@@ -53,14 +53,15 @@ CI.Module.prototype._types.spectra_displayer.View.prototype = {
 				return;
 			// Get the data associated to the datasource
 			moduleValue = moduleValue.getData();
-			console.log(view.dom.data('spectra'));
 			view.dom.data('spectra').setBoundaries(moduleValue.value.from, moduleValue.value.to);
+
 			return;
 		}
 
 		// Load the jcamp from the rel
 		if(!(moduleValue = this.module.getDataFromRel('jcamp')))
 			return;
+		
 		// Get the data associated to the datasource
 		moduleValue = moduleValue.getData();
 		// Display the jcamp to the screen using the value and the module ref
