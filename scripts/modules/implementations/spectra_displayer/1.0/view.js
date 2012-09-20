@@ -69,8 +69,12 @@ CI.Module.prototype._types.spectra_displayer.View.prototype = {
 
 		// Get the data associated to the datasource
 		moduleValue = moduleValue.getData();
+
+		var cfgM = this.module.getConfiguration();
+		var cfg = {continuous: (cfgM.mode == 'curve'), flipX: cfgM.flipX, flipY: cfgM.flipY };
+
 		// Display the jcamp to the screen using the value and the module ref
-		CI.DataType.toScreen(moduleValue, view.module, this.dom, {continuous: (this.module.getConfiguration().mode == 'curve') }).done(function(val) {
+		CI.DataType.toScreen(moduleValue, view.module, this.dom, cfg).done(function(val) {
 			
 			if(view.dom.data('spectra'))
 				view.dom.data('spectra').onZoomChange = function(minX, maxX) {

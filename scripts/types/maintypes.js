@@ -590,7 +590,6 @@ CI.DataType.getStructureFromElement = function(element) {
 		*/
 		//for(var i in element) 
 		structure.elements = CI.DataType.getStructureFromElement(element);
-		console.log(element);
 		
 	} else if(typeof element == "object") {
 		
@@ -863,9 +862,11 @@ CI.Type["jcamp"] = {
 			var spectra = new ChemDoodle.PerspectiveCanvas(dom.attr('id'), dom.parent().width(), dom.parent().height());
 			dom.data('spectra', spectra);
 			spectra.specs.plots_showYAxis = true;
-			spectra.specs.plots_flipXAxis = false;
-			
+			//spectra.specs.plots_flipXAxis = false;
+		
 			var ctns = opts.continuous || false;
+			spectra.specs.plots_flipXAxis =  opts.flipX || false;
+			spectra.specs.plots_flipYAxis =  opts.flipY || false;
 			
 			var jcampLoaded = ChemDoodle.readJCAMP(value.value);
 	  		spectra.loadSpectrum(jcampLoaded);

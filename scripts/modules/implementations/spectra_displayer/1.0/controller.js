@@ -81,6 +81,16 @@ CI.Module.prototype._types.spectra_displayer.Controller.prototype = {
 
 		field.setTitle(new CI.Title('Mode'));
 		field.implementation.setOptions({ 'peaks': 'Display as peaks', 'curve': 'Display as a curve' });
+
+
+		var field = groupfield.addField({
+			type: 'Checkbox',
+			name: 'flip'
+		});
+		field.setTitle(new CI.Title('Axis flipping'));
+		field.implementation.setOptions({ 'flipX': 'Flip X', 'flipY': 'Flip Y' });
+
+
 		return true;
 	},
 	
@@ -88,18 +98,33 @@ CI.Module.prototype._types.spectra_displayer.Controller.prototype = {
 		
 		var mode = this.module.getConfiguration().mode || 'peaks';
 		
+		var flipArray = [];
+		if(this.module.getConfiguration().flipX)
+			flipArray.push('flipX');
+		if(this.module.getConfiguration().flipY)
+			flipArray.push('flipY');
+	
 		return {
-			
 			gencfg: [{
-				mode: [mode]
+				mode: [mode],
+				flip: [flipArray],
 			}]
-			
-		}
-		
+		}	
 	},
 	
 	doSaveConfiguration: function(confSection) {
+
+		var flipX = false, flipY = false;
+		var flipCfg = confSection[0].gencfg[0].flip[0];
+		for(var i = 0; i < flipCfg.length; i++) {
+			if(flipCfg[i] == 'flipX')
+					flipX = true;
+			if(flipCfg[i] == 'flipY')
+					flipY = true;
+		}
+
 		this.module.getConfiguration().mode = confSection[0].gencfg[0].mode[0];
-		console.log(this.module.getConfiguration().mode);
+		this.module.getConfiguration().flipX = flipX;
+		this.module.getConfiguration().flipY = flipY;
 	}
 }
