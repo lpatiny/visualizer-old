@@ -50,7 +50,6 @@ CI.Module = function(definition) {
 		this.domContent = this.dom.children().children('.ci-module-content');
 		this.domHeader = this.dom.children().children('.ci-module-header');
 		this.domWrapper = this.dom;
-		this.viewExpander = $('<div class="ci-module-expand">...</div>');
 		
 		var moduleConstruct = CI.Module.prototype._types[moduleType];
 		
@@ -68,10 +67,16 @@ CI.Module = function(definition) {
 		this.controller.init();
 		this.model.init();
 		
-		this.dom.find('.ci-configure').bind('click', function(event) {
-			$(document).trigger('configModule', module);
+		if(this.controller.export)
+			this.dom.find('.ci-configure').bind('click', function(event) {
+				$(document).trigger('configModule', module);
+			});
+		else
+			this.dom.find('.ci-configure').hide();
+
+		this.dom.find('.ci-export').bind('click', function(event) {
+			module.exportData();
 		});
-		
 		
 		this.dom.find('.ci-remove').bind('click', function(event) {
 			Entry.removeModule(module);
@@ -100,6 +105,10 @@ CI.Module = function(definition) {
 		html += '</div>';
 		html += '<div class="ci-module-header-toolbar">';
 		html += '<ul>';
+		
+		
+		html += '<li class="ci-export">Export</li>';
+
 		html += '<li class="ci-configure"></li>';
 		html += '<li class="ci-remove">X</li>';
 		html += '</ul>';
@@ -333,6 +342,15 @@ CI.Module.prototype = {
 	setTitle: function(title) {
 		this.definition.title = title;
 		this.domHeader.find('.ci-module-header-title').text(title);
+	},
+
+	exportData: function() {
+		var module = this;
+		$('<div class="ci-module-export"><textarea></textarea></div>').dialog({
+			'title': 'Export data from module ' + module.getTitle(),
+			'width': '70%',
+			height: 500
+		}).children('textarea').text(module.controller.export());
 	}
 };
 

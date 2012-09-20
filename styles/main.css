@@ -318,6 +318,14 @@ div.ci-module-wrapper .ci-module-content {
 	
 }
 
+.ci-module-export textarea {
+	width: 100%;
+	height: 100%;
+	border: none;
+	outline: none;
+	resize: none;
+}
+
 .ci-canvas-jcamp, .canvas-container {
 	font-size: 0px;
 }

@@ -27,30 +27,55 @@ window[_namespaces['table']].Tables.Content.prototype = {
 	
 	build: function() {
 		var j = -1;
-		var html = [];
+		var html = "";
 		
 		this.reIndexedElements = {};
 		this.index = 0;
 		this.supNav = [];
 		
 		for(var i = 0; i < this.elements.length; i++) {
-
-			if(!this.doSearch(this.elements[i])) {
-				console.log('Search failed');
+			if(!this.doSearch(this.elements[i]))
 				continue;
-			}
-
 			j++;
-			
 			if(j < (this.page - 1) * this.pagination || j >= this.page * this.pagination)
 				continue;
-
-			html.push(this.buildElement(this.elements[i], 0, 0, this.elements.length == i + 1));
+			html += this.buildElement(this.elements[i], 0, 0, this.elements.length == i + 1);
 		}
 		
-		var jqHtml = $(html.join(''));
+		var jqHtml = $(html);
 		this.table.setContentHtml(jqHtml);
+	},
 
+	exportToTextWith: function(delimiter, showColumns) {
+		
+		var html = "";
+		var columns = this.table.getColumns(), element;
+
+		if(showColumns)
+			for(var i = 0; i < columns.length; i++) {
+				html += columns[i].getName();
+				html += delimiter;
+			}
+
+		html += "\n";
+
+		for(var i = 0; i < this.elements.length; i++) {
+			if(!this.doSearch(this.elements[i]))
+				continue;
+
+			element = this.elements[i];
+			for(var j = 0; j < columns.length; j++) {
+				var name = columns[j].getName();
+				var elVal = element.data[name];
+				
+				html += elVal;
+				html += delimiter;
+			}
+
+			html += "\n";
+		}
+
+		return html;
 	},
 	
 	buildElement: function(element, parent, level, last) {
@@ -141,7 +166,7 @@ window[_namespaces['table']].Tables.Content.prototype = {
 			search.replace(metachars[i], "\\" + metachars[i]);
 		search = search.toLowerCase();
 		
-		this.search = new RegExp(search);
+		this.search = new RegExp(search, "gi");
 	},
 	
 	sort: function(col, asc) {
@@ -159,5 +184,10 @@ window[_namespaces['table']].Tables.Content.prototype = {
 	
 	getElementById: function(id) {
 		return this.reIndexedElements[id];
+	},
+
+
+	exportToTabDelimited: function() {
+		return this.exportToTextWith("\t", true);
 	}
 }

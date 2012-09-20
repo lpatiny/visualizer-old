@@ -227,7 +227,13 @@ CI.Module.prototype._types.grid.Controller.prototype = {
 			valjpath: valjpath,
 			colorjpath: colorjpath
 		};*/
+	},
+
+
+
+	export: function() {
+
+			return this.module.view.table.exportToTabDelimited();
 	}
-	
 
 }

@@ -200,6 +200,10 @@ window[_namespaces['table']].Tables.Table.prototype = {
 			inst.setPage($(this).data('page'));
 		});
 		this.body/*.prepend(top).*/.append(bottom);
+	},
+
+	exportToTabDelimited: function() {
+		return this.content.exportToTabDelimited();
 	}
 }
 

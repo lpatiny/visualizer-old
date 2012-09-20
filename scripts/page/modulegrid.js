@@ -166,14 +166,12 @@ CI.Grid = {
 			height: containerHeight
 		});
 		module.view.onResize(module.getDomContent().width(), containerHeight);
-		CI.Grid.checkModuleSize(module);
+		//CI.Grid.checkModuleSize(module);
 	},
 	
 	checkModuleSize: function(module) {
-		
+/*		
 		if(module.getDomContent().height() > module.getDomContent().parent().height(false))
-			module.getDomContent().parent().after(module.viewExpander);
-		else
-			module.viewExpander.remove();
+			module.getDomContent().parent().after(module.viewExpander);*/
 	}
 }
