@@ -74,6 +74,13 @@ CI.DataType.Structures = {
 
 	},
 
+	'fromTo': {
+		'type': 'object',
+		'elements': {
+			'from': 'number',
+			'to': 'number'
+		}
+	},
 
 	'chart': {
 
@@ -833,20 +840,21 @@ CI.Type["jcamp"] = {
 
 			if(dom.length == 0)
 				return;
-console.time('load jcamp');
+
 			var spectra = new ChemDoodle.PerspectiveCanvas(dom.attr('id'), dom.parent().width(), dom.parent().height());
 			dom.data('spectra', spectra);
 			spectra.specs.plots_showYAxis = true;
 			spectra.specs.plots_flipXAxis = false;
-
 			var jcampLoaded = ChemDoodle.readJCAMP(value.value);
 	  		spectra.loadSpectrum(jcampLoaded);
+
+
 	},
 
 	toScreen: function(def, value, args) {
 		
 		if(args[0])
-			return CI.Type.jcamp.doFromDom(args[0], value);
+			return def.resolve(CI.Type.jcamp.doFromDom(args[0], value));
 
 		var id = CI.Util.getNextUniqueId();
 		CI.Util.DOMDeferred.progress(function(dom) { CI.Type.jcamp.doFromDom($("#" + id, dom), value); });

@@ -48,7 +48,7 @@ CI.Module.prototype._types.spectra_displayer.Model.prototype = {
 		this.dataValue[dataName] = this.dataValue[dataName];
 			
 		/* Triggers a module update */
-		this.module.updateView();
+		this.module.updateView(this.module.getDataRelFromName(dataName));
 	},
 	
 	getValue: function() {

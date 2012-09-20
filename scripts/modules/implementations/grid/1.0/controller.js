@@ -23,46 +23,19 @@ CI.Module.prototype._types.grid.Controller.prototype = {
 		var actions;
 		if(!(actions = this.module.definition.dataSend))	
 			return;
-			/*	
-		if(typeof actions.onEntryHover !== "undefined") {
-			
-			module.getDomView().on('mouseenter', 'div.ci-displaylist-element', function() {
-				
-				var index = $(this).index();
-				for(var i = 0; i < actions.onEntryHover.length; i++) {
-					switch(actions.onEntryHover[i].rel) {
-						case 'element':
-							var toSend = module.view.list[index];	
-						break;
-					}
-					
-					if(!!toSend) {
-						var data = CI.Types.getValueFromJPath(actions.onEntryHover[i].key, toSend);
-						CI.API.setSharedVar(actions.onEntryHover[i].name, data);
-					}
-				}
-				
-			});
-		}*/
 	},
 	
 	lineHover: function(element) {
-		
 		var actions;
 		if(!(actions = this.module.definition.dataSend))	
-			return;
-				
+			return;	
 		for(var i = 0; i < actions.length; i++) {
-
 			CI.API.blankSharedVar(actions[i].name);
 			if(actions[i].event == "onHover")
 				CI.API.setSharedVarFromJPath(actions[i].name, element, actions[i].jpath);
-			
 		}
 	},
-	
-	
-	
+
 	lineClick: function(element) {
 		
 		var actions;
@@ -81,6 +54,7 @@ CI.Module.prototype._types.grid.Controller.prototype = {
 	configurationSend: {
 
 		events: {
+
 			onSelect: {
 				label: 'Select a line',
 				description: 'Click on a line to select it'
@@ -216,38 +190,19 @@ CI.Module.prototype._types.grid.Controller.prototype = {
 		
 	},
 	
-	
 	doSaveConfiguration: function(confSection) {
-		
 		var group = confSection[0].cols[0];
-		
 		var cols = {};
 		for(var i = 0; i < group.length; i++)
 			cols[group[i].coltitle] = { jpath: group[i].coljpath };
-		
-
 		this.module.getConfiguration().colsjPaths = cols;
 		this.module.getConfiguration().nbLines = confSection[0].gencfg[0].nblines[0];
 		this.module.getConfiguration().colorjPath = confSection[0].gencfg[0].colorjpath[0];
 		this.module.getConfiguration().displaySearch = !!confSection[0].gencfg[0].displaySearch[0][0];
-
-		
-		/*var coltitle = group.colnumber;
-		var coljpath = group.valjPath;
-		
-		
-		this.module.definition.configuration = {
-			colnumber: colnumber,
-			valjpath: valjpath,
-			colorjpath: colorjpath
-		};*/
 	},
 
-
-
 	export: function() {
-
-			return this.module.view.table.exportToTabDelimited();
+		return this.module.view.table.exportToTabDelimited();
 	}
 
 }

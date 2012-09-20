@@ -7534,6 +7534,9 @@ ChemDoodle.monitor = (function(featureDetection, q, document) {
 				this.drawChildExtras(ctx);
 			}
 		}
+
+		if(this.onRepaint)
+			this.onRepaint.call(this);
 	};
 	c._Canvas.prototype.resize = function(w, h) {
 		var cap = q('#' + this.id);
@@ -8480,7 +8483,15 @@ ChemDoodle.monitor = (function(featureDetection, q, document) {
 		this.lastPinchScale = 1;
 		return true;
 	};
+
 	c.PerspectiveCanvas.prototype = new c._SpectrumCanvas();
+
+	c.PerspectiveCanvas.prototype.setBoundaries = function(from, to) {
+		this.spectrum.minX = from;
+		this.spectrum.maxX = to;
+		this.repaint();
+	}
+
 	c.PerspectiveCanvas.prototype.mousedown = function(e) {
 		this.dragRange = new c.structures.Point(e.p.x, e.p.x);
 	};
@@ -8494,6 +8505,8 @@ ChemDoodle.monitor = (function(featureDetection, q, document) {
 			}
 			this.dragRange = null;
 			this.repaint();
+			if(this.onZoomChange)
+				this.onZoomChange.call(this, this.spectrum.minX, this.spectrum.maxX);
 		}
 	};
 	c.PerspectiveCanvas.prototype.drag = function(e) {

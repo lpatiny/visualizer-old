@@ -16,17 +16,36 @@ CI.Module.prototype._types.spectra_displayer.Controller = function(module) {
 
 CI.Module.prototype._types.spectra_displayer.Controller.prototype = {
 	
-	
 	init: function() {
+	},
+
+	zoomChanged: function(min, max) {
+		var actions;
+		if(!(actions = this.module.definition.dataSend))	
+			return;
+		for(var i = 0; i < actions.length; i++) {
+			CI.API.blankSharedVar(actions[i].name);
+			if(actions[i].event == "onZoomChange") {
+				//console.log('Ok set');
+				CI.API.setSharedVarFromJPath(actions[i].name, {type: 'fromTo', value: {from: min, to: max}}, actions[i].jpath);
+			}
+		}
 	},
 	
 	configurationSend: {
 		
 		events: {
+			onZoomChange: {
+				label: 'on zoom change',
+				description: 'When the zoom changes'
+			}
 		},
 		
 		rels: {
-			
+			'fromTo': {
+				label: 'From - To',
+				description: 'Sends the coordinates of the zoom'
+			}
 		}
 	},
 	
@@ -35,12 +54,17 @@ CI.Module.prototype._types.spectra_displayer.Controller.prototype = {
 			type: 'jcamp',
 			label: 'jcamp data',
 			description: 'A jcamp file'
+		},
+
+		fromTo: {
+			type: 'fromTo',
+			label: 'From - To data',
+			description: 'From - To data'
 		}
 	},
-	
-	
+
 	moduleInformations: {
-		moduleName: 'ChemDoodle Spectra'
+		moduleName: 'Jcamp display (CDWC)'
 	}
 
 }
