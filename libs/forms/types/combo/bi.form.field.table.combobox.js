@@ -29,8 +29,7 @@ BI.Forms.Fields.Table.Combo.prototype.buildHtml = function() {
 BI.Forms.Fields.Table.Combo.prototype.initHtml = function() {
 
 	var field = this;
-	if(typeof this.options != "undefined")
-		this.loadTree();
+	this.loadTree();
 };
 
 
@@ -63,6 +62,7 @@ BI.Forms.Fields.Table.Combo.prototype.startEditing = function(position) {
 /*	this.divs[position].hide().after(this.input.val(this.main.getValue(position)));
 	this.input.focus();*/
 	
+	this.fillTree(position);
 	this.currentIndex = position;
 	this.main.toggleExpander(position);
 };
@@ -79,7 +79,8 @@ BI.Forms.Fields.Table.Combo.prototype.stopEditing = function(position) {
 BI.Forms.Fields.Table.Combo.prototype.expanderShowed = function(index) {
 	
 	if(this.optionsIndexed[index] !== undefined) {
-		this.loadTree(index);
+	//	this.loadTree(index);
+		this.fillTree(index);
 	}
 	
 	

@@ -21,7 +21,6 @@ $.extend(BI.Forms.Fields.List.Combo.prototype, {
 
 	
 	buildHtml: BI.Forms.FieldGeneric.buildHtml,
-	
 		
 	initHtml: function() {
 		

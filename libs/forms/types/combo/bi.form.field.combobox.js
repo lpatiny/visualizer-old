@@ -21,12 +21,15 @@ BI.Forms.Fields.Combo.prototype = {
 	
 	setOptions: function(options, index) {
 		
-		if(index !== undefined) {
+
+		if(index !== undefined)
 			this.optionsIndexed[index] = options;
-		} else
+		else
 			this.options = options;
 		
-		this.loadTree(index);
+
+		//this.setText(index, title);	
+		//this.loadTree(index);
 	},
 	
 	setOptionsUrl: function(url, index) {
@@ -40,36 +43,18 @@ BI.Forms.Fields.Combo.prototype = {
 				var xml = $($.parseXML(data)).children();
 				var json = field.parseLazyRead(dom);
 				field.options = json;
-				field.loadTree();
+				//field.fil();
 			}
 		});
 	},
 	
 	loadTree: function(index) {
-		
-		var field = this;
-		/*
-		if(this.treeLoaded) {
+
+		var field = this;		
+		field.domTree = this.main.domExpander.empty().html('<div />').children();
+		field.domTree.dynatree({
 			
-		      
-		      var rootNode = this.main.domExpander.dynatree("getRoot");
-		      rootNode.deactivate()
-		      rootNode.removeChildren();
-		      rootNode.addChild(((index !== undefined && this.optionsIndexed[index] !== undefined) ? this.optionsIndexed[index] : this.options));
-		      rootNode.activate()
-		      
-		      return;
-		}
-		*/
-		if(!this.main.isInit || (this.options == undefined && this.optionsIndexed[index] == undefined))
-			return;
-		
-		this.treeLoaded = true;
-		
-		
-		this.main.domExpander.empty().html('<div />').children().dynatree({
-			
-			children: ((index !== undefined && this.optionsIndexed[index] !== undefined) ? this.optionsIndexed[index] : this.options),
+			children: [],
 			imagePath: '',
 			onLazyRead: function(node) {
 				
@@ -96,23 +81,23 @@ BI.Forms.Fields.Combo.prototype = {
 					
 				//event.stopPropagation();
 				
-				if(field.currentIndex !== undefined)
+				/*if(field.currentIndex !== undefined)
 					var index = field.currentIndex;
-				
-				if(index == undefined)
+*/
+
+				if(field.main.findExpandedElement())
 					var index = field.main.findExpandedElement().index;
-				
+
+
 				var id = node.data.key;
 				var icon = node.data.icon;
 				var title = node.data.title;
 				// If we click on a folder, do nothing.
 				if(node.data.isFolder)
 					return;
-					
-			//	field.main.setIcon(index, icon);
+
 				field.main.changeValue(index, id);
 				field.setText(index, title);
-				
 				field.main.hideExpander();
 			},
 			
@@ -128,6 +113,17 @@ BI.Forms.Fields.Combo.prototype = {
 			debugLevel: 0
 		});
 	},
+
+	fillTree: function(index) {
+
+		var options = this.options;
+		if(this.optionsIndexed[index])
+			options = this.optionsIndexed[index];
+
+		var root = this.domTree.dynatree('getRoot');
+		root.removeChildren();
+		root.addChild(options);
+	},
 	
 	
 	doValCallback: function() {
@@ -141,24 +137,38 @@ BI.Forms.Fields.Combo.prototype = {
 	
 	
 	setValue: function(index, value) {
-		var index2 = index;
-		var field = this;
-		
-		this._loadedCallback.push(function() {
-			field.currentIndex = index2;
-			var tree, node;
-			tree = field.main.domExpander.children().dynatree("getTree");
-			
-			if(tree.getNodeByKey && (node = tree.getNodeByKey(value))) {
-				node.activate();
-				node.deactivate();
-			}
-		});
-		
-		this.doValCallback();
+		this.main.changeValue(index, value);
+		this.checkFillState(index);
 	},
 	
+
+	checkFillState: function(index) {
+
+		var options = this.options;
+		if(this.optionsIndexed[index])
+			options = this.optionsIndexed[index];
+
+		var element = this.lookRecursively(this.main.getValue(index), options);
+		if(element)
+			this.setText(index, element.title);
+	},
 	
+
+	lookRecursively: function(key, pool) {
+		var found = false;
+		for(var i = 0; i < pool.length; i++) {
+
+			if(pool[i].key == key)
+				return pool[i];
+			
+			if(pool[i].children)
+				if(found = this.lookRecursively(key, pool[i].children))
+					return found;
+		}
+
+		return false;
+	},
+
 	parseLazyRead: function(dom) {
 	
 		var json = [];

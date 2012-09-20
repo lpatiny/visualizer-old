@@ -231,10 +231,8 @@ BI.Forms.Field.prototype = {
 			this.doReloadStructure('getsNotNull');
 		
 		this.doReloadStructure('change');
-		
-		for(var i = 0; i < this.changeHandler.length; i++) {
+		for(var i = 0; i < this.changeHandler.length; i++)
 			this.changeHandler[i].call(this, index, value);
-		}
 	},
 	
 	isValid: function() {
