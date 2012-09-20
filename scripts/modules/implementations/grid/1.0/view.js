@@ -23,14 +23,16 @@ CI.Module.prototype._types.grid.View.prototype = {
 		this.domExport = $("<div />");
 
 		var inst = this;
-		var searchInput = $("<input />").bind('keyup', function() {
-			if(inst.table)
-				inst.table.doSearch($(this).val());;
-		});
 
-		this.domSearch.append(searchInput);
-		this.domSearch.prepend("<span>Search : </span>");
+		if(this.module.getConfiguration().displaySearch) {
+			var searchInput = $("<input />").bind('keyup', function() {
+				if(inst.table)
+					inst.table.doSearch($(this).val());;
+			});
 
+			this.domSearch.append(searchInput);
+			this.domSearch.prepend("<span>Search : </span>");
+		}
 		this.dom.append(this.domSearch).append(this.domExport).append(this.domTable);
 		this.module.getDomContent().html(this.dom);
 	},

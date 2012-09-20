@@ -32,13 +32,17 @@ window[_namespaces['table']].Tables.Content.prototype = {
 		this.reIndexedElements = {};
 		this.index = 0;
 		this.supNav = [];
-		
+		this.entryCount = 0;
+
 		for(var i = 0; i < this.elements.length; i++) {
+
 			if(!this.doSearch(this.elements[i]))
 				continue;
+			this.entryCount++;
 			j++;
 			if(j < (this.page - 1) * this.pagination || j >= this.page * this.pagination)
 				continue;
+
 			html += this.buildElement(this.elements[i], 0, 0, this.elements.length == i + 1);
 		}
 		

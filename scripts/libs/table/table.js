@@ -168,10 +168,14 @@ window[_namespaces['table']].Tables.Table.prototype = {
 		this.content.setSearch(term);
 		this.content.build();
 		this.commitContent();
+		this.addPagination();
 	},
 
 	addPagination: function() {
 		
+		if(this.paginationDOM)
+			this.paginationDOM.remove();
+console.log(this.content.entryCount);
 		var inst = this;
 		var pages = Math.ceil(this.content.entryCount / this.pagination);
 		var page = this.page;
@@ -196,10 +200,10 @@ window[_namespaces['table']].Tables.Table.prototype = {
 		}
 		
 		html += '</td></tr>';
-		var bottom = $(html).on('click', 'span', function() {
+		this.paginationDOM = $(html).on('click', 'span', function() {
 			inst.setPage($(this).data('page'));
 		});
-		this.body/*.prepend(top).*/.append(bottom);
+		this.body.append(this.paginationDOM);
 	},
 
 	exportToTabDelimited: function() {

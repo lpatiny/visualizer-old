@@ -32,7 +32,6 @@ jQuery.fn.customInput = function(){
 			})
 			.trigger('updateState')
 			.on('click', function(){ 
-				console.log('force click');
 				$('input[name="'+ $(this).attr('name') +'"]').trigger('updateState');
 			})
 			.focus(function(){ 

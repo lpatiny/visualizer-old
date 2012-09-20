@@ -225,11 +225,11 @@ CI.Module.prototype._types.grid.Controller.prototype = {
 		for(var i = 0; i < group.length; i++)
 			cols[group[i].coltitle] = { jpath: group[i].coljpath };
 		
-		console.log(confSection[0].gencfg[0].displaySearch[0]);
+
 		this.module.getConfiguration().colsjPaths = cols;
 		this.module.getConfiguration().nbLines = confSection[0].gencfg[0].nblines[0];
 		this.module.getConfiguration().colorjPath = confSection[0].gencfg[0].colorjpath[0];
-		this.module.getConfiguration().displaySearch = false;
+		this.module.getConfiguration().displaySearch = !!confSection[0].gencfg[0].displaySearch[0][0];
 
 		
 		/*var coltitle = group.colnumber;
