@@ -156,6 +156,9 @@ BI.Forms.Fields.Combo.prototype = {
 
 	lookRecursively: function(key, pool) {
 		var found = false;
+
+		if(!pool) return;
+
 		for(var i = 0; i < pool.length; i++) {
 
 			if(pool[i].key == key)

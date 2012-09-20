@@ -133,7 +133,7 @@ CI.Module.prototype._types.grid.View.prototype = {
 						element.data[j] = val;
 					});
 
-					if(!element.data[j])
+					if(element.data[j] == undefined)
 						element.data[j] = async.html;
 			}
 			if(source[i].children) {

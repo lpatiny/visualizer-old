@@ -425,9 +425,10 @@ CI.DataType._PENDING = new Object();
 
 CI.DataType.fetchElementIfNeeded = function(element) {
 	
-	if(element === false || element == undefined)
-		return $.Deferred().reject();
-		
+	if(element === false || element === undefined || element == null)
+		return $.Deferred().resolve("");
+	
+
 	var type = element.type, ajaxType, def;
 	if(!element.value && element.url) {
 		
@@ -521,7 +522,7 @@ CI.DataType.getJPathsFromStructure = function(structure, title, jpathspool, keys
 			case 'array':
 				
 				// Array which length is nown
-				if(!structure.elements instanceof Array)
+				if(!(structure.elements instanceof Array))
 					structure.elements = [structure.elements];
 
 				for(var i = 0; i < structure.elements.length; i++)
@@ -589,7 +590,7 @@ CI.DataType.getStructureFromElement = function(element) {
 		*/
 		//for(var i in element) 
 		structure.elements = CI.DataType.getStructureFromElement(element);
-		
+		console.log(element);
 		
 	} else if(typeof element == "object") {
 		
@@ -711,7 +712,7 @@ CI.DataType.asyncToScreenHtml = function(element, box, jpath) {
 	} else*/
 		// returns element.value if fetched
 
-	var def = CI.DataType.getValueFromJPath(element, jpath).pipe(function(data) { var val = CI.DataType._toScreen(data, box); $("#callback-load-" + asyncId).html(val); return val; });
+	var def = CI.DataType.getValueFromJPath(element, jpath).pipe(function(data) {  var val = CI.DataType._toScreen(data, box); $("#callback-load-" + asyncId).html(val); return val; });
 	def.html = html;
 	return def; 	
 }
@@ -757,8 +758,7 @@ CI.Type["chemical"] = {
 	},
 	
 	toScreen: function(def, val) {
-
-		CI.Type[CI.DataType.Structures.chemical].getIUPAC(def, val);
+		CI.Type["chemical"].getIUPAC(def, val);
 	}
 };
 	

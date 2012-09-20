@@ -72,9 +72,10 @@ CI.Module.prototype._types.spectra_displayer.View.prototype = {
 		// Display the jcamp to the screen using the value and the module ref
 		CI.DataType.toScreen(moduleValue, view.module, this.dom, {continuous: (this.module.getConfiguration().mode == 'curve') }).done(function(val) {
 			
-			view.dom.data('spectra').onZoomChange = function(minX, maxX) {
-				view.module.controller.zoomChanged(minX, maxX);
-			};
+			if(view.dom.data('spectra'))
+				view.dom.data('spectra').onZoomChange = function(minX, maxX) {
+					view.module.controller.zoomChanged(minX, maxX);
+				};
 			view.update('fromTo');
 			//CI.Util.ResolveDOMDeferred(view.module.getDomContent());
 			CI.Grid.moduleResize(view.module);			
