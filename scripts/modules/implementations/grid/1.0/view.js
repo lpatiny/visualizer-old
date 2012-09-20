@@ -130,11 +130,10 @@ CI.Module.prototype._types.grid.View.prototype = {
 					async.done(function(val) {
 						element.data[j] = val;
 					});
+
 					if(!element.data[j])
 						element.data[j] = async.html;
-					
 			}
-			
 			if(source[i].children) {
 				element.children  = [];
 				this.buildElement(source[i].children, element.children, jpaths, colorJPath);

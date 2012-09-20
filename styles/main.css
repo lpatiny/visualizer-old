@@ -369,4 +369,9 @@ div.ci-module-display_value div.ci-module-content img {
 	font-size: 1.1em;
 }
 
+.ci-displaylist-list-2d img {
+	max-width: 100%;
+	max-height: 100%;
+}
+
 

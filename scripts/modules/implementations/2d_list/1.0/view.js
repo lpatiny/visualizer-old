@@ -44,8 +44,20 @@ CI.Module.prototype._types['2d_list'].View.prototype = {
 			return;
 		
 		moduleValue = moduleValue.getData();
+		var cfg = this.module.getConfiguration();
 
+		var sizeStyle = "";
+		if(cfg.width || cfg.height) {
+			sizeStyle += 'style="';
 
+			if(cfg.width)
+				sizeStyle += "width: " + cfg.width + "px; ";
+
+			if(cfg.height)
+				sizeStyle += "height: " + cfg.height + "px; ";
+
+			sizeStyle += '"';
+		}
 
 		CI.DataType.fetchElementIfNeeded(moduleValue).done(function(val) {
 			this.list = val;
@@ -57,6 +69,7 @@ CI.Module.prototype._types['2d_list'].View.prototype = {
 					html += '<tr>';
 				}
 				html += '<td ';
+				html += sizeStyle;
 				html += '>';
 
 				var thehtml;
@@ -64,6 +77,7 @@ CI.Module.prototype._types['2d_list'].View.prototype = {
 				async.done(function(val) {
 					thehtml = val;
 				});
+
 				if(!thehtml)
 					thehtml = async.html;
 				html += thehtml;

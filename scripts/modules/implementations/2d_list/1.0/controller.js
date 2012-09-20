@@ -133,6 +133,18 @@ CI.Module.prototype._types['2d_list'].Controller.prototype = {
 		field.implementation.setOptions(jpaths);
 		field.setTitle(new CI.Title('Color jPath'));
 		
+		var field = groupfield.addField({
+			type: 'Text',
+			name: 'width'
+		});
+		field.setTitle(new CI.Title('Width'));
+		
+		var field = groupfield.addField({
+			type: 'Text',
+			name: 'height'
+		});
+		field.setTitle(new CI.Title('Height'));
+		
 		return true;
 	},
 	
@@ -142,11 +154,16 @@ CI.Module.prototype._types['2d_list'].Controller.prototype = {
 		var colorJpath = this.module.getConfiguration().colorjpath || "none";
 		var cols = this.module.getConfiguration().colnumber || 4;
 		
+		var height = this.module.getConfiguration().height || "";
+		var width = this.module.getConfiguration().width || "";
+		
 		return {
 			module: [{
 				colnumber: [cols],
 				valjPath: [valJpath],
-				colorjPath: [colorJpath]
+				colorjPath: [colorJpath],
+				width: [width],
+				height: [height]
 			}]
 		}
 		
@@ -160,11 +177,15 @@ CI.Module.prototype._types['2d_list'].Controller.prototype = {
 		var colnumber = group.colnumber[0];
 		var valjpath = group.valjPath[0];
 		var colorjpath = group.colorjPath[0];
+		var height = group.width[0];
+		var width = group.height[0];
 		
 		this.module.definition.configuration = {
 			colnumber: colnumber,
 			valjpath: valjpath,
-			colorjpath: colorjpath
+			colorjpath: colorjpath,
+			width: width,
+			height: height
 		};
 	}
 	
