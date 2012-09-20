@@ -68,14 +68,14 @@ CI.Module = function(definition) {
 		this.model.init();
 		
 		if(this.controller.export)
-			this.dom.find('.ci-configure').bind('click', function(event) {
-				$(document).trigger('configModule', module);
+			this.dom.find('.ci-export').bind('click', function(event) {
+				module.exportData();
 			});
 		else
-			this.dom.find('.ci-configure').hide();
+			this.dom.find('.ci-export').hide();
 
-		this.dom.find('.ci-export').bind('click', function(event) {
-			module.exportData();
+		this.dom.find('.ci-configure').bind('click', function(event) {
+			$(document).trigger('configModule', module);
 		});
 		
 		this.dom.find('.ci-remove').bind('click', function(event) {
