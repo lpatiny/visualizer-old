@@ -68,6 +68,11 @@ CI.DataType.Structures = {
 	'jcamp': "string",
 
 
+	'arrayXY': {
+		'type': 'array',
+		'elements': ['number', 'number']
+	},
+
 	'matrix': {
 
 		'type': 'object'
@@ -491,7 +496,7 @@ CI.DataType.getJPathsFromStructure = function(structure, title, jpathspool, keys
 		return;
 
 	var children = [];
-	
+		
 	if(structure.elements) {
 		
 			
@@ -508,14 +513,21 @@ CI.DataType.getJPathsFromStructure = function(structure, title, jpathspool, keys
 			case 'object':
 				
 				for(var i in structure.elements) {
-					CI.DataType.getJPathsFromStructure(structure.elements[i], i, children, keystr);
+					CI.DataType.getJPathsFromStructure(structure.elements[i], i + "", children, keystr);
 				}
 				
 			break;
 			
 			case 'array':
-			
-				CI.DataType.getJPathsFromStructure(structure.elements, '0', children, keystr);
+				
+				// Array which length is nown
+				if(!structure.elements instanceof Array)
+					structure.elements = [structure.elements];
+
+				for(var i = 0; i < structure.elements.length; i++)
+					CI.DataType.getJPathsFromStructure(structure.elements[i], i + "", children, keystr);
+				
+	
 				/*
 				var jpathpoolchild = [];
 				var keystr2 = keystr + ".0";
@@ -606,19 +618,24 @@ CI.DataType.getJPathsFromElement = function(element, jpaths) {
 	if(element === undefined)
 		return;
 	
+
 	// We know the dynamic structure
 	// Apply to typed elements + to js objects
+
+
 	if(element.structure)
 		CI.DataType.getJPathsFromStructure(element.structure, null, jpaths);	
 	else if(element.type && CI.DataType.Structures[element.type]) {
 		CI.DataType.getJPathsFromStructure(CI.DataType.Structures[element.type], null, jpaths);
+
 	} else {
-		console.log(typeof element);
+		
 		switch(typeof element) {
 
 			default:
 			case 'object':
 				var structure = CI.DataType.getStructureFromElement(element, structure);
+
 				CI.DataType.getJPathsFromStructure(structure, null, jpaths);
 			break;
 			/*

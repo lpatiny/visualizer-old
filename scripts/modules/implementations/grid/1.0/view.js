@@ -59,7 +59,9 @@ CI.Module.prototype._types.grid.View.prototype = {
 			return;
 			
 		moduleValue = moduleValue.getData();
-		
+		if(moduleValue == null)
+			return;
+
 		var Table = new CI.Tables.Table({
 			
 			onLineHover: function(element) {
@@ -83,13 +85,13 @@ CI.Module.prototype._types.grid.View.prototype = {
 			Table.setPagination(nbLines);
 		
 		var Columns = {};
+
+		var type = CI.DataType.getType(moduleValue);
 		for(var j in jpaths) {
 			var Column = new CI.Tables.Column(j);
 			Column.setTitle(new CI.Title(j));
-			
 			if(jpaths[j].format)
 				Column.format(jpaths[j].format);
-			
 			Table.addColumn(Column);
 			Columns[j] = Column;
 		}

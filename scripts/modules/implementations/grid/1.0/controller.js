@@ -77,7 +77,7 @@ CI.Module.prototype._types.grid.Controller.prototype = {
 	
 	configurationReceive: {
 		list: {
-			type: ["array"],
+			type: ["array", "arrayXY"],
 			label: 'List',
 			description: 'Any list of displayable element'
 		}		
@@ -111,15 +111,18 @@ CI.Module.prototype._types.grid.Controller.prototype = {
 		
 		var jpaths = [];
 		
-		if(data != null) 
+		if(CI.DataType.getType(data) == 'array') 
 			CI.DataType.getJPathsFromElement(data[0], jpaths);
-
+		else if(CI.DataType.getType(data) == 'arrayXY')
+			CI.DataType.getJPathsFromElement(data, jpaths);
+		
 
 		var field = groupfield.addField({
 			type: 'Combo',
 			name: 'colorjpath'
 		});
 		//options.unshift({ title: 'None', key: 'none'});
+
 		field.implementation.setOptions(jpaths);
 		field.setTitle(new CI.Title('Color jPath'));
 
@@ -142,18 +145,18 @@ CI.Module.prototype._types.grid.Controller.prototype = {
 		});
 		field.setTitle(new CI.Title('Columns title'));
 		
-		var options = [];
+		/*var options = [];
 		if(data = this.module.getDataFromRel('list'))
 			data = data.getData();
-		
-		if(data != null)
-			CI.DataType.getJPathsFromElement(data[0], options);
-		
+		*/
+		/*if(data != null)
+			CI.DataType.getJPathsFromElement(data[0], jpaths);
+		*/
 		var field = groupfield.addField({
 			type: 'Combo',
 			name: 'coljpath'
 		});
-		field.implementation.setOptions(options);
+		field.implementation.setOptions(jpaths);
 		field.setTitle(new CI.Title('Value jPath'));
 		
 		return true;
