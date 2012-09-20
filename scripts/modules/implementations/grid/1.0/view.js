@@ -19,7 +19,7 @@ CI.Module.prototype._types.grid.View.prototype = {
 	init: function() {	
 		this.dom = $('<div class="ci-displaylist-list"></div>');
 		this.domTable = $("<div />");
-		this.domSearch = $("<div />");
+		this.domSearch = $("<div />").addClass('ci-grid-search');
 		this.domExport = $("<div />");
 
 		var inst = this;
@@ -29,7 +29,7 @@ CI.Module.prototype._types.grid.View.prototype = {
 		});
 
 		this.domSearch.append(searchInput);
-
+		this.domSearch.prepend("<span>Search : </span>");
 
 		this.dom.append(this.domSearch).append(this.domExport).append(this.domTable);
 		this.module.getDomContent().html(this.dom);

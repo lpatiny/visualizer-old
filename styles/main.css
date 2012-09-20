@@ -256,6 +256,7 @@ div.ci-module-wrapper .ci-module-content {
 
 .ci-displaylist-list {
 	margin: 20px;
+	margin-top: 5px;
 }
 
 .ci-displaylist-list > div {
@@ -351,3 +352,21 @@ div.ci-module-display_value div.ci-module-content img {
 	max-width: 100%;
 	max-height: 100%;
 }
+
+
+.ci-grid-search input {
+	border: 1px solid #333333;
+	padding: 4px;
+	padding-left: 5px;
+	font-size: inherit;
+	border-radius: 5px;
+}
+
+.ci-grid-search span {
+	display: inline-block;
+	margin-right: 10px;
+	padding-top: 15px;
+	font-size: 1.1em;
+}
+
+

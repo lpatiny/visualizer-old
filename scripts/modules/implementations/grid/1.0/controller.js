@@ -148,9 +148,17 @@ CI.Module.prototype._types.grid.Controller.prototype = {
 		//options.unshift({ title: 'None', key: 'none'});
 		field.implementation.setOptions(jpaths);
 		field.setTitle(new CI.Title('Color jPath'));
+
+
+		var field = groupfield.addField({
+			type: 'Checkbox',
+			name: 'displaySearch'
+		});
+		field.implementation.setOptions({ 'allow': 'Allow searching'});
+		field.setTitle(new CI.Title('Searching'));
 		
-		
-		
+
+
 		var groupfield = new BI.Forms.GroupFields.Table('cols');
 		section.addFieldGroup(groupfield);
 		
@@ -182,6 +190,7 @@ CI.Module.prototype._types.grid.Controller.prototype = {
 		var cols = this.module.getConfiguration().colsjPaths;
 		var nblines = this.module.getConfiguration().nbLines || 20;
 		var colorjPath = this.module.getConfiguration().colorjPath || '';
+		var search = this.module.getConfiguration().search || false;
 		
 		var titles = [];
 		var jpaths = [];
@@ -195,7 +204,8 @@ CI.Module.prototype._types.grid.Controller.prototype = {
 			
 			gencfg: [{
 				nblines: [nblines],
-				colorjpath: [colorjPath]
+				colorjpath: [colorjPath],
+				displaySearch: [{ allow: search }]
 			}],
 			
 			cols: [{
@@ -215,9 +225,13 @@ CI.Module.prototype._types.grid.Controller.prototype = {
 		for(var i = 0; i < group.length; i++)
 			cols[group[i].coltitle] = { jpath: group[i].coljpath };
 		
+		console.log(confSection[0].gencfg[0].displaySearch[0]);
 		this.module.getConfiguration().colsjPaths = cols;
 		this.module.getConfiguration().nbLines = confSection[0].gencfg[0].nblines[0];
 		this.module.getConfiguration().colorjPath = confSection[0].gencfg[0].colorjpath[0];
+		this.module.getConfiguration().displaySearch = false;
+
+		
 		/*var coltitle = group.colnumber;
 		var coljpath = group.valjPath;
 		
