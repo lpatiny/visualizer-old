@@ -30,96 +30,75 @@ CI.Module.prototype._types['2d_list'].View.prototype = {
 	
 	inDom: function() {},
 
-	update: function() {
-		
-		var moduleValue;
-		var view = this;
-		
-		var valJpath = this.module.getConfiguration().valjpath;
-		var colorJpath = this.module.getConfiguration().colorjpath;
-		var cols = this.module.getConfiguration().colnumber || 4;
-		
-		
-		if(!(moduleValue = this.module.getDataFromRel('list')))
-			return;
-		
-		moduleValue = moduleValue.getData();
-		var cfg = this.module.getConfiguration();
+	update2: {
 
-		var sizeStyle = "";
-		if(cfg.width || cfg.height) {
-			sizeStyle += 'style="';
+		list: function(moduleValue) {
 
-			if(cfg.width)
-				sizeStyle += "width: " + cfg.width + "px; ";
+			if(moduleValue == undefined || !(moduleValue instanceof Array))
+				return;
 
-			if(cfg.height)
-				sizeStyle += "height: " + cfg.height + "px; ";
+			var view = this, cfg = this.module.getConfiguration();
+			var valJpath = cfg.valjpath;
+			var colorJpath = cfg.colorjpath;
+			var cols = cfg.colnumber || 4;
+			var sizeStyle = "";
+			if(cfg.width || cfg.height) {
+				sizeStyle += 'style="';
 
-			sizeStyle += '"';
-		}
+				if(cfg.width)
+					sizeStyle += "width: " + cfg.width + "px; ";
 
-		CI.DataType.fetchElementIfNeeded(moduleValue).done(function(val) {
-			this.list = val;
+				if(cfg.height)
+					sizeStyle += "height: " + cfg.height + "px; ";
 
-			var html = '<table cellpadding="3" cellspacing="0">';
-			for(var i = 0; i < this.list.length; i++) {
-				colId = i % cols;
-				if(colId == 0) {
-					html += '<tr>';
+				sizeStyle += '"';
+			}
+
+			CI.DataType.fetchElementIfNeeded(moduleValue).done(function(val) {
+				this.list = val;
+
+				var html = '<table cellpadding="3" cellspacing="0">';
+				for(var i = 0; i < this.list.length; i++) {
+					colId = i % cols;
+					if(colId == 0) {
+						html += '<tr>';
+					}
+					html += '<td ';
+					html += sizeStyle;
+					html += '>';
+
+					var thehtml;
+					async = CI.DataType.asyncToScreenHtml(this.list[i], view.module, valJpath);
+					async.done(function(val) {
+						thehtml = val;
+					});
+
+					if(!thehtml)
+						thehtml = async.html;
+					html += thehtml;
+
+
+					//html +=  CI.DataType.toScreen(CI.DataType.getValueFromJPath(this.list[i], valJpath), this.module);
+					html += '</td>';
+					if(colId == cols)
+						html += '</tr>';
 				}
-				html += '<td ';
-				html += sizeStyle;
-				html += '>';
-
-				var thehtml;
-				async = CI.DataType.asyncToScreenHtml(this.list[i], view.module, valJpath);
-				async.done(function(val) {
-					thehtml = val;
-				});
-
-				if(!thehtml)
-					thehtml = async.html;
-				html += thehtml;
-
-
-				//html +=  CI.DataType.toScreen(CI.DataType.getValueFromJPath(this.list[i], valJpath), this.module);
-				html += '</td>';
-				if(colId == cols)
+				
+				if(i % cols != 0) {
+					while(i % cols != 0) {
+						html += '<td></td>';
+						i++;
+					}
 					html += '</tr>';
-			}
-			
-			if(i % cols != 0) {
-				while(i % cols != 0) {
-					html += '<td></td>';
-					i++;
 				}
-				html += '</tr>';
-			}
-			html += '</table>';
-			view.dom.html(html);
-		});
-
-/*
-
-		for(var i = 0; i < this.list.length; i++) {
-			var j = i;
-			CI.DataType.getValueFromJPath(this.list[i], colorJpath, function(val) {
-				
-				var val = CI.DataType.toScreen(val, view.module);
-				view.dom.children('table').children('tbody').children().find('.col-id-' + j).css('background-color', val);
+				html += '</table>';
+				view.dom.html(html);
 			});
-			
-				
-			CI.DataType.getValueFromJPath(this.list[i], valJpath, function(val) {
-				var val = CI.DataType.toScreen(val, view.module);
-				view.dom.children('table').children('tbody').children().find('.col-id-' + j).html(val);	
-			});
+
+			$(document).trigger('checkAsyncLoad', [ this.dom ]);
+
 		}
-		*/
-		$(document).trigger('checkAsyncLoad', [ this.dom ]);
 	},
-	
 
 	getDom: function() {
 		return this.dom;
