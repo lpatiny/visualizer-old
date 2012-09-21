@@ -10,26 +10,10 @@
 if(typeof CI.Module.prototype._types.grid == 'undefined')
 	CI.Module.prototype._types.grid = {};
 
-CI.Module.prototype._types.grid.Model = function(module) {
-	
-	/*
-	 * Sets
-	 * (array) this.data
-	 * (json) this.dataValue    -- Could be any type of data provided by any DataSource object. 
-	 */
-	CI.Module.prototype._impl.model.init(module, this);
-	
-	// Call anything else if you want. The prototyped init() function can also be used.
-}
+CI.Module.prototype._types.grid.Model = function(module) { }
 
-CI.Module.prototype._types.grid.Model.prototype = {
-	
-	
-	// Usually you don't really to init a model. But who knows. Please leave it.
-	init: function() {	
-	//	CI.Module.prototype._impl.model.afterInit(this.module);
-	},
-	
+$.extend(CI.Module.prototype._types.grid.Model.prototype, CI.Module.prototype._impl.model);
+$.extend(CI.Module.prototype._types.grid.Model.prototype, {
 	
 	/* 
 	 * This function is a handler called from any DataSource object. 
@@ -88,4 +72,4 @@ CI.Module.prototype._types.grid.Model.prototype = {
 			return;
 		return getjPath(data);
 	}
-}
+});

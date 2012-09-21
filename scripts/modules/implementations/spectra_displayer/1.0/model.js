@@ -6,52 +6,13 @@
  * Dual licensed under the MIT or GPL Version 2 licenses.
  */
 
-
 if(typeof CI.Module.prototype._types.spectra_displayer == 'undefined')
 	CI.Module.prototype._types.spectra_displayer = {};
+CI.Module.prototype._types.spectra_displayer.Model = function(module) { }
+$.extend(CI.Module.prototype._types.spectra_displayer.Model.prototype, CI.Module.prototype._impl.model);
+$.extend(CI.Module.prototype._types.spectra_displayer.Model.prototype, {
 
-CI.Module.prototype._types.spectra_displayer.Model = function(module) {
-	
-	/*
-	 * Sets
-	 * (array) this.data
-	 * (json) this.dataValue    -- Could be any type of data provided by any DataSource object. 
-	 */
-	CI.Module.prototype._impl.model.init(module, this);
-	
-	// Call anything else if you want. The prototyped init() function can also be used.
-}
-
-CI.Module.prototype._types.spectra_displayer.Model.prototype = {
-	
-	
-	// Usually you don't really to init a model. But who knows. Please leave it.
-	init: function() {	
-	//	CI.Module.prototype._impl.model.afterInit(this.module);
-	},
-	
-	
-	/* 
-	 * This function is a handler called from any DataSource object. 
-	 * Its goal is to refresh the module with the new data
-	 * 
-	 * To finally refresh the view, simply call this.module.updateView();
-	 * or don't if for any reason it's not necessary to update the module
-	 */
-	onDataChange: function(dataName) {
-		
-		/* Here you can transform the data coming from the DAO */
-		this.dataValue[dataName] = this.data[dataName].getData();
-		
-		var jpath;
-		/*if(jpath = this.data[dataName].getjPath())*/
-		this.dataValue[dataName] = this.dataValue[dataName];
-			
-		/* Triggers a module update */
-		this.module.updateView(this.module.getDataRelFromName(dataName));
-	},
-	
-	getValue: function() {
+		getValue: function() {
 		return this.dataValue;
 	},
 	
@@ -71,4 +32,4 @@ CI.Module.prototype._types.spectra_displayer.Model.prototype = {
 		CI.Types._getjPath(data[i], jpath);	
 		return jpath;
 	}
-}
+});

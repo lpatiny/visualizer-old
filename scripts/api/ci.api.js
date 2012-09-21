@@ -20,7 +20,7 @@ CI.API.blankSharedVar = function(varName) {
 
 // Stores a deferred
 CI.API.setSharedVar = function(varName, varData) {
-	
+	console.error('Function deprecated. Please move to CI.Repo.setValue(name, returned);')
 	var filters = CI.API.getSharedFilters(varName);
 	var def1 = $.Deferred();
 	var def2 = def1;
@@ -65,7 +65,8 @@ CI.API.resendAllVars = function() {
 CI.API.setSharedVarFromJPath = function(name, value, jpath) {
 	
 	CI.DataType.getValueFromJPath(value, jpath).done(function(returned) {
-		CI.API.setSharedVar(name, returned);
+		//CI.API.setSharedVar(name, returned);
+		CI.Repo.setValue(name, returned);
 	});
 }
 
@@ -80,3 +81,10 @@ CI.API.getSharedFilters = function(varName) {
 	}
 	return toReturn;
 }
+
+CI.API.doHighlight = function(tagList) {
+
+//	CI.Repo.
+
+}
+

@@ -10,7 +10,6 @@ if(typeof CI.Module.prototype._types.spectra_displayer == 'undefined')
 	CI.Module.prototype._types.spectra_displayer = {};
 
 CI.Module.prototype._types.spectra_displayer.Controller = function(module) {
-	
 	CI.Module.prototype._impl.controller.init(module, this);
 }
 

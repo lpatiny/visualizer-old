@@ -20,8 +20,7 @@ CI.Module.prototype._types.display_value.View.prototype = {
 		html += '<div></div>';
 		this.dom = $(html).css('display', 'table').css('height', '100%').css('width', '100%');
 		this.module.getDomContent().html(this.dom);
-		
-		this.update();
+	
 	},
 	
 	onResize: function() {

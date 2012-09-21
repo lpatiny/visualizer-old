@@ -47,8 +47,6 @@ CI.EntryPoint = function(structure, data, options, onLoad) {
 			}
 		
 		CI.Grid.checkDimensions();
-		CI.DataSource.prototype._bindEvent();
-		
 		if(typeof data == "object")
 			doData(data);
 		else
@@ -112,20 +110,13 @@ CI.EntryPoint.prototype = {
 			if(!vars)
 				return;
 			
+
+
 			for(var i in this.data) {
 			//	CI.dataType.instanciate(this.data[i]);
-				
 				for(var j = 0; j < vars.length; j++) {
-					
-					if(vars[j].sourcename == i) {
-						(function(k, data) {
-							
-							CI.DataType.getValueFromJPath(data, vars[k].jpath).done(function(val) {
-								CI.API.setSharedVar(vars[k].varname, val);	
-							});
-
-						})(j, this.data[i]);
-					}
+					if(vars[j].sourcename == i)
+						CI.API.setSharedVarFromJPath(vars[j].varname, this.data[i], vars[j].jpath);
 				}
 			}
 		}
@@ -196,14 +187,7 @@ CI.EntryPoint.prototype = {
 		return this.structure.configuration;
 	},
 	
-	
 	setConfiguration: function(cfg) {
 		return this.structure.configuration = cfg;
 	}
 }
-
-
-
-
-
-

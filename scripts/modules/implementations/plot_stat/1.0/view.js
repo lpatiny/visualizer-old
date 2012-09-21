@@ -36,24 +36,17 @@ CI.Module.prototype._types.plot_stat.View.prototype = {
 			this.drawChart();
 	},
 	
-	update: function() {
-		
-		var moduleValue;
-		var view = this;
-		
-		if(!(moduleValue = this.module.getDataFromRel('chart')))
-			return;
-			
-		moduleValue = moduleValue.getData();
-		var type = CI.DataType.getType(moduleValue);
-		
-		CI.DataType.toScreen(moduleValue, this.module).done(function(html) {
-			view.dom.html(html);
-			CI.Util.ResolveDOMDeferred();
-		});
-
+	update2: {
+		'chart': function(moduleValue) {
+			var moduleValue;
+			var view = this;
+			var type = CI.DataType.getType(moduleValue);
+			CI.DataType.toScreen(moduleValue, this.module).done(function(html) {
+				view.dom.html(html);
+				CI.Util.ResolveDOMDeferred();
+			});
+		}
 	},
-	
 	
 	drawChart: function() {
 
@@ -152,7 +145,7 @@ CI.Module.prototype._types.plot_stat.View.prototype = {
 						var row = e.row;
 						var col = e.column;
 						var rowData = moduleValue.series[col - 1][row];
-						
+
 						view.module.controller.hoverEvent(rowData);
 					});
 

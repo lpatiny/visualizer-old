@@ -5,32 +5,14 @@
  * Copyright 2012 Norman Pellet - norman.pellet@epfl.ch
  * Dual licensed under the MIT or GPL Version 2 licenses.
  */
-
-
 if(typeof CI.Module.prototype._types['2d_list'] == 'undefined')
 	CI.Module.prototype._types['2d_list'] = {};
 
-CI.Module.prototype._types['2d_list'].Model = function(module) {
-	
-	/*
-	 * Sets
-	 * (array) this.data
-	 * (json) this.dataValue    -- Could be any type of data provided by any DataSource object. 
-	 */
-	CI.Module.prototype._impl.model.init(module, this);
-	
-	// Call anything else if you want. The prototyped init() function can also be used.
-}
+CI.Module.prototype._types['2d_list'].Model = function(module) { }
 
-CI.Module.prototype._types['2d_list'].Model.prototype = {
-	
-	
-	// Usually you don't really to init a model. But who knows. Please leave it.
-	init: function() {	
-	//	CI.Module.prototype._impl.model.afterInit(this.module);
-	},
-	
-	
+$.extend(CI.Module.prototype._types['2d_list'].Model.prototype, CI.Module.prototype._impl.model);
+$.extend(CI.Module.prototype._types['2d_list'].Model.prototype, {
+
 	/* 
 	 * This function is a handler called from any DataSource object. 
 	 * Its goal is to refresh the module with the new data
@@ -80,4 +62,4 @@ CI.Module.prototype._types['2d_list'].Model.prototype = {
 			
 		return getjPath(data);
 	}
-}
+});

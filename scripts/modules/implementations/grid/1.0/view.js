@@ -47,65 +47,62 @@ CI.Module.prototype._types.grid.View.prototype = {
 		this.table = null;
 	},
 
-	update: function() {
-	
-		var moduleValue;
-		var view = this;
-		
-		var jpaths = this.module.getConfiguration().colsjPaths;
-		var colorJPath = this.module.getConfiguration().colorjPath;
-		
-		if(!(moduleValue = this.module.getDataFromRel('list')))
-			return;
-			
-		moduleValue = moduleValue.getData();
-		if(moduleValue == null)
-			return;
+	update2: {
 
-		var Table = new CI.Tables.Table({
+		list: function(value) {
+		
+			var moduleValue;
+			var view = this;
 			
-			onLineHover: function(element) {
-				var source = element._source;
-				view.module.controller.lineHover(source);
-			},
-			
-			onLineClick: function(element) {
-				var source = element._source;
-				view.module.controller.lineClick(source);
-			},
+			var jpaths = this.module.getConfiguration().colsjPaths;
+			var colorJPath = this.module.getConfiguration().colorjPath;
+			var moduleValue = value;
 
-			onPageChanged: function(newPage) {
-				CI.Util.ResolveDOMDeferred(Table.getDom());
+			var Table = new CI.Tables.Table({
+				
+				onLineHover: function(element) {
+					var source = element._source;
+					view.module.controller.lineHover(source);
+				},
+				
+				onLineClick: function(element) {
+					var source = element._source;
+					view.module.controller.lineClick(source);
+				},
+
+				onPageChanged: function(newPage) {
+					CI.Util.ResolveDOMDeferred(Table.getDom());
+				}
+			});
+			this.table = Table;
+			
+			var nbLines;
+			if(nbLines = this.module.getConfiguration().nbLines)
+				Table.setPagination(nbLines);
+			
+			var Columns = {};
+
+			var type = CI.DataType.getType(moduleValue);
+			for(var j in jpaths) {
+				var Column = new CI.Tables.Column(j);
+				Column.setTitle(new CI.Title(j));
+				if(jpaths[j].format)
+					Column.format(jpaths[j].format);
+				Table.addColumn(Column);
+				Columns[j] = Column;
 			}
-		});
-		this.table = Table;
 		
-		var nbLines;
-		if(nbLines = this.module.getConfiguration().nbLines)
-			Table.setPagination(nbLines);
-		
-		var Columns = {};
+			var list = CI.DataType.getValueIfNeeded(moduleValue);
+			var Content = new CI.Tables.Content();
+			var elements = [];
+			view.buildElement(list, elements, jpaths, colorJPath);
+			for(var i = 0, length = elements.length; i < length; i++)
+				Content.addElement(elements[i]);
+			Table.setContent(Content);
+			Table.init(view.domTable);
 
-		var type = CI.DataType.getType(moduleValue);
-		for(var j in jpaths) {
-			var Column = new CI.Tables.Column(j);
-			Column.setTitle(new CI.Title(j));
-			if(jpaths[j].format)
-				Column.format(jpaths[j].format);
-			Table.addColumn(Column);
-			Columns[j] = Column;
+			CI.Util.ResolveDOMDeferred(Table.getDom());
 		}
-	
-		var list = CI.DataType.getValueIfNeeded(moduleValue);
-		var Content = new CI.Tables.Content();
-		var elements = [];
-		view.buildElement(list, elements, jpaths, colorJPath);
-		for(var i = 0, length = elements.length; i < length; i++)
-			Content.addElement(elements[i]);
-		Table.setContent(Content);
-		Table.init(view.domTable);
-
-		CI.Util.ResolveDOMDeferred(Table.getDom());
 	},
 
 	buildElement: function(source, arrayToPush, jpaths, colorJPath) {

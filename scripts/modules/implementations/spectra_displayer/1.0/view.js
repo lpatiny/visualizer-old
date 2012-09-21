@@ -42,48 +42,37 @@ CI.Module.prototype._types.spectra_displayer.View.prototype = {
 		this.dom.html("");
 	},
 
-	update: function(rel) {
-		
-		var moduleValue;
-		var view = this;
+	update2: { 
 
-		if(rel == 'fromTo') {
+		'fromTo': function(moduleValue) {
+			var view = this;
 
-			if(!(moduleValue = this.module.getDataFromRel('fromTo')))
-				return;
-			// Get the data associated to the datasource
-			moduleValue = moduleValue.getData();
-
-			if(moduleValue == null)
+			if(moduleValue === undefined)
 				return;
 
 			if(view.dom.data('spectra'))
 				view.dom.data('spectra').setBoundaries(moduleValue.value.from, moduleValue.value.to);
-
 			return;
+		},
+
+		'jcamp': function(moduleValue) {
+			var view = this;
+			var cfgM = this.module.getConfiguration();
+			var cfg = {continuous: (cfgM.mode == 'curve'), flipX: cfgM.flipX, flipY: cfgM.flipY };
+			// Display the jcamp to the screen using the value and the module ref
+			CI.DataType.toScreen(moduleValue, this.module, this.dom, cfg).done(function(val) {
+				
+				if(view.dom.data('spectra'))
+					view.dom.data('spectra').onZoomChange = function(minX, maxX) {
+						view.module.controller.zoomChanged(minX, maxX);
+					};
+
+				view.module.updateView('fromTo');
+				//view.update2.fromTo(CI.Repo.getValue(''));
+				//CI.Util.ResolveDOMDeferred(view.module.getDomContent());
+				CI.Grid.moduleResize(view.module);			
+			});
 		}
-
-		// Load the jcamp from the rel
-		if(!(moduleValue = this.module.getDataFromRel('jcamp')))
-			return;
-
-		// Get the data associated to the datasource
-		moduleValue = moduleValue.getData();
-
-		var cfgM = this.module.getConfiguration();
-		var cfg = {continuous: (cfgM.mode == 'curve'), flipX: cfgM.flipX, flipY: cfgM.flipY };
-
-		// Display the jcamp to the screen using the value and the module ref
-		CI.DataType.toScreen(moduleValue, view.module, this.dom, cfg).done(function(val) {
-			
-			if(view.dom.data('spectra'))
-				view.dom.data('spectra').onZoomChange = function(minX, maxX) {
-					view.module.controller.zoomChanged(minX, maxX);
-				};
-			view.update('fromTo');
-			//CI.Util.ResolveDOMDeferred(view.module.getDomContent());
-			CI.Grid.moduleResize(view.module);			
-		});
 	},
 	
 	getDom: function() {

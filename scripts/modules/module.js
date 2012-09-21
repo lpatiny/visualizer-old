@@ -41,6 +41,8 @@ CI.Module = function(definition) {
 	this.init = init;
 	function init() {
 		
+
+
 		//define object properties
 		var module = this;
 		var moduleType = this.definition.type;
@@ -62,10 +64,10 @@ CI.Module = function(definition) {
 		this.view = new CI.Module.prototype._types[moduleType].View(this);
 		this.controller = new CI.Module.prototype._types[moduleType].Controller(this);
 		this.model = new CI.Module.prototype._types[moduleType].Model(this);
-		
-		this.view.init();
-		this.controller.init();
-		this.model.init();
+
+		this.view.init(this);
+		this.controller.init(this);
+		this.model.init(this);
 		
 		if(this.controller.export)
 			this.dom.find('.ci-export').bind('click', function(event) {
@@ -182,11 +184,9 @@ CI.Module.prototype = {
 	/**
 	 * Called to update the view (normally after a change of data)
 	 */
-	updateView: function(argument) {
-		if(typeof this.view.update == 'function')
-			return this.view.update(argument);
-			
-		throw "The module has no update capability";
+	updateView: function(rel) {
+		if(this.view.update2 && this.view.update2[rel])
+			this.view.update2[rel].call(this.view, CI.Repo.getValue(this.getNameFromRel(rel)));
 	},
 	
 	/** 
@@ -253,10 +253,18 @@ CI.Module.prototype = {
 	
 	
 	getDataFromRel: function(rel) {
-	
+		console.error('Function deprecated. Please remove');
+		for(var i in this.definition.dataSource)
+			if(this.definition.dataSource[i].rel == rel) {
+				return this.model.data[this.definition.dataSource[i].name];
+			}
+		return false;
+	},
+
+	getNameFromRel: function(rel) {
 		for(var i in this.definition.dataSource)
 			if(this.definition.dataSource[i].rel == rel)
-				return this.model.data[this.definition.dataSource[i].name];
+				return this.definition.dataSource[i].name;
 		return false;
 	},
 	
@@ -366,37 +374,68 @@ CI.Module.prototype._impl = {
 		 * @param module the module to which this model is associated
 		 * @param model the model being associated
 		 */
-		init: function(module, model) {
-			
+		init: function(module) {
+
 			var sourceName, sourceAccepts;
-			
-			module.model = model;
-			model.module = module;
-			model.data = [];
-			model.dataValue = [];
-			
+			module.model = this;
+			this.data = [];
+			this.module = module;
 			//loop through the data provided in the definition and copy it into the model as a DataSource
-			var sources = module.definition.dataSource;
-			
-			if(!sources)
-				return;
-				
-			for(var i = 0; i < sources.length; i++) {
-				sourceName = sources[i].name;
-				
-				if(typeof sources[i].rel == "undefined") {
-					throw {display: true, notify: true, message: "The rel of any datasource need to be specified"};
-					return;
-				}
-				sourceRel = sources[i].rel;
-				jPath = sources[i].jpath;
-				
-				sourceData = null;
-				sourceAccepts = module.getAcceptedTypes(sourceRel);
-				
-				model.data[sourceName] = new CI.DataSource(model.module, sourceName, sourceAccepts, jPath);
-				model.dataValue[sourceName] = null;
+			this.resetListeners();
+			//	model.dataValue[sourceName] = null;
+		},
+
+		resetListeners: function() {
+			this.sourceMap = null;
+			CI.Repo.unListenValue(this.listenCallback);
+
+			CI.Repo.listenValue(this.getVarNameList(), $.proxy(this.listenCallback, this));
+		},
+
+		getVarNameList: function() {
+
+			var list = this.module.definition.dataSource, listFinal = [], keyedMap = {};
+			for(var l = list.length, i = l - 1; i >= 0; i--) {
+				listFinal.push(list[i].name)
+				keyedMap[list[i].name] = list[i];
 			}
+
+			this.sourceMap = keyedMap;
+			return listFinal;
+		},
+
+		listenCallback: function(varValue, varName) {	
+
+			if(!this.sourceMap)
+				return;
+
+			var value = this.buildData(varValue, this.sourceMap[varName]);
+			this.data[varName] = varValue;
+
+			var rel = this.module.getDataRelFromName(varName);
+
+			if(rel && this.module.view.update2 && this.module.view.update2[rel])
+				this.module.view.update2[rel].call(this.module.view, varValue);
+ 		},
+
+ 		buildData: function(data, source) {
+
+			var dataRebuilt = {};
+
+			if(!(source.type instanceof Array))
+				source.type = [source.type];
+
+			var dataType = CI.DataType.getType(data);
+			var mustRebuild = false;
+			
+			for(var i = 0; i < source.type.length; i++) {
+				if(source.type[i] == dataType) {
+					return data;
+				}
+			}
+			if(mustRebuild)
+				return dataRebuilt;
+			return false;
 		}
 	},
 	
