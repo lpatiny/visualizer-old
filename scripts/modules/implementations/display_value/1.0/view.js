@@ -33,25 +33,19 @@ CI.Module.prototype._types.display_value.View.prototype = {
 	
 	inDom: function() {},
 
-	update: function() {
-		
-		var moduleValue;
-		var view = this;
-		var cfg = this.module.getConfiguration();
-		
-		if(moduleColor = this.module.getDataFromRel('color')) {
-			color = moduleColor.getData();
-			view.module.getDomContent().css('backgroundColor', color);
-		}
-		
-		if(!(moduleValue = this.module.getDataFromRel('value')) || ((moduleValue = moduleValue.getData()) === null)) {
-			
-			if(cfg.defaultvalue)
-				view.fillWithVal(cfg.defaultvalue);
+	update2: {
 
-		} else {
+		'color': function(color) {
+			if(color === undefined)
+				color = "#ffffff";
+			this.module.getDomContent().css('backgroundColor', color);
+		},
 
-			if(moduleValue !== undefined)
+		'value': function(moduleValue) {
+			var cfg = this.module.getConfiguration(), view = this;
+			if(moduleValue == undefined)
+				view.fillWithVal(cfg.defaultvalue || '');
+			else
 				CI.DataType.toScreen(moduleValue, this.module).done(function(val) {
 					view.fillWithVal(val);
 				});
