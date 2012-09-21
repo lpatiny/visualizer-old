@@ -44,40 +44,30 @@ CI.Module.prototype._types['2d_list'].View.prototype = {
 			var sizeStyle = "";
 			if(cfg.width || cfg.height) {
 				sizeStyle += 'style="';
-
 				if(cfg.width)
 					sizeStyle += "width: " + cfg.width + "px; ";
-
 				if(cfg.height)
 					sizeStyle += "height: " + cfg.height + "px; ";
-
 				sizeStyle += '"';
 			}
-
 			CI.DataType.fetchElementIfNeeded(moduleValue).done(function(val) {
 				this.list = val;
-
 				var html = '<table cellpadding="3" cellspacing="0">';
 				for(var i = 0; i < this.list.length; i++) {
 					colId = i % cols;
-					if(colId == 0) {
+					if(colId == 0)
 						html += '<tr>';
-					}
 					html += '<td ';
 					html += sizeStyle;
 					html += '>';
-
 					var thehtml;
 					async = CI.DataType.asyncToScreenHtml(this.list[i], view.module, valJpath);
 					async.done(function(val) {
 						thehtml = val;
 					});
-
 					if(!thehtml)
 						thehtml = async.html;
 					html += thehtml;
-
-
 					//html +=  CI.DataType.toScreen(CI.DataType.getValueFromJPath(this.list[i], valJpath), this.module);
 					html += '</td>';
 					if(colId == cols)
@@ -94,9 +84,7 @@ CI.Module.prototype._types['2d_list'].View.prototype = {
 				html += '</table>';
 				view.dom.html(html);
 			});
-
 			$(document).trigger('checkAsyncLoad', [ this.dom ]);
-
 		}
 	},
 
