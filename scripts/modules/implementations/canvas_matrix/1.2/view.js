@@ -263,9 +263,7 @@ CI.Module.prototype._types.canvas_matrix.View.prototype = {
 			var gridData;
 			// Get the new module value
 			var moduleValue;	
-			if(!(moduleValue = this.module.getDataFromRel('matrix')))
-				return;
-			moduleValue = moduleValue.getData();
+			
 			this.gridData = moduleValue.value.data;
 			this.canvasNbX = this.gridData[0].length;
 			this.canvasNbY = this.gridData.length;
