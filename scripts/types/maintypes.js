@@ -67,7 +67,7 @@ CI.DataType.Structures = {
 	'mf': 'string',
 	'jcamp': "string",
 
-
+	'boolean': "boolean",
 	'arrayXY': {
 		'type': 'array',
 		'elements': ['number', 'number']
@@ -410,7 +410,6 @@ CI.DataType.SubElements = {
 CI.DataType.getValueIfNeeded = function(element) {
 	if(element.value && element.type)
 		return element.value;
-	
 	if(element.url && element.type) {
 		element.value = undefined;
 		return element.value;
@@ -419,16 +418,11 @@ CI.DataType.getValueIfNeeded = function(element) {
 	return element;
 }
 
-CI.DataType._PENDING = new Object();
-
-
-
 CI.DataType.fetchElementIfNeeded = function(element) {
 	
-	if(element === false || element === undefined || element == null)
+	if(element === undefined || element == null)
 		return $.Deferred().resolve("");
 	
-
 	var type = element.type, ajaxType, def;
 	if(!element.value && element.url) {
 		
@@ -897,6 +891,18 @@ CI.Type["chart"] = {
 	toScreen: function(def, value) {
 
 		
+	}
+};
+
+
+
+
+CI.Type["boolean"] = {
+	toScreen: function(def, value) {
+		if(value)
+			def.resolve('<span style="color: green;">&#10004;</span>');
+		else
+			def.resolve('<span style="color: red;">&#10008;</span>');
 	}
 };
 

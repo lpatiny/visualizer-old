@@ -374,7 +374,6 @@ CI.Module.prototype._impl = {
 		 * @param model the model being associated
 		 */
 		init: function(module) {
-
 			var sourceName, sourceAccepts;
 			module.model = this;
 			this.data = [];
@@ -406,13 +405,9 @@ CI.Module.prototype._impl = {
 
 			if(!this.sourceMap)
 				return;
-console.log(varName);
 			var value = this.buildData(varValue, this.sourceMap[varName]);
-
 			this.data[varName] = varValue;
-
 			var rel = this.module.getDataRelFromName(varName);
-
 			if(rel && this.module.view.update2 && this.module.view.update2[rel])
 				this.module.view.update2[rel].call(this.module.view, varValue);
  		},
@@ -420,16 +415,12 @@ console.log(varName);
  		buildData: function(data, source) {
 
 			var dataRebuilt = {};
-
 			if(!source)
 				return;
-
 			if(!(source.type instanceof Array))
 				source.type = [source.type];
-
 			var dataType = CI.DataType.getType(data);
 			var mustRebuild = false;
-			
 			for(var i = 0; i < source.type.length; i++) {
 				if(source.type[i] == dataType) {
 					return data;

@@ -118,6 +118,7 @@ CI.Observable.prototype.unpush = function() {
 CI.RepoPool = function() {
 	this.on('change', function(sourcekeys, value) {
 		var callbacks = {};
+		this._keys = this._keys || [];
 		for(var i = 0; i < sourcekeys.length; i++) {
 			if(this._keys[sourcekeys[i]] == undefined)
 				continue;
