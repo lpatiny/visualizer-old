@@ -45,7 +45,7 @@ CI.Module.prototype._types['2d_list'].View.prototype = {
 			if(cfg.width || cfg.height) {
 				sizeStyle += 'style="';
 				if(cfg.width)
-					sizeStyle += "width: " + cfg.width + "px; ";
+					sizeStyle += "width: " + Math.round(100 / cols) + "%; ";
 				if(cfg.height)
 					sizeStyle += "height: " + cfg.height + "px; ";
 				sizeStyle += '"';
