@@ -45,13 +45,17 @@ CI.Grid = {
 		
 		module.inDom();
 		
+		module.getDomWrapper().find('.ci-module-header').bind('mousedown', function() {
+			CI.Grid.checkDimensions(true);
+		}).bind('mouseup', function() {
+			CI.Grid.checkDimensions(false);
+		});
 		// Insert jQuery UI resizable and draggable
 		module.getDomWrapper().resizable({
 			grid: [CI.Grid.definition.xWidth, CI.Grid.definition.yHeight],
 			resize: function() {
 
-				CI.Grid.moduleResize(module);
-				CI.Grid.checkDimensions();
+				//CI.Grid.moduleResize(module);
 			},
 			
 			start: function() {
@@ -83,6 +87,7 @@ CI.Grid = {
 					}
 					count++;
 				}
+				CI.Grid.checkDimensions(true);
 				module.moving = true;
 				$(this).css("zIndex",count);
 			},
@@ -97,7 +102,7 @@ CI.Grid = {
 			},
 			
 			drag: function() {
-				CI.Grid.checkDimensions();
+				CI.Grid.checkDimensions(true);
 			}
 		}).trigger('resize').bind('mouseover', function() {
 			
@@ -131,7 +136,7 @@ CI.Grid = {
 		CI.Grid.moduleResize(module);
 	},
 	
-	checkDimensions: function() {
+	checkDimensions: function(extend) {
 		
 		var bottomMax = 0;
 		for(var i in CI.modules) {
@@ -141,7 +146,7 @@ CI.Grid = {
 				bottomMax = Math.max(bottomMax, pos.top + size.height);
 		}
 
-		CI.Grid._el.css('height', (CI.Grid.defaults.yHeight * bottomMax + 1000));
+		CI.Grid._el.css('height', (CI.Grid.defaults.yHeight * bottomMax + (extend ? 1000 : 0)));
 	},
 	
 	
