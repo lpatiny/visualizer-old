@@ -15,6 +15,7 @@ window[_namespaces['table']].Tables.Table.prototype = {
 	defaults: {
 		cssPrefix: _namespaces['table'].toLowerCase(),
 		onLineHover: null,
+		onLineOut: null,
 		onLineSelect: null,
 		onPageChanged: null
 	},
@@ -63,6 +64,11 @@ window[_namespaces['table']].Tables.Table.prototype = {
 	execFuncContent: function(funcName, vars) {
 		if(typeof this.content !== "undefined")
 			this.content[funcName].apply(this.content, vars);
+	},
+
+	highlight: function(element) {
+		this.dom.find('tr').eq(element.index).css('background-color', (element._highlight ? 'red' : ''));
+		console.log(element._highlight);
 	},
 	
 	buildTable: function() {
@@ -113,6 +119,7 @@ window[_namespaces['table']].Tables.Table.prototype = {
 		});
 
 		this.dom.children('tbody').on('mouseenter', 'tr', function() {
+
 			if($(this).hasClass('ci-table-pagination'))
 				return;
 			if(typeof inst.options.onLineHover == "function")
@@ -122,6 +129,11 @@ window[_namespaces['table']].Tables.Table.prototype = {
 				return;
 			if(typeof inst.options.onLineClick == "function")
 				inst.options.onLineClick(inst.content.getElementById($(this).data('element-id')));
+		}).on('mouseout', 'tr', function() {
+			if($(this).hasClass('ci-table-pagination'))
+				return;
+			if(typeof inst.options.onLineOut == "function")
+				inst.options.onLineOut(inst.content.getElementById($(this).data('element-id')));
 		});
 		
 		for(var i = 0; i < this.cols.length; i++) {
@@ -130,12 +142,9 @@ window[_namespaces['table']].Tables.Table.prototype = {
 	},
 	
 	getColumn: function(name) {
-		
-		for(var i = 0; i < this.cols.length; i++) {
-			
+		for(var i = 0; i < this.cols.length; i++)
 			if(this.cols[i].getName() == name)
 				return this.cols[i];
-		}
 	},
 	
 	getColumns: function() {
@@ -143,18 +152,15 @@ window[_namespaces['table']].Tables.Table.prototype = {
 	},
 	
 	commitContent: function() {
-		
-		this.body.html(this.content.build());
+
+		this.content.build();
 		this.addPagination();
-		
 	},
 	
 	init: function(dom) {
 		this.buildTable();
 		this.commitContent();
-		
 		dom.html(this.dom);
-		
 		this.afterInit();
 	},
 	

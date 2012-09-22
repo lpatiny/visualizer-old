@@ -6,13 +6,11 @@ window[_namespaces['util']].Util.getCurrentLang = function() {
 }
 
 window[_namespaces['util']].Util.maskIframes = function() {
-	
 	$("iframe").each(function() {
 		var iframe = $(this);
 		var pos = iframe.position();
 		var width = iframe.width();
-		var height = iframe.height();
-		
+		var height = iframe.height();		
 		iframe.before($('<div />').css({
 			position: 'absolute',
 			width: width,
@@ -24,25 +22,17 @@ window[_namespaces['util']].Util.maskIframes = function() {
 		}).addClass('iframemask'));
 	});
 }
-
-
 window[_namespaces['util']].Util.unmaskIframes = function() {
 	$(".iframemask").remove();
 }
-
-
 window[_namespaces['util']].Util.uniqueid = 0;
 window[_namespaces['util']].Util.getNextUniqueId = function() {
 	return 'uniqid_' + (++window[_namespaces['util']].Util.uniqueid);
 }
 
-
-
 CI.Event = function() {}
 slice = Array.prototype.slice;
-
 CI.Event.prototype.on = function(topic, callback) {
-
 	this.topics = this.topics || [];
 	this.topics[topic] = this.topics[topic] || $.Callbacks();
 	this.topics[topic].add.apply(this.topics[topic], slice.call(arguments, 1));
@@ -87,10 +77,8 @@ CI.Observable.set = function(name, value) {
 CI.Observable.prototype._proxiedSet = function() {
 	if(!this.__proxiedSet)
 		this.__proxiedSet = $.proxy(this.set, this);
-
 	return this.__proxiedSet;
 }
-
 // List of observables targets
 // When any of the target change, change myself
 // Example:
@@ -127,116 +115,101 @@ CI.Observable.prototype.unpush = function() {
 	});
 }
 
-CI.RepoPool = function() {};
-$.extend(CI.RepoPool.prototype, CI.Event.prototype);
+CI.RepoPool = function() {
+	this.on('change', function(sourcekeys, value) {
+		var callbacks = {};
+		for(var i = 0; i < sourcekeys.length; i++) {
+			if(this._keys[sourcekeys[i]] == undefined)
+				continue;
 
+			for(var j = 0; j < this._keys[sourcekeys[i]].length; j++)
+				callbacks[this._keys[sourcekeys[i]][j]] = true;	
+		}
 
-CI.RepoPool.prototype.get = function(mode, key) {
-	return this._value[mode][key];
-}
-
-CI.RepoPool.prototype.getValue = function(key) {
-	return this.get('value', key);
-}
-
-CI.RepoPool.prototype.set = function(mode, keys, value) {
-	if(!(keys instanceof Array))
-		keys = [keys];
-
-	this._value = this._value || [];
-	this._value[mode] = this._value[mode] || [];
-
-	for(var i = 0, l = keys.length; i < l; i++)
-		this._value[mode][keys[i]] = value;
-
-	this.trigger(mode, keys, value);
-}
-
-CI.RepoPool.prototype.setHighlight = function(keys, value) {
-	return this.set('highlight', keys, value);
-}
-
-CI.RepoPool.prototype.setValue = function(keys, value) {
-	return this.set('value', keys, value);
-}
-
-CI.RepoPool.prototype.listen = function(mode, keys, callback) {
-	var self = this;
-	if(!keys instanceof Array)
-		keys = [keys];
-	this.on(mode, function(sourcekeys, value) {
-		
-		// Check keys
-		var commonKeys;
-		if((commonKeys = self.getCommonKeys(keys, sourcekeys)).length > 0) {
-			callback.call(mode, value, commonKeys);
+		for(var i in callbacks) {
+			var currentCallback = this._callbacks[i];
+			if(!currentCallback)
+					return;
+			if((commonKeys = this.getCommonKeys(currentCallback[0], sourcekeys)).length > 0) {
+				currentCallback[1](value, commonKeys);
+			}
 		}
 	});
+};
+
+$.extend(CI.RepoPool.prototype, CI.Event.prototype);
+
+CI.RepoPool.prototype.get = function(key) {
+	return this._value[key];
 }
 
-CI.RepoPool.prototype.unListen = function(mode, callback) {
-	this.off(mode, callback);
+CI.RepoPool.prototype.set = function(keys, value) {
+	if(!(keys instanceof Array))
+		keys = [keys];
+	this._value = this._value || [];
+	for(var i = 0, l = keys.length; i < l; i++)
+		this._value[keys[i]] = value;
+	this.trigger('change', keys, value);
 }
 
-CI.RepoPool.prototype.listenHighlight = function(keys, callback) {
-	return this.listen('highlight', keys, callback)
+CI.RepoPool.prototype._callbackId = -1;
+CI.RepoPool.prototype.listen = function(keys, callback) {
+	var self = this;
+	this._keys = this._keys || {};
+	this._callbacks = this._callbacks || [];
+	if(!(keys instanceof Array))
+		keys = [keys];
+	var callbackId = ++CI.RepoPool.prototype._callbackId;
+	this._callbacks[callbackId] = [keys, callback];
+	this.bindKeysRecursively(keys, callbackId, true);
 }
 
-CI.RepoPool.prototype.listenValue = function(keys, callback) {
-	return this.listen('value', keys, callback)
+CI.RepoPool.prototype.bindKeysRecursively = function(keys, callbackId, add) {
+	for(var i = 0, l = keys.length; i < l; i++) {
+		if(keys[i] instanceof Array) {
+			this.bindKeysRecursively(keys[i], callbackId, add)
+			continue;
+		}
+		this._keys[keys[i]] = this._keys[keys[i]] || [];
+		if(add)
+			this._keys[keys[i]].push(callbackId);
+		else
+			this._keys[keys[i]].splice(this._keys[keys[i]].indexOf(callbackId), 1);
+	}
 }
 
-
-CI.RepoPool.prototype.unListenValue = function(callback) {
-	return this.unListen('value', callback)
+CI.RepoPool.prototype.unListen = function(keys, callback) {
+	this._keys = this._keys || {};
+	this._callbacks = this._callbacks || [];
+	this.bindKeysRecursively(keys, callback, false);
+	for(var i = 0; i < this._callbacks.length; i++) {
+		if(this._callbacks[i][1] == callback) {
+			this._callbacks.splice(i, 1);
+			break;
+		}
+	}
 }
 
-
-
-// Set 1 is a 1D array
-// Set 2 can be recursive
 CI.RepoPool.prototype.getCommonKeys = function(set1, set2) {
-	var set3 = set2.slice(0);
-	var set1Rev = {};
+	var set3 = set2.slice(0), set1Rev = {};
 	for(var i = 0, l = set1.length; i < l; i++)
 		set1Rev[set1[i]] = true;
 	return this.compareKeysRecursively(set1Rev, set3, true);
 }
 
 CI.RepoPool.prototype.compareKeysRecursively = function(set1, set2, or) {
-	var i = 0, j = 0, l, set2el;
+	var i = 0, l, set2el, set3 = [];	
 	for(i = 0, l = set2.length; i < l; i++) {
 		set2el = set2[i];
 		if(set2el instanceof Array)
 			set2el = this.compareKeysRecursively(set1, set2el, !or);
-		if(!set1[set2el])
-			if(or)
-				set2.splice(i, 1);
-			else
-				return null;
+		if(!set1[set2el] && !or)
+			return null;
+		else if(set1[set2el])
+			set3.push(set2el)
 	}
-	return set2;
+	return set3;
 }
 
 CI.Repo = new CI.RepoPool();
-
-/*
-// Set a number of keys for highlighing
-CI.RepoPool.multipleSet('highlight', ['key2', 'key3'], 'value');
-
-// Set a var for value transfer
-CI.RepoPool.multipleSet('value', 'varName', 'value');
-
-CI.RepoPool.listen('highlight', ['key1', 'key2'], function(actionName, value, commonKeys) {
-	// Do something here
-});
-
-// Listen for "varName" only
-CI.RepoPool.listenValue('varName', function(value, commonKeys) {
-
-});
-
-// Listen for "key1" OR ("key2" AND "key3") to appear
-CI.RepoPool.listenHighlight(['key1', ['key2', 'key3']], function(commonKeys) {
-	// Determine what to highlight as a function of the different keys
-});*/
+CI.RepoHighlight = new CI.RepoPool();

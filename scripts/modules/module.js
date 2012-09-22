@@ -186,7 +186,7 @@ CI.Module.prototype = {
 	 */
 	updateView: function(rel) {
 		if(this.view.update2 && this.view.update2[rel])
-			this.view.update2[rel].call(this.view, CI.Repo.getValue(this.getNameFromRel(rel)));
+			this.view.update2[rel].call(this.view, CI.Repo.get(this.getNameFromRel(rel)));
 	},
 	
 	/** 
@@ -253,7 +253,6 @@ CI.Module.prototype = {
 	
 	
 	getDataFromRel: function(rel) {
-		console.error('Function deprecated. Please remove');
 		for(var i in this.definition.dataSource)
 			if(this.definition.dataSource[i].rel == rel) {
 				return this.model.data[this.definition.dataSource[i].name];
@@ -387,19 +386,18 @@ CI.Module.prototype._impl = {
 
 		resetListeners: function() {
 			this.sourceMap = null;
-			CI.Repo.unListenValue(this.listenCallback);
-
-			CI.Repo.listenValue(this.getVarNameList(), $.proxy(this.listenCallback, this));
+			CI.Repo.unListen(this.getVarNameList(), this.listenCallback);
+			CI.Repo.listen(this.getVarNameList(), $.proxy(this.listenCallback, this));
 		},
 
 		getVarNameList: function() {
-
 			var list = this.module.definition.dataSource, listFinal = [], keyedMap = {};
+			if(!list)
+				return [];
 			for(var l = list.length, i = l - 1; i >= 0; i--) {
 				listFinal.push(list[i].name)
 				keyedMap[list[i].name] = list[i];
 			}
-
 			this.sourceMap = keyedMap;
 			return listFinal;
 		},
@@ -408,8 +406,9 @@ CI.Module.prototype._impl = {
 
 			if(!this.sourceMap)
 				return;
-
+console.log(varName);
 			var value = this.buildData(varValue, this.sourceMap[varName]);
+
 			this.data[varName] = varValue;
 
 			var rel = this.module.getDataRelFromName(varName);
@@ -421,6 +420,9 @@ CI.Module.prototype._impl = {
  		buildData: function(data, source) {
 
 			var dataRebuilt = {};
+
+			if(!source)
+				return;
 
 			if(!(source.type instanceof Array))
 				source.type = [source.type];
@@ -448,6 +450,4 @@ CI.Module.prototype._impl = {
 			
 		}
 	}
-	
-	
 }

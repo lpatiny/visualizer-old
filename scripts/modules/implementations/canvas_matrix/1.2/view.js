@@ -253,54 +253,40 @@ CI.Module.prototype._types.canvas_matrix.View.prototype = {
 	},
 	
 	// Here we receive new data, we need to relaunch the workers
-	update: function() {
-		
-		var gridData;
-		this.doCanvasErase();
-		
-		
-		// Ok now we need to launch the workers
-		
-		// Get the new module value
-		var moduleValue;	
-		if(!(moduleValue = this.module.getDataFromRel('matrix')))
-			return;
-		
-		moduleValue = moduleValue.getData();
-		this.gridData = moduleValue.value.data;
-				
-		this.canvasNbX = this.gridData[0].length;
-		this.canvasNbY = this.gridData.length;
-		
-		// Init the getminmaxmatrix worker
-		// TODO: do it automatically
-		//if(!CI.WebWorker.hasWorkerInit('getminmaxmatrix'))
+	update2: {
+
+		matrix: function(moduleValue) {
+
+			this.doCanvasErase();
+			if(!moduleValue)
+					return;
+			var gridData;
+			// Get the new module value
+			var moduleValue;	
+			if(!(moduleValue = this.module.getDataFromRel('matrix')))
+				return;
+			moduleValue = moduleValue.getData();
+			this.gridData = moduleValue.value.data;
+			this.canvasNbX = this.gridData[0].length;
+			this.canvasNbY = this.gridData.length;
+			timeStart = Date.now();
+			var self = this;
 			
-		timeStart = Date.now();
-		var self = this;
-		
-		CI.WebWorker.send('getminmaxmatrix', moduleValue.value.data, function(data) {
-			
-			self.minValue = data.min;
-			self.maxValue = data.max;
-			
-			self.doChangeWorkersData();
-			// We can keep the actual workers, not a problem. We just need to erase the buffers array	
-			self.buffers = [];
-			self.buffersDone = [];
-			
-			if(!self.getHighContrast()) {
-				self.minValue = 0;
-				self.maxValue = 1;
-			}
-			self.redoScale(self.minValue, self.maxValue);
-			self.launchWorkers();
-			//self.redoScale(self.minValue, self.maxValue, self.module.getConfiguration().colors);		
-		});
-		
-		
-			
-		//	this.redoScale(self.minValue, self.maxValue, this.module.getConfiguration().colors);
+			CI.WebWorker.send('getminmaxmatrix', moduleValue.value.data, function(data) {
+				self.minValue = data.min;
+				self.maxValue = data.max;
+				self.doChangeWorkersData();
+				// We can keep the actual workers, not a problem. We just need to erase the buffers array	
+				self.buffers = [];
+				self.buffersDone = [];
+				if(!self.getHighContrast()) {
+					self.minValue = 0;
+					self.maxValue = 1;
+				}
+				self.redoScale(self.minValue, self.maxValue);
+				self.launchWorkers();
+			});			
+		}
 	},
 	
 	initWorkers: function() {

@@ -18,29 +18,13 @@ CI.API.blankSharedVar = function(varName) {
 	$(document).trigger('sharedDataChanged', [varName]);
 }
 
-// Stores a deferred
-CI.API.setSharedVar = function(varName, varData) {
-	console.error('Function deprecated. Please move to CI.Repo.setValue(name, returned);')
-	var filters = CI.API.getSharedFilters(varName);
-	var def1 = $.Deferred();
-	var def2 = def1;
-	for(var i = 0, l = filters.length; i < l; i++)
-		def2 = def2.pipe(filters[i]);
-
-	CI.sharedData[varName] = def1;
-	def1.resolve(varData);
-	$(document).trigger('sharedDataChanged', [varName, def2]);
-}
-
-CI.API.getSharedVar = function(varName) {
-	
+CI.API.getSharedVar = function(varName) {	
 	return CI.sharedData[varName];
 }
 
 CI.API.getModulesFromSharedVar = function(varName) {
-	
+	console.error("Function deprecated");
 	var allModules = {}, source = [];
-	
 	for(var i in CI.modules) {
 		source = CI.modules[i].definition.dataSource;
 	
@@ -51,9 +35,9 @@ CI.API.getModulesFromSharedVar = function(varName) {
 			}
 		}
 	}
-	
 	return allModules;
 }
+
 
 CI.API.resendAllVars = function() {
 	for(var i in CI.sharedData) {
@@ -63,10 +47,8 @@ CI.API.resendAllVars = function() {
 
 
 CI.API.setSharedVarFromJPath = function(name, value, jpath) {
-	
 	CI.DataType.getValueFromJPath(value, jpath).done(function(returned) {
-		//CI.API.setSharedVar(name, returned);
-		CI.Repo.setValue(name, returned);
+		CI.Repo.set(name, returned);
 	});
 }
 
@@ -83,8 +65,6 @@ CI.API.getSharedFilters = function(varName) {
 }
 
 CI.API.doHighlight = function(tagList) {
-
-//	CI.Repo.
 
 }
 

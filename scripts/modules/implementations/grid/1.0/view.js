@@ -21,20 +21,19 @@ CI.Module.prototype._types.grid.View.prototype = {
 		this.domTable = $("<div />");
 		this.domSearch = $("<div />").addClass('ci-grid-search');
 		this.domExport = $("<div />");
-
 		var inst = this;
-
 		if(this.module.getConfiguration().displaySearch) {
 			var searchInput = $("<input />").bind('keyup', function() {
 				if(inst.table)
 					inst.table.doSearch($(this).val());;
 			});
-
 			this.domSearch.append(searchInput);
 			this.domSearch.prepend("<span>Search : </span>");
 		}
 		this.dom.append(this.domSearch).append(this.domExport).append(this.domTable);
 		this.module.getDomContent().html(this.dom);
+
+		var self = this;
 	},
 
 	inDom: function() {},
@@ -63,6 +62,11 @@ CI.Module.prototype._types.grid.View.prototype = {
 				onLineHover: function(element) {
 					var source = element._source;
 					view.module.controller.lineHover(source);
+				},
+
+				onLineOut: function(element) {
+					var source = element._source;
+					view.module.controller.lineOut(source);
 				},
 				
 				onLineClick: function(element) {
@@ -98,6 +102,8 @@ CI.Module.prototype._types.grid.View.prototype = {
 			view.buildElement(list, elements, jpaths, colorJPath);
 			for(var i = 0, length = elements.length; i < length; i++)
 				Content.addElement(elements[i]);
+
+			this.elements = elements;
 			Table.setContent(Content);
 			Table.init(view.domTable);
 
@@ -108,7 +114,7 @@ CI.Module.prototype._types.grid.View.prototype = {
 	buildElement: function(source, arrayToPush, jpaths, colorJPath) {
 		var jpath;
 		var box = this.module;
-		
+		var self = this;
 		for(var i = 0, length = source.length; i < length; i++) {
 			var element = {};
 			element.data = {};
@@ -137,13 +143,18 @@ CI.Module.prototype._types.grid.View.prototype = {
 				element.children  = [];
 				this.buildElement(source[i].children, element.children, jpaths, colorJPath);
 			}
-			
+
+			(function(myElement) {
+				if(source[i]._highlight)
+					CI.RepoHighlight.listen(source[i]._highlight, function(value, what) {
+						myElement._highlight = value;
+						self.table.highlight(myElement);
+					});
+			}) (element);
 			element._source = source[i];
-			
 			arrayToPush.push(element);
 		}
 	},
-
 
 	getDom: function() {
 		return this.dom;

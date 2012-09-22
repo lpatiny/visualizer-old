@@ -34,6 +34,11 @@ CI.Module.prototype._types.grid.Controller.prototype = {
 			if(actions[i].event == "onHover")
 				CI.API.setSharedVarFromJPath(actions[i].name, element, actions[i].jpath);
 		}
+		CI.RepoHighlight.set(element._highlight, 1);
+	},
+
+	lineOut: function(element) {
+		CI.RepoHighlight.set(element._highlight, 0);
 	},
 
 	lineClick: function(element) {
@@ -106,8 +111,6 @@ CI.Module.prototype._types.grid.Controller.prototype = {
 		
 		
 		var data = this.module.getDataFromRel('list');
-		if(data)
-			data = data.getData();
 		
 		var jpaths = [];
 		

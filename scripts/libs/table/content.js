@@ -35,50 +35,41 @@ window[_namespaces['table']].Tables.Content.prototype = {
 		this.entryCount = 0;
 
 		for(var i = 0; i < this.elements.length; i++) {
-
 			if(!this.doSearch(this.elements[i]))
 				continue;
 			this.entryCount++;
 			j++;
 			if(j < (this.page - 1) * this.pagination || j >= this.page * this.pagination)
 				continue;
-
+			this.elements[i].index = j;
 			html += this.buildElement(this.elements[i], 0, 0, this.elements.length == i + 1);
 		}
-		
 		var jqHtml = $(html);
 		this.table.setContentHtml(jqHtml);
 	},
 
 	exportToTextWith: function(delimiter, showColumns) {
-		
 		var html = "";
 		var columns = this.table.getColumns(), element;
-
 		if(showColumns)
 			for(var i = 0; i < columns.length; i++) {
 				html += columns[i].getName();
 				html += delimiter;
 			}
-
 		html += "\n";
-
 		for(var i = 0; i < this.elements.length; i++) {
 			if(!this.doSearch(this.elements[i]))
 				continue;
-
 			element = this.elements[i];
+			element.index = i;
 			for(var j = 0; j < columns.length; j++) {
 				var name = columns[j].getName();
 				var elVal = element.data[name];
-				
 				html += elVal;
 				html += delimiter;
 			}
-
 			html += "\n";
 		}
-
 		return html;
 	},
 	
@@ -96,17 +87,14 @@ window[_namespaces['table']].Tables.Content.prototype = {
 		html.push(parent !== 0 ? 'ci-table-hidden' : '');
 		if(!element._colorVal)
 			html.push(" " + element._color);
-
 		html.push('"');
-
-		if(element._colorVal)
+		if(element._highlight)
+			html.push(' style="background-color: #ff0000"');
+		else if(element._colorVal)
 			html.push(' style="background-color: ' + element._colorVal + '"');
 		html.push(">");
-		
 		var hasChildren = false;
-		
 		this.reIndexedElements[index] = element;
-		
 		if(level > 0)
 			this.supNav[level] = last ? 'corner' : 'cross';
 		for(var i = 0; i < columns.length; i++) {
@@ -115,22 +103,18 @@ window[_namespaces['table']].Tables.Content.prototype = {
 			hasChildren = false;
 			if(element.children)
 				hasChildren = true;
-			
 			var elVal = element.data[name];
-			html.push(columns[i].buildElement(((typeof elVal != "undefined") ? elVal : ''), i == 0, this.supNav, hasChildren, level));
+			var elHtml = columns[i].buildElement(((typeof elVal != "undefined") ? elVal : ''), i == 0, this.supNav, hasChildren, level);
+			html.push(elHtml);
 		}
-
 		html.push('</tr>');
-		
 		if(element.children) {
 			if(level > 0)
 				this.supNav[level] = last ? 'space' : 'barre';
 			for(var i = 0, len = element.children.length; i < len; i++) {
-				html.push(this.buildElement(element.children[i], index, level + 1, i == len - 1));
-				
+				html.push(this.buildElement(element.children[i], index, level + 1, i == len - 1));		
 			}
 		}
-		
 		if(level > 0)
 			delete this.supNav[level]; 
 		return html.join('');

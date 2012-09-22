@@ -55,7 +55,7 @@
 	display: inline-block;	
 }
 
-.ci-table tr:nth-child(2n) td {
+.ci-table tr:nth-child(2n) {
 	background-color: #fcfcfc;
 }
 

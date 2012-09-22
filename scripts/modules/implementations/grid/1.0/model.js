@@ -53,21 +53,16 @@ $.extend(CI.Module.prototype._types.grid.Model.prototype, {
 			CI.DataType.getJPathsFromElement(data, jpaths);
 			return jpaths;
 		}
-		
-		
+
 		switch(rel) {
-			
 			case 'element':
 				rel = 'list';
 			break;
-			
 		}
 		var data = this.module.getDataFromRel(rel);
-		
 		if(!data || data == null)
 			return;
-			
-		data = data.getData();
+		//data = data.getData();
 		if(data == null)
 			return;
 		return getjPath(data);

@@ -41,7 +41,6 @@ CI.Module.prototype._types.plot_stat.View.prototype = {
 			
 			if(moduleValue === undefined)
 				return;
-			
 			var view = this;
 			var type = CI.DataType.getType(moduleValue);
 			CI.DataType.toScreen(moduleValue, this.module).done(function(html) {
