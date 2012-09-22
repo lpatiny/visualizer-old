@@ -51,7 +51,7 @@ $.extend(CI.Module.prototype._types.plot_stat.Model.prototype, {
 		var data = this.module.getDataFromRel('chart');
 		if(!data)
 			return;
-		data = data.getData();
+		
 		if(!data)
 			return;
 		data = data.value;

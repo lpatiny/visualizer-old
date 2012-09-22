@@ -23,7 +23,6 @@ CI.Module.prototype._types.canvas_matrix.Controller.prototype = {
 			if(!(moduleValue = this.module.getDataFromRel('matrix')))
 				return;
 			
-			moduleValue = moduleValue.getData();
 			var pxPerCell = this.module.view.getPxPerCell();
 			var shift = this.module.view.getXYShift();
 			

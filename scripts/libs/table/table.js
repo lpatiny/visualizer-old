@@ -69,7 +69,6 @@ window[_namespaces['table']].Tables.Table.prototype = {
 	highlight: function(element) {
 		// Acount for initial tr
 		this.dom.find('tr').eq(element.index + 1).css('background-color', (element._highlight ? 'red' : ''));
-		console.log(element._highlight);
 	},
 	
 	buildTable: function() {

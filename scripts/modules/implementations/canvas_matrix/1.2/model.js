@@ -49,7 +49,7 @@ $.extend(CI.Module.prototype._types.canvas_matrix.Model.prototype, {
 		
 		if(!data)
 			return;
-		data = data.getData();
+		
 		data = data.value;
 		if(!data)
 			return;
