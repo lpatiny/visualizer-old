@@ -1,6 +1,7 @@
 
 CI.Saver = function() {
 	this.busy = false;
+	this.lastScript;
 	this.setTimeout();
 }
 
@@ -13,8 +14,14 @@ CI.Saver.prototype = {
 			return;
 		}
 		this.busy = true;
-		$("#visualizer-saver").html('Visualization saving...');
 		var script = JSON.stringify(Entry.structure);
+
+		if(this.lastScript == script)
+			return;
+
+		$("#visualizer-saver").html('Visualization saving...');
+		
+		this.lastScript = script;
 		$.post(_saveViewUrl, {content: script}, function() {
 			var dateNow = new Date();
 			self.busy = false;
