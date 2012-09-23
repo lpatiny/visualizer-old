@@ -119,7 +119,9 @@ CI.RepoPool = function() {
 	this.on('change', function(sourcekeys, value) {
 		var callbacks = {};
 		this._keys = this._keys || [];
+
 		for(var i = 0; i < sourcekeys.length; i++) {
+
 			if(this._keys[sourcekeys[i]] == undefined)
 				continue;
 
@@ -160,6 +162,7 @@ CI.RepoPool.prototype.listen = function(keys, callback) {
 	this._callbacks = this._callbacks || [];
 	if(!(keys instanceof Array))
 		keys = [keys];
+
 	var callbackId = ++CI.RepoPool.prototype._callbackId;
 	this._callbacks[callbackId] = [keys, callback];
 	this.bindKeysRecursively(keys, callbackId, true);
@@ -174,8 +177,12 @@ CI.RepoPool.prototype.bindKeysRecursively = function(keys, callbackId, add) {
 		this._keys[keys[i]] = this._keys[keys[i]] || [];
 		if(add)
 			this._keys[keys[i]].push(callbackId);
-		else
-			this._keys[keys[i]].splice(this._keys[keys[i]].indexOf(callbackId), 1);
+		else {
+			var index = this._keys[keys[i]].indexOf(callbackId);
+			if(index == -1)
+				continue;
+			this._keys[keys[i]].splice(index, 1);
+		}
 	}
 }
 
