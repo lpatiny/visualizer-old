@@ -18,6 +18,7 @@ CI.Saver.prototype = {
 
 		if(this.lastScript == script) {
 			self.setTimeout();
+			this.busy = false;
 			return;
 		}
 
