@@ -54,7 +54,7 @@ CI.Module.prototype._types.plot_stat.Controller.prototype = {
 		for(var i = 0; i < actions.length; i++) {
 			if(actions[i].event == "onHover") {
 				CI.API.blankSharedVar(actions[i].name);
-				
+
 				CI.API.setSharedVarFromJPath(actions[i].name, data, actions[i].jpath);
 			}
 		}
@@ -99,6 +99,13 @@ CI.Module.prototype._types.plot_stat.Controller.prototype = {
 		field.setTitle(new CI.Title('Point size'));
 		
 
+		
+		var field = groupfield.addField({
+			type: 'Checkbox',
+			name: 'legend'
+		});
+		field.setTitle(new CI.Title('Legend'));
+		field.implementation.setOptions({"display": "Display"});
 		return true;
 	},
 	
@@ -108,12 +115,14 @@ CI.Module.prototype._types.plot_stat.Controller.prototype = {
 		var linewidth = cfg.linewidth || 0;
 		var charttype = cfg.charttype || "linechart";
 		var pointsize = cfg.pointsize || 7;
-		
+		var displayLegend = cfg.legend ? ['display'] : ''
+
 		return {
 			module: [{
 				linewidth: [linewidth],
 				pointsize: [pointsize],
-				charttype: [charttype]
+				charttype: [charttype],
+				legend: [displayLegend]
 			}]
 		}
 	},
@@ -126,11 +135,13 @@ CI.Module.prototype._types.plot_stat.Controller.prototype = {
 		var linewidth = group.linewidth[0];
 		var charttype = group.charttype[0];
 		var pointsize = group.pointsize[0];
+		var legend = !!group.legend[0][0];
 
 		this.module.definition.configuration = {
 			linewidth: linewidth,
 			pointsize: pointsize,
-			charttype: charttype
+			charttype: charttype,
+			legend: legend
 		};
 
 		

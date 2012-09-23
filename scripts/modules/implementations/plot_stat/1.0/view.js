@@ -69,7 +69,6 @@ CI.Module.prototype._types.plot_stat.View.prototype = {
 				var view = this;
 				var cfg = this.module.getConfiguration();
 	
-		//	try {
 				moduleValue = CI.DataType.getValueIfNeeded(moduleValue);	
 				var data = [[ moduleValue.xAxis.label ]];
 				
@@ -103,7 +102,7 @@ CI.Module.prototype._types.plot_stat.View.prototype = {
 				          title: moduleValue.title,
 				          hAxis: {title: moduleValue.xAxis.label, minValue: moduleValue.xAxis.minValue, maxValue: moduleValue.xAxis.maxValue},
 				          vAxis: {title: moduleValue.yAxis.label},
-				          legend: 'none',
+				          legend: cfg.legend || 'none',
 				          pointSize: cfg.pointsize || 7,
 				          lineWidth: cfg.linewidth || 0
 				       };
@@ -114,9 +113,7 @@ CI.Module.prototype._types.plot_stat.View.prototype = {
 
 					if($("#" + chartId, dom).length == 0)
 							return;
-
 					var dom = $("#" + chartId).get(0);
-
 					switch(cfg.charttype) {
 
 						case 'barchart':

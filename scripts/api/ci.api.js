@@ -41,7 +41,7 @@ CI.API.getModulesFromSharedVar = function(varName) {
 
 CI.API.resendAllVars = function() {
 	for(var i in CI.sharedData) {
-		CI.API.setSharedVar(i, CI.sharedData[i]);
+		CI.Repo.set(i, CI.sharedData[i]);
 	}
 }
 
