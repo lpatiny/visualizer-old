@@ -18,6 +18,7 @@ CI.Module.prototype._types.canvas_matrix.View.prototype = {
 	
 	init: function() {
 			
+
 		this.canvas = document.createElement("canvas");
 		this.canvasContext = this.canvas.getContext('2d');
 		
@@ -44,10 +45,13 @@ CI.Module.prototype._types.canvas_matrix.View.prototype = {
 			
 			e.preventDefault();
 			var delta = e.originalEvent.detail || e.originalEvent.wheelDelta;
+
+			if(self.max && delta > 0 || self.min && delta < 0)
+				return;
+
 			self.accumulatedDelta += delta;
 			if(delta !== undefined)
-				self.changeZoom(self.accumulatedDelta / 1000, (e.offsetX || e.pageX - $(e.target).offset().left), (e.offsetY || e.pageY - $(e.target).offset().top));
-				
+				self.changeZoom(self.accumulatedDelta / 1000, (e.offsetX || e.pageX - $(e.target).offset().left), (e.offsetY || e.pageY - $(e.target).offset().top))
 		});
 		
 		
@@ -226,6 +230,17 @@ CI.Module.prototype._types.canvas_matrix.View.prototype = {
 			
 			this.pxPerCell = newPxPerCell;
 			
+			if(this.pxPerCell == this.availableZooms[this.availableZooms.length - 1]) {
+				this.max = true;
+				this.min = false;
+			} else if(this.pxPerCell == this.availableZooms[0]) {
+				this.min = true;
+				this.max = false;
+			} else {
+				this.min = false;
+				this.max = false;
+			}
+
 			this.doCanvasErase();
 			this.launchWorkers(true);
 			this.doCanvasRedraw();
@@ -268,7 +283,7 @@ CI.Module.prototype._types.canvas_matrix.View.prototype = {
 			this.canvasNbY = this.gridData.length;
 			timeStart = Date.now();
 			var self = this;
-			
+
 			CI.WebWorker.send('getminmaxmatrix', moduleValue.value.data, function(data) {
 				self.minValue = data.min;
 				self.maxValue = data.max;
