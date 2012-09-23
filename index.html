@@ -4,42 +4,27 @@
 	<title>Visualizer</title>
 	<link rel="stylesheet" href="styles/main.css" media="screen, print" />
 	
-	
 	<script type="text/javascript" src="https://www.google.com/jsapi"></script>
-	<script type="text/javascript">
-		
-		
-	</script>
-	
-	
 	<!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" language="javascript" type="text/javascript"></script>-->
 	<script src="./libs/forms/libs/jquery/1.7/jquery-1.7.1.min.js" language="javascript" type="text/javascript"></script>
 	<script src="./libs/jqueryui/jquery-ui-1.8.20.custom.min.js" language="javascript" type="text/javascript"></script>
-	
 	<link rel="stylesheet" href="libs/jqueryui/css/ui-lightness/jquery-ui-1.8.18.custom.css" media="screen, print" />
 	
 	<!-- Load the visualizer scripts -->
 	<script src="./scripts/init.js" type="text/javascript" language="javascript"></script>
 	<script src="./scripts/visualizer.js" type="text/javascript" language="javascript"></script>
-	
 	<script src="./scripts/api/ci.api.js" type="text/javascript" language="javascript"></script>
-	
 	<script src="./scripts/libs/table/column.js" type="text/javascript" language="javascript"></script>
 	<script src="./scripts/libs/table/content.js" type="text/javascript" language="javascript"></script>
 	<script src="./scripts/libs/table/table.js" type="text/javascript" language="javascript"></script>
 	<link href="./scripts/libs/table/style/patiny/lpatiny.css" rel="stylesheet" media="screen, print" />
-	
 	<script src="./scripts/libs/title/title.js" type="text/javascript" language="javascript"></script>
-	
-	
 	<script src="./scripts/libs/util/ajaxmanager.js" type="text/javascript" language="javascript"></script>
 	<script src="./scripts/libs/util/util.js" type="text/javascript" language="javascript"></script>
 	<script src="./scripts/libs/util/ajaxquery.js" type="text/javascript" language="javascript"></script>
 	<script src="./scripts/libs/util/jsonloader.js" type="text/javascript" language="javascript"></script>
 	<script src="./scripts/libs/util/domdeferred.js" type="text/javascript" language="javascript"></script>
-
 	<script src="./scripts/libs/conf/confelements.js" type="text/javascript" language="javascript"></script>
-
 
 	<script src="./scripts/libs/icons/icons.js" type="text/javascript" language="javascript"></script>
 	<script src="./scripts/libs/lang/lang.js" type="text/javascript" language="javascript"></script>
@@ -129,6 +114,7 @@
 	-->
 	
 	<script src="./scripts/page/entrypoint.js" type="text/javascript" language="javascript"></script>
+	<script src="./scripts/page/saver.js" type="text/javascript" language="javascript"></script>
 	<script src="./scripts/page/modulegrid.js" type="text/javascript" language="javascript"></script>
 	
 	
@@ -271,21 +257,19 @@
 		<div class="title">
 			Visualizer title
 		</div>
-		<div class="infos">
+		
+		<div id="visualizer-infos">
 			Visualizer v1.1<br />
 			&copy; 2012 Luc Patiny & Norman Pellet
 		</div>
+		<div id="visualizer-saver"></div>
 		<div class="ci-spacer"></div>
 	</div>
 	
 	
 	<table id="ci-viewport" cellpadding="0" cellspacing="0">
-		
-		
 		<tr>
-			<td id="ci-left" class="ci-cfg">
-				
-			</td>
+			<td id="ci-left" class="ci-cfg"></td>
 			<td class="ci-expand" id="ci-expand-left">.<br />.<br />.</td>
 			<td id="ci-center">
 				<div id="ci-modules-grid"></div>

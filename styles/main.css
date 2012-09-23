@@ -308,7 +308,14 @@ div.ci-module-wrapper .ci-module-content {
 	margin-bottom: 7px;
 }
 
-#ci-header .infos {
+#ci-header #visualizer-infos {
+	float: right;
+	font-size: 10px;
+	margin: 10px;
+}
+
+
+#ci-header #visualizer-saver {
 	float: right;
 	font-size: 10px;
 	margin: 10px;
