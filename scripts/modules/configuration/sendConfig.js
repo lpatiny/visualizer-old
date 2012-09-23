@@ -6,7 +6,6 @@ $(document).bind('configModule', function(event, module) {
 	$('<div id="cfgModule"></div>').dialog({ modal: true, width: '80%', title: "Edit module preferences"}).biForm({}, function() {
 		
 		var inst = this;
-		
 		// General configuration	
 		var section = new BI.Forms.Section('general', { multiple: false });
 		this.addSection(section);
@@ -21,14 +20,11 @@ $(document).bind('configModule', function(event, module) {
 		});
 		field.setTitle(new CI.Title('Module title'));
 		
-		
-		
 		var field = groupfield.addField({
 			type: 'Color',
 			name: 'bgcolor'
 		});
 		field.setTitle(new CI.Title('Background color'));
-		
 		
 		// Self configuration
 		var section = new BI.Forms.Section('module', { multiple: false });
@@ -39,16 +35,11 @@ $(document).bind('configModule', function(event, module) {
 			module.controller.doConfiguration(section);
 				
 		// Send configuration
-		
 		var availCfg = module.controller.configurationSend;
-		
 		var sendjpaths = [];
 		for(var i in availCfg.rels) {
-			
 			sendjpaths[i] = module.model.getjPath(i)
 		}
-		
-		
 		
 		var allEvents = [];
 		for(var i in availCfg.events)

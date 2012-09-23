@@ -16,8 +16,10 @@ CI.Saver.prototype = {
 		this.busy = true;
 		var script = JSON.stringify(Entry.structure);
 
-		if(this.lastScript == script)
+		if(this.lastScript == script) {
+			self.setTimeout();
 			return;
+		}
 
 		$("#visualizer-saver").html('Visualization saving...');
 		
