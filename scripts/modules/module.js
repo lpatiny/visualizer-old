@@ -188,6 +188,14 @@ CI.Module.prototype = {
 		if(this.view.update2 && this.view.update2[rel])
 			this.view.update2[rel].call(this.view, CI.Repo.get(this.getNameFromRel(rel)));
 	},
+
+	updateAllView: function() {
+		if(!this.view.update2)
+			return;
+
+		for(var i in this.view.update2)
+			this.view.update2[i].call(this.view, CI.Repo.get(this.getNameFromRel(i)));
+	},
 	
 	/** 
 	 * Returns the DOM object which corresponds to the module's content

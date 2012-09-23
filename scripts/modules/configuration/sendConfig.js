@@ -149,7 +149,7 @@ $(document).bind('configModule', function(event, module) {
 			module.view.init();
 			
 			module.view.inDom();
-			module.updateView();
+			module.updateAllView();
 
 			inst.getDom().dialog('close');
 		});
