@@ -48,15 +48,14 @@ CI.Module.prototype._types.grid.View.prototype = {
 
 	update2: {
 
-		list: function(value) {
+		list: function(moduleValue) {
 		
-			var moduleValue;
+			if(!moduleValue)
+				return;
 			var view = this;
-			
 			var jpaths = this.module.getConfiguration().colsjPaths;
 			var colorJPath = this.module.getConfiguration().colorjPath;
-			var moduleValue = value;
-
+			
 			var Table = new CI.Tables.Table({
 				
 				onLineHover: function(element) {
