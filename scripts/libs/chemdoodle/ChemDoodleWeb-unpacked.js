@@ -1940,6 +1940,7 @@ ChemDoodle.RESIDUE = (function() {
 		this.bondNumber = 0;
 		this.angleOfLeastInterference = 0;
 		this.isHidden = false;
+		this.color = false;
 		this.label = label ? label.replace(/\s/g, '') : 'C';
 		this.altLabel = null;
 		if (!ELEMENT[this.label]) {
@@ -1964,6 +1965,11 @@ ChemDoodle.RESIDUE = (function() {
 			var dz = p.z - this.z;
 			return m.sqrt(dx * dx + dy * dy + dz * dz);
 		};
+
+		this.hover = function(bln) {
+			this.isHover = bln;
+		}
+
 		this.draw = function(ctx, specs) {
 			this.textBounds = [];
 			if (this.specs) {
@@ -2119,6 +2125,10 @@ ChemDoodle.RESIDUE = (function() {
 					}
 				}
 			}
+
+			if(this.drawChildExtras)
+				this.drawDecorations(ctx);
+
 		};
 		this.drawLonePairs = function(ctx, specs, num, angle, largest) {
 			var segment = largest / (num + (this.bondNumber == 0 ? 0 : 1));
@@ -2164,7 +2174,9 @@ ChemDoodle.RESIDUE = (function() {
 				color = ELEMENT[this.label].jmolColor;
 			} else if (specs.atoms_usePYMOLColors) {
 				color = ELEMENT[this.label].pymolColor;
-			}
+			} else if(this.color)
+				color = this.color;
+
 			gl.material.setDiffuseColor(color);
 			// render
 			gl.setMatrixUniforms(transform);
@@ -2483,6 +2495,7 @@ ChemDoodle.RESIDUE = (function() {
 			}
 		};
 		this.drawDecorations = function(ctx) {
+
 			if (this.isHover || this.isSelected) {
 				var pi2 = 2 * m.PI;
 				var angle = (this.a1.angleForStupidCanvasArcs(this.a2) + m.PI / 2) % pi2;
@@ -6444,6 +6457,7 @@ ChemDoodle.RESIDUE = (function() {
 
 	io.MOLInterpreter = function() {
 		this.read = function(content, multiplier) {
+
 			if (!multiplier) {
 				multiplier = c.default_bondLength_2D;
 			}
@@ -6451,6 +6465,7 @@ ChemDoodle.RESIDUE = (function() {
 			if (content == null || content.length == 0) {
 				return molecule;
 			}
+
 			var currentTagTokens = content.split('\n');
 
 			var counts = currentTagTokens[3];
@@ -6513,6 +6528,7 @@ ChemDoodle.RESIDUE = (function() {
 				}
 				molecule.bonds[i] = b;
 			}
+
 			return molecule;
 		};
 
@@ -7494,6 +7510,7 @@ ChemDoodle.monitor = (function(featureDetection, q, document) {
 	};
 	c._Canvas.prototype.repaint = function() {
 		var canvas = document.getElementById(this.id);
+		this._domcanvas = canvas;
 		if (canvas.getContext) {
 			var ctx = canvas.getContext('2d');
 			var pixelRatio = window.devicePixelRatio ? window.devicePixelRatio : 1;

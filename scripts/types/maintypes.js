@@ -793,6 +793,20 @@ CI.Type["mol2d"] = {
 			var molLoaded = ChemDoodle.readMOL(molfile.value);
 			molLoaded.scaleToAverageBondLength(14.4);
 			canvas.loadMolecule(molLoaded);
+
+//console.log(molfile._highlight);
+			CI.RepoHighlight.listen(molfile._highlight, function(dummyvalue, commonKeys) {
+				var commonKeys2 = {};
+				var atoms = {};
+				for(var i = commonKeys.length; i >= 0; i--)
+					atoms[molfile._atomID.indexOf(commonKeys[i])] = true;
+				for(var i = 0; i < molLoaded.atoms.length; i++) {
+					molLoaded.atoms[i].isHover = !!atoms[i];
+					canvas._domcanvas.width = canvas._domcanvas.width;
+					molLoaded.atoms[i].drawChildExtras = !!atoms[i];
+				}
+				canvas.repaint();
+			});
 		});
 
 		def.resolve('<canvas id="' + id + '"></canvas>');
