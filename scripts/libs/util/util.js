@@ -158,6 +158,8 @@ CI.RepoPool.prototype.set = function(keys, value) {
 CI.RepoPool.prototype._callbackId = -1;
 CI.RepoPool.prototype.listen = function(keys, callback) {
 	var self = this;
+	if(this.keys.length == 0)
+		return;
 	this._keys = this._keys || {};
 	this._callbacks = this._callbacks || [];
 	if(!(keys instanceof Array))
