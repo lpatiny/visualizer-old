@@ -796,9 +796,11 @@ CI.Type["mol2d"] = {
 
 //console.log(molfile._highlight);
 			CI.RepoHighlight.listen(molfile._highlight, function(dummyvalue, commonKeys) {
+
+				if($("#" + id, dom).length == 0)
+					return;
+
 				var commonKeys2 = {};
-
-
 				var atoms = {};
 				for(var i = commonKeys.length; i >= 0; i--)
 					atoms[molfile._atomID.indexOf(commonKeys[i])] = true;
