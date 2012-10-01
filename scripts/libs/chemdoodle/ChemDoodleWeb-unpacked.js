@@ -6911,6 +6911,7 @@ ChemDoodle.RESIDUE = (function() {
 
 	io.JCAMPInterpreter = function() {
 		this.convertHZ2PPM = false;
+		var _commaSplitter = /[\s,]+/;
 		this.read = function(content) {
 			
 			this.isBreak = function(c) {
@@ -7188,7 +7189,7 @@ ChemDoodle.RESIDUE = (function() {
 						spectrum.continuous = false;
 						var innerLines = currentRecord.split('\n');
 						for ( var j = 1, jj = innerLines.length; j < jj; j++) {
-							var items = innerLines[j].split(/[\s,]+/);
+							var items = innerLines[j].split(_commaSplitter);
 							for ( var k = 0, kk = items.length; k + 1 < kk; k += 2) {
 								spectrum.data.push(new structures.Point(parseFloat(trim(items[k])), parseFloat(trim(items[k + 1]))));
 							}

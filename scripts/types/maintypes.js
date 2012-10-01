@@ -800,6 +800,7 @@ CI.Type["mol2d"] = {
 				if($("#" + id, dom).length == 0)
 					return;
 
+
 				var commonKeys2 = {};
 				var atoms = {};
 				for(var i = commonKeys.length; i >= 0; i--)
@@ -811,6 +812,8 @@ CI.Type["mol2d"] = {
 				}
 				canvas.repaint();
 			}, true);
+
+
 		});
 
 		def.resolve('<canvas id="' + id + '"></canvas>');
@@ -866,6 +869,9 @@ CI.Type["mol3d"] = {
 
 CI.Type["jcamp"] = {
 
+	_id: 0,
+	cache: [],
+
 	doFromDom: function(dom, value, opts) {
 
 			if(dom.length == 0)
@@ -879,8 +885,16 @@ CI.Type["jcamp"] = {
 			var ctns = opts.continuous || false;
 			spectra.specs.plots_flipXAxis =  opts.flipX || false;
 			spectra.specs.plots_flipYAxis =  opts.flipY || false;
+		
+			if(value._cacheId && CI.Type.jcamp.cache[value._cacheId]) {
+				var jcampLoaded = CI.Type.jcamp.cache[value._cacheId];
+			} else {
+				var jcampLoaded = ChemDoodle.readJCAMP(value.value);
+				CI.Type.jcamp.cache.push(jcampLoaded);
+				value._cacheId = CI.Type.jcamp._id;
+				CI.Type.jcamp._id++;
+			}
 			
-			var jcampLoaded = ChemDoodle.readJCAMP(value.value);
 	  		spectra.loadSpectrum(jcampLoaded);
 	  		spectra.getSpectrum().continuous = ctns;
 	  		spectra.repaint();

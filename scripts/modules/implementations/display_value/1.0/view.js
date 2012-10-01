@@ -49,6 +49,7 @@ CI.Module.prototype._types.display_value.View.prototype = {
 				CI.DataType.toScreen(moduleValue, this.module).done(function(val) {
 					view.fillWithVal(val);
 				});
+
 		}
 	},
 	

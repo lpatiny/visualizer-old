@@ -107,6 +107,8 @@ CI.Module.prototype._types.grid.View.prototype = {
 			Table.init(view.domTable);
 
 			CI.Util.ResolveDOMDeferred(Table.getDom());
+
+			
 		}
 	},
 
