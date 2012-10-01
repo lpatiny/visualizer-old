@@ -893,6 +893,11 @@ CI.Type["jcamp"] = {
 				CI.Type.jcamp.cache.push(jcampLoaded);
 				value._cacheId = CI.Type.jcamp._id;
 				CI.Type.jcamp._id++;
+
+				if(CI.Type.jcamp.cache.length == 100) {
+					CI.Type.jcamp.cache.splice(0, 1);
+					CI.Type.jcamp._id--;
+				}
 			}
 			
 	  		spectra.loadSpectrum(jcampLoaded);
