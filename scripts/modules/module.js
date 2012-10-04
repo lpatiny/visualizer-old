@@ -427,7 +427,10 @@ CI.Module.prototype._impl = {
 				return;
 			if(!(source.type instanceof Array))
 				source.type = [source.type];
+
+			console.log(source);
 			var dataType = CI.DataType.getType(data);
+
 			var mustRebuild = false;
 			for(var i = 0; i < source.type.length; i++) {
 				if(source.type[i] == dataType) {

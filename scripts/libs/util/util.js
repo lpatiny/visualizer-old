@@ -116,6 +116,8 @@ CI.Observable.prototype.unpush = function() {
 }
 
 CI.RepoPool = function() {
+
+	this._value = [];
 	this.on('change', function(sourcekeys, value) {
 		var callbacks = {};
 		this._keys = this._keys || [];

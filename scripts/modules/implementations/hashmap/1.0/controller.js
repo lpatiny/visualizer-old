@@ -6,15 +6,15 @@
  * Dual licensed under the MIT or GPL Version 2 licenses.
  */
 
-if(typeof CI.Module.prototype._types.plot_stat == 'undefined')
-	CI.Module.prototype._types.plot_stat = {};
+if(typeof CI.Module.prototype._types.hashmap == 'undefined')
+	CI.Module.prototype._types.hashmap = {};
 
-CI.Module.prototype._types.plot_stat.Controller = function(module) {
+CI.Module.prototype._types.hashmap.Controller = function(module) {
 	
 	CI.Module.prototype._impl.controller.init(module, this);
 }
 
-CI.Module.prototype._types.plot_stat.Controller.prototype = {
+CI.Module.prototype._types.hashmap.Controller.prototype = {
 	
 	
 	init: function() {
@@ -28,122 +28,73 @@ CI.Module.prototype._types.plot_stat.Controller.prototype = {
 	
 	configurationSend: {
 
-		events: {
-			onHover: {
-				label: 'Hovers an element',
-				description: 'Pass the mouse over a line to select it'
-			}
-		},
 		
-		rels: {
-			'element': {
-				label: 'The selected element data',
-				description: 'Returns the selected element'
-			}
-		}
-		
-	},
-	
-	hoverEvent: function(data) {
-		
-			
-		var actions;
-		if(!(actions = this.module.definition.dataSend))	
-			return;
-				
-		for(var i = 0; i < actions.length; i++) {
-			if(actions[i].event == "onHover") {
-				CI.API.blankSharedVar(actions[i].name);
-
-				CI.API.setSharedVarFromJPath(actions[i].name, data, actions[i].jpath);
-			}
-		}
 	},
 	
 	configurationReceive: {
-		"chart": {
-			type: ['chart'],
-			label: 'Formatted data for a chart',
+		"hashmap": {
+			type: ['object'],
+			label: 'A simple 1 level json object',
 			description: ''
 		}	
 	},
 	
 	moduleInformations: {
-		moduleName: 'Chart'
+		moduleName: 'JSON 1 Level'
 	},
 	
 	doConfiguration: function(section) {
+
+		var data = this.module.getDataFromRel('hashmap');
 		
-		var groupfield = new BI.Forms.GroupFields.List('module');
+		var jpaths = [];
+		CI.DataType.getJPathsFromElement(data, jpaths);
+
+		var groupfield = new BI.Forms.GroupFields.Table('keys');
 		section.addFieldGroup(groupfield);
 		
 		var field = groupfield.addField({
-			type: 'Combo',
-			name: 'charttype'
+			type: 'Text',
+			name: 'title'
 		});
-		field.implementation.setOptions([{ title: "Horizontal Bar Chart", key: "hbarchart"}, { title: "Vertical Bar Chart", key: "vbarchart"}, { title: "Line chart", key: "linechart"}]);
-		field.setTitle(new CI.Title('Chart type'));
+		field.setTitle(new CI.Title('Columns title'));
 	
+		var field = groupfield.addField({
+			type: 'Combo',
+			name: 'key'
+		});
+		field.implementation.setOptions(jpaths);
+		field.setTitle(new CI.Title('Key'));
 
-		var field = groupfield.addField({
-			type: 'Text',
-			name: 'linewidth'
-		});
-		field.setTitle(new CI.Title('Line width'));
-		
-		
-		var field = groupfield.addField({
-			type: 'Text',
-			name: 'pointsize'
-		});
-		field.setTitle(new CI.Title('Point size'));
-		
-
-		
-		var field = groupfield.addField({
-			type: 'Checkbox',
-			name: 'legend'
-		});
-		field.setTitle(new CI.Title('Legend'));
-		field.implementation.setOptions({"display": "Display"});
 		return true;
 	},
+
 	
 	doFillConfiguration: function() {
-	
-		var cfg = this.module.getConfiguration();
-		var linewidth = cfg.linewidth || 0;
-		var charttype = cfg.charttype || "linechart";
-		var pointsize = cfg.pointsize || 7;
-		var displayLegend = cfg.legend ? ['display'] : ''
+		
+		var keys = this.module.getConfiguration().keys;
+		
+		var titles = [];
+		var jpaths = [];
+		for(var i in keys) {
+			titles.push(i);
+			jpaths.push(keys[i]);
+		}
 
 		return {
-			module: [{
-				linewidth: [linewidth],
-				pointsize: [pointsize],
-				charttype: [charttype],
-				legend: [displayLegend]
+			keys: [{
+				title: titles,
+				key: jpaths
 			}]
 		}
 	},
 	
-	
 	doSaveConfiguration: function(confSection) {
-		
-		var group = confSection[0].module[0];
-		
-		var linewidth = group.linewidth[0];
-		var charttype = group.charttype[0];
-		var pointsize = group.pointsize[0];
-		var legend = !!group.legend[0][0];
+		var group = confSection[0].keys[0];
+		var cols = {};
+		for(var i = 0; i < group.length; i++)
+			cols[group[i].title] = group[i].key;
 
-		this.module.definition.configuration = {
-			linewidth: linewidth,
-			pointsize: pointsize,
-			charttype: charttype,
-			legend: legend
-		};
-
-		
-	}
+		this.module.getConfiguration().keys = cols;
+	},
 }
