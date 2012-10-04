@@ -57,6 +57,7 @@ CI.DataType.Structures = {
 	
 	'object': "object",
 	'mol2d': "string",
+	'molfile2D': "string",
 	'gif': "string" ,
 	'picture': "string",
 	'string': "string",
@@ -819,6 +820,7 @@ CI.Type["mol2d"] = {
 		def.resolve('<canvas id="' + id + '"></canvas>');
 	}
 };
+CI.Type["molfile2D"] = CI.Type.mol2d;
 	
 
 

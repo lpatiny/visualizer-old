@@ -23,7 +23,7 @@ CI.Module.prototype._types['2d_list'].Controller.prototype = {
 		var actions;
 		if(!(actions = this.module.definition.dataSend))	
 			return;
-					
+		console.log(actions);
 		for(var i = 0; i < actions.length; i++) {
 			
 			var j = i;
@@ -37,14 +37,12 @@ CI.Module.prototype._types['2d_list'].Controller.prototype = {
 					var cols = module.getConfiguration().colnumber || 4;
 					
 					var elementId = trIndex * cols + tdIndex;
-					if(!(moduleValue = module.getDataFromRel('list').getData()))
+					if(!(moduleValue = module.getDataFromRel('list')))
 						return;
 					var value = CI.DataType.getValueIfNeeded(moduleValue);
-					var k = j;
 					
-					CI.API.setSharedVarFromJPath(actions[k].name, value[elementId], actions[j].jpath);
+					CI.API.setSharedVarFromJPath(actions[j].name, value[elementId], actions[j].jpath);
 				});
-				
 			}
 		}
 	},
@@ -112,7 +110,7 @@ CI.Module.prototype._types['2d_list'].Controller.prototype = {
 		
 		var jpaths = [];
 		if(data = this.module.getDataFromRel('list')) {
-			data = data.getData();
+			
 			if(data != null)
 				CI.DataType.getJPathsFromElement(data[0], jpaths);
 		}
@@ -188,8 +186,4 @@ CI.Module.prototype._types['2d_list'].Controller.prototype = {
 			height: height
 		};
 	}
-	
-	
-
-
 }

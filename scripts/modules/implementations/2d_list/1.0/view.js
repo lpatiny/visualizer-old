@@ -84,7 +84,8 @@ CI.Module.prototype._types['2d_list'].View.prototype = {
 				html += '</table>';
 				view.dom.html(html);
 			});
-			$(document).trigger('checkAsyncLoad', [ this.dom ]);
+			
+			CI.Util.ResolveDOMDeferred(view.dom);
 		}
 	},
 

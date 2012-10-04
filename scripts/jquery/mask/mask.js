@@ -43,7 +43,9 @@
 	$.fn.unmask = function() {
 		
 		return this.each(function() {
-			$(this).data('mask.overlay').remove();
+
+			if($(this).data('mask.overlay'))
+				$(this).data('mask.overlay').remove();
 		});
 	}
 	
