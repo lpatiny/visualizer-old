@@ -121,12 +121,9 @@ CI.RepoPool = function() {
 	this.on('change', function(sourcekeys, value) {
 		var callbacks = {};
 		this._keys = this._keys || [];
-
 		for(var i = 0; i < sourcekeys.length; i++) {
-
 			if(this._keys[sourcekeys[i]] == undefined)
 				continue;
-
 			for(var j = 0; j < this._keys[sourcekeys[i]].length; j++)
 				callbacks[this._keys[sourcekeys[i]][j]] = true;	
 		}
@@ -135,9 +132,7 @@ CI.RepoPool = function() {
 			var currentCallback = this._callbacks[i];
 			if(!currentCallback)
 					return;
-
 			var commonKeys = this.getCommonKeys(currentCallback[0], sourcekeys);
-
 			if(commonKeys.length > 0 || ((!commonKeys || commonKeys.length == 0) && currentCallback[2])) {
 				currentCallback[1](value, commonKeys);
 			}
@@ -158,8 +153,7 @@ CI.RepoPool.prototype.set = function(keys, value) {
 		keys = [];
 
 	this._value = this._value || [];
-	for(var i = 0, l = keys.length; i < l; i++)
-		this._value[keys[i]] = value;
+	this._value[keys] = [keys, value];
 	this.trigger('change', keys, value);
 }
 
@@ -199,6 +193,12 @@ CI.RepoPool.prototype.bindKeysRecursively = function(keys, callbackId, add) {
 	}
 }
 
+CI.RepoPool.prototype.reset = function() {
+	this._callbacks = [];
+	this._keys = {};
+
+}
+
 CI.RepoPool.prototype.unListen = function(keys, callback) {
 	this._keys = this._keys || {};
 	this._callbacks = this._callbacks || [];
@@ -231,6 +231,15 @@ CI.RepoPool.prototype.compareKeysRecursively = function(set1, set2, or) {
 	}
 	return set3;
 }
+
+CI.RepoPool.prototype.resendAll = function() {
+
+	for(var i in this._value)
+		this.set(this._value[i][0], this._value[i][1]);
+
+}
+
+
 
 CI.Repo = new CI.RepoPool();
 CI.RepoHighlight = new CI.RepoPool();

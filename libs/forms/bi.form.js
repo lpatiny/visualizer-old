@@ -158,7 +158,6 @@ BI.Forms.Form.prototype = {
 	},
 	
 	getSections: function() {
-		console.log(this.sections);
 		return this.sections;
 	},
 	

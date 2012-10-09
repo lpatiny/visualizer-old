@@ -133,15 +133,16 @@ $(document).bind('configModule', function(event, module) {
 				module.controller.doSaveConfiguration(value.module);
 			
 			Entry.save();
-			CI.API.resendAllVars();
-			
 			if(module.view.erase)
 				module.view.erase();
 			module.view.init();
 			
 			module.view.inDom();
 			module.updateAllView();
-
+			
+			module.model.resetListeners();
+			CI.API.resendAllVars();
+			
 			inst.getDom().dialog('close');
 		});
 		

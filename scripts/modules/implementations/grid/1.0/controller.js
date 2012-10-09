@@ -114,10 +114,7 @@ CI.Module.prototype._types.grid.Controller.prototype = {
 		});
 		field.setTitle(new CI.Title('Lines per page'));
 		
-		
-		
 		var data = this.module.getDataFromRel('list');
-		
 		var jpaths = [];
 		
 		if(CI.DataType.getType(data) == 'array') 
@@ -125,16 +122,13 @@ CI.Module.prototype._types.grid.Controller.prototype = {
 		else if(CI.DataType.getType(data) == 'arrayXY')
 			CI.DataType.getJPathsFromElement(data, jpaths);
 		
-
 		var field = groupfield.addField({
 			type: 'Combo',
 			name: 'colorjpath'
 		});
-		//options.unshift({ title: 'None', key: 'none'});
-
+		
 		field.implementation.setOptions(jpaths);
 		field.setTitle(new CI.Title('Color jPath'));
-
 
 		var field = groupfield.addField({
 			type: 'Checkbox',
@@ -176,7 +170,7 @@ CI.Module.prototype._types.grid.Controller.prototype = {
 		var cols = this.module.getConfiguration().colsjPaths;
 		var nblines = this.module.getConfiguration().nbLines || 20;
 		var colorjPath = this.module.getConfiguration().colorjPath || '';
-		var search = this.module.getConfiguration().search || false;
+		var search = this.module.getConfiguration().displaySearch || false;
 		
 		var titles = [];
 		var jpaths = [];
@@ -191,7 +185,7 @@ CI.Module.prototype._types.grid.Controller.prototype = {
 			gencfg: [{
 				nblines: [nblines],
 				colorjpath: [colorjPath],
-				displaySearch: [{ allow: search }]
+				displaySearch: [[search ? 'allow' : '']]
 			}],
 			
 			cols: [{

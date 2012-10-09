@@ -40,15 +40,14 @@ CI.API.getModulesFromSharedVar = function(varName) {
 
 
 CI.API.resendAllVars = function() {
-	for(var i in CI.sharedData) {
-		CI.Repo.set(i, CI.sharedData[i]);
-	}
+	CI.Repo.resendAll();
 }
 
 
 CI.API.setSharedVarFromJPath = function(name, value, jpath) {
 	CI.DataType.getValueFromJPath(value, jpath).done(function(returned) {
 		CI.Repo.set(name, returned);
+
 	});
 }
 

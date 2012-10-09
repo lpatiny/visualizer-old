@@ -409,8 +409,7 @@ CI.Module.prototype._impl = {
 			return listFinal;
 		},
 
-		listenCallback: function(varValue, varName) {	
-
+		listenCallback: function(varValue, varName) {
 			if(!this.sourceMap)
 				return;
 			var value = this.buildData(varValue, this.sourceMap[varName]);
@@ -428,7 +427,6 @@ CI.Module.prototype._impl = {
 			if(!(source.type instanceof Array))
 				source.type = [source.type];
 
-			console.log(source);
 			var dataType = CI.DataType.getType(data);
 
 			var mustRebuild = false;
