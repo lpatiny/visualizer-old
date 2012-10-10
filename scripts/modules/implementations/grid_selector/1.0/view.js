@@ -45,7 +45,7 @@ CI.Module.prototype._types.grid_selector.View.prototype = {
 			var cols = moduleValue.categories;
 			var lines = moduleValue.variables;
 			this._selectors = {};
-			console.log(this.module.getConfiguration()._data);
+			
 			html = '<table>';
 			for(var i = -1, l = lines.length; i < l; i++) {
 				html += '<tr data-lineid="' + i + '">';
@@ -108,7 +108,7 @@ CI.Module.prototype._types.grid_selector.View.prototype = {
 		this._selectors[col.name] = this._selectors[col.name] || {};
 		if(col.selectorType == 'checkbox') {
 			var id = CI.Util.getNextUniqueId();
-			var defaultVal = value !== undefined ? value : col.defaultVal;
+			var defaultVal = value !== undefined ? value : col.defaultValue;
 			this._selectors[col.name][line.name] = defaultVal;
 			return '<input type="checkbox" id="' + id + '" ' + (defaultVal ? 'checked="checked"' : '') + '" data-colid="' + col.name + '" data-lineid="' + line.name + '" /><label for="' + id + '">&nbsp;</label>';
 		} else if(col.selectorType == 'range') {

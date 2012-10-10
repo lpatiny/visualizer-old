@@ -40,7 +40,7 @@ CI.Module.prototype._types.loading_plot.View.prototype = {
 	update2: {
 
 		preferences: function(moduleValue) {
-
+			this._lastConf = moduleValue;
 			if(!this._lastValue)
 				return;
 
@@ -49,11 +49,9 @@ CI.Module.prototype._types.loading_plot.View.prototype = {
 				// i = descriptor, family, ingredient
 				for(var j = 0; j < this._lastValue.series.length; j++) {
 					if(this._lastValue.series[j].category == i) {
-						console.log(moduleValue);
+						
 						for(var k = 0; k < this._lastValue.series[j].data.length; k++) {
 							this._lastValue.series[j].data[k].instance.filter(moduleValue[i]);
-							if(this._lastValue.series[j].data[k].instance._failure['phenolic'] == true)
-								console.log('ALERT');
 						}
 					}
 				}
@@ -114,6 +112,10 @@ CI.Module.prototype._types.loading_plot.View.prototype = {
 
 			svg.ready();
 			Springs.resolve();
+
+			if(this._lastConf) {
+				this.update2.preferences.call(this, this._lastConf);
+			}
 		}
 	},
 

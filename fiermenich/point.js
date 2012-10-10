@@ -82,7 +82,6 @@ Fierm.Ellipse = function(x, y, data) {
 }
 $.extend(Fierm.Ellipse.prototype, Fierm.SVGElement.prototype);
 Fierm.Ellipse.prototype.filter = function(filter) {
-
 	if(filter[this._data.n] !== undefined) {
 		this._nodes[0].setAttributeNS(null, 'display', (filter[this._data.n] ? 'block' : 'none'));
 		this._nodes[1].setAttributeNS(null, 'display', (filter[this._data.n] ? 'block' : 'none'));
