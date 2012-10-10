@@ -165,8 +165,18 @@ Fierm.SVG.prototype.setViewBox = function(x1, y1, x2, y2) {
 }
 
 Fierm.SVG.prototype.changeZoomElements = function(newZoom) {
+
+	var parent = this._groupLabels.parentNode;
+	var next = this._groupLabels.nextSibling;
+	parent.removeChild(this._groupLabels);
+
 	for(var i in this._els)
 		this._els[i].changeZoom(newZoom);
+
+	if(next)
+		parent.insertBefore(this._groupLabels, nextSibling);
+	else
+		parent.appendChild(this._groupLabels);
 }
 
 Fierm.SVG.prototype.add = function(el) {
@@ -175,8 +185,8 @@ Fierm.SVG.prototype.add = function(el) {
 		return;
 	for(var i in el._nodes)	
 		this._groupElements.appendChild(el._nodes[i]);
-	for(var i in el._labels)	
-		this._groupLabels.appendChild(el._labels[i]);
 
+	if(el._label)
+		this._groupLabels.appendChild(el._label);
 	el.inDom();
 }

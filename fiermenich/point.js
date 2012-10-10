@@ -14,7 +14,6 @@ Fierm.SVGElement.prototype.createElement = function(nodeName, properties, doNotI
 			this._highlightgroup.appendChild(node);
 		else
 			this._nodes.push(node);
-
 	}
 	return node;
 }
@@ -27,10 +26,10 @@ Fierm.SVGElement.prototype.setLabelVisibility = function(bln) {
 Fierm.SVGElement.prototype.doDisplayLabel = function(bln, zoom) {
 
 	if(bln && this._labelVisibility) {
-
 		Fierm.SVGElement.prototype.Springs.allow();
 		this._line.setAttributeNS(null, 'display', 'block');
 		this._label.setAttributeNS(null, 'display', 'block');
+
 		this._label.setAttributeNS(null, 'font-size', 12 / zoom);
 	} else {
 		Fierm.SVGElement.prototype.Springs.forbid();
@@ -45,6 +44,7 @@ Fierm.SVGElement.prototype.createLabel = function(x, y, labelTxt) {
 	label.setAttributeNS(null, 'x', x);
 	label.setAttributeNS(null, 'y', y);
 	label.setAttributeNS(null, 'font-size', 12 / Fierm.initZoom);
+	//this._nodes.push(label);
 	this._label = label;
 	return label;
 }
@@ -233,7 +233,7 @@ Fierm.Pie.prototype.changeZoom = function(zoom) {
 		this._currentEl = this._g;
 	}
 	
-	this.doDisplayLabel(zoom < 1500 ? true : false, zoom);
+	this.doDisplayLabel(zoom < 1500 ? false : true, zoom);
 }
 
 Fierm.Pie.prototype.getOptimalSpringParameter = function() {
