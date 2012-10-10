@@ -90,7 +90,7 @@ CI.Module.prototype._types.loading_plot.Controller.prototype = {
 
 
 		/* */
-		var jpaths = [];
+		/*var jpaths = [];
 		
 		CI.DataType.getJPathsFromElement(data.value.series[0].data[0], jpaths);
 		var field = groupfield.addField({
@@ -98,7 +98,7 @@ CI.Module.prototype._types.loading_plot.Controller.prototype = {
 			name: 'colorjpath'
 		});
 		field.setTitle(new CI.Title('Color (jPath)'));
-		field.implementation.setOptions(jpaths);
+		field.implementation.setOptions(jpaths);*/
 		/* */
 
 
@@ -131,7 +131,7 @@ CI.Module.prototype._types.loading_plot.Controller.prototype = {
 		var titles = [];
 		var layers = [];
 		for(var i = 0; i < cfgLayers.length; i++) {
-			var cfgLocalLayer = { groups: {config: [{ el: [cfgLayers[i].layer], type: [cfgLayers[i].display], colorjpath: [cfgLayers[i].colorjpath], color: [cfgLayers[i].color], labels: [[(cfgLayers[i].displayLabels ? 'display_labels' : null)]] }] } };
+			var cfgLocalLayer = { groups: {config: [{ el: [cfgLayers[i].layer], type: [cfgLayers[i].display], /*colorjpath: [cfgLayers[i].colorjpath], */color: [cfgLayers[i].color], labels: [[(cfgLayers[i].displayLabels ? 'display_labels' : null)]] }] } };
 			layers.push(cfgLocalLayer)
 		}
 
@@ -154,7 +154,7 @@ CI.Module.prototype._types.loading_plot.Controller.prototype = {
 			for(var j = 0; j < labels.length; j++)
 				if(labels[j] == 'display_labels')
 					displayLabels = true;
-			layers.push({ layer: group[i].config[0].el[0], display: group[i].config[0].type[0], color: group[i].config[0].color[0], colorjpath: group[i].config[0].colorjpath[0], displayLabels: displayLabels });
+			layers.push({ layer: group[i].config[0].el[0], display: group[i].config[0].type[0], color: group[i].config[0].color[0], /*colorjpath: group[i].config[0].colorjpath[0],*/ displayLabels: displayLabels });
 		}
 	
 		this.module.getConfiguration().layers = layers;	

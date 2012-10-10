@@ -51,7 +51,7 @@ CI.Module.prototype._types.loading_plot.View.prototype = {
 					if(this._lastValue.series[j].category == i) {
 						
 						for(var k = 0; k < this._lastValue.series[j].data.length; k++) {
-							this._lastValue.series[j].data[k].instance.filter(moduleValue[i]);
+							this._instances[j][k].filter(moduleValue[i]);
 						}
 					}
 				}
@@ -81,8 +81,8 @@ CI.Module.prototype._types.loading_plot.View.prototype = {
 
 			svg.initZoom();
 			Fierm.SVGElement.prototype.Springs = Springs;
-			this._lastValue = $.extend({}, moduleValue.value);
-
+			this._lastValue = moduleValue.value;
+			this._instances = [];
 			if(!moduleValue.value || !moduleValue.value.series)
 				return;
 
@@ -103,7 +103,11 @@ CI.Module.prototype._types.loading_plot.View.prototype = {
 								var el = new Fierm.Ellipse(datas[k].x, datas[k].y, datas[k]);
 
 							el.setLabelVisibility(layers[i].displayLabels);
-							this._lastValue.series[j].data[k].instance = el;
+							if(layers[i].color)
+								el.setColor(layers[i].color);
+
+							this._instances[j] = this._instances[j] || [];
+							this._instances[j][k] = el;
 							svg.add(el);
 						}
 						break;

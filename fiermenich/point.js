@@ -85,6 +85,13 @@ Fierm.SVGElement.prototype.writeLabel = function() {
 	}
 }
 
+Fierm.SVGElement.prototype.setColor = function(color) {
+	this._color = color;
+	this._a.setAttributeNS(null, 'fill', color);
+	this._b.setAttributeNS(null, 'stroke', color);
+}
+
+
 Fierm.Ellipse = function(x, y, data) {
 	
 	this.construct(x,y,data);
