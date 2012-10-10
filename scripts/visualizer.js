@@ -179,9 +179,7 @@ CI.ConfigVisualizer = function() {
 	
 	function configureEntryPoint() {
 		var now = Date.now();
-		$.fancybox($("<div />").attr('id', 'formEntryPoint-' + now), { width: 700, height: 500, autoSize: false });
-		
-		$("#formEntryPoint-" + now).biForm({}, function() {
+		$("<div />").dialog({ modal: true, width: '80%', title: "Edit Entry Variables"}).biForm({}, function() {
 			
 			var inst = this;			
 			var section = new BI.Forms.Section('cfg', { multiple: false });
@@ -229,12 +227,14 @@ CI.ConfigVisualizer = function() {
 			field.setTitle(new CI.Title('JPath'));
 			
 			
-		
+			var inst = this;
 			var save = new CI.Buttons.Button('Save', function() {
 				var value = inst.getValue();
 				var data = value.cfg[0].tablevars[0];
 				Entry.setEntryDataVariables(data);
 				Entry.save();
+
+				inst.getDom().dialog('close');
 			});
 			
 			
@@ -280,9 +280,7 @@ CI.ConfigVisualizer = function() {
 	
 	function configureVisualizer() {
 		var now = Date.now();
-		$.fancybox($("<div />").attr('id', 'formVisualizer-' + now), { width: 700, height: 500, autoSize: false });
-		
-		$("#formVisualizer-" + now).biForm({}, function() {
+		$("<div />").dialog({ modal: true, width: '80%', title: "Edit Vizualizer"}).biForm({}, function() {
 			
 			var inst = this;			
 			var section = new BI.Forms.Section('cfg', { multiple: false });
@@ -341,6 +339,7 @@ CI.ConfigVisualizer = function() {
 				
 				Entry.setConfiguration(config);
 				Entry.save();
+				inst.getDom().dialog('close');
 			});
 			
 			save.setColor('blue');
@@ -379,7 +378,7 @@ CI.ConfigVisualizer = function() {
 
 		var varname = element.getTitle();
 
-		$("<div />").dialog({ modal: true, width: '80%', title: 'Configure variable ' + varname }).biForm({}, function() {
+		$("<div />").dialog({ modal: true, width: '80%', title: "Edit Shared variables"}).biForm({}, function() {
 
 			var inst = this;			
 			var section = new BI.Forms.Section('filters', { multiple: false });
@@ -417,6 +416,7 @@ CI.ConfigVisualizer = function() {
 
 				Entry.getConfiguration().variableFilters[varname] = data;
 				Entry.save();
+				inst.getDom().dialog('close');
 			});
 			
 			save.setColor('blue');
