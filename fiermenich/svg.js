@@ -16,7 +16,7 @@ Fierm.SVG.prototype.create = function() {
 	this._svgEl = document.createElementNS(this._nameSpace, 'svg');
 	this._svgEl.setAttributeNS("http://www.w3.org/2000/xmlns/", "xmlns:xlink", "http://www.w3.org/1999/xlink");
 	this._svgEl.setAttribute('draggable', 'true');
-	this._svgEl.setAttribute('preserveAspectRatio', 'xMidYMid slice');
+	this._svgEl.setAttribute('preserveAspectRatio', 'xMidYMid meet');
 
 	this._groupElements = document.createElementNS(this._nameSpace, 'g');
 	this._svgEl.appendChild(this._groupElements);
@@ -33,6 +33,8 @@ Fierm.SVG.prototype.setViewBoxWidth = function(w, h) {
 	this._viewHeight = h;
 	this._viewBox = [0, 0, this._viewWidth, this._viewHeight];
 }
+
+
 
 Fierm.SVG.prototype.setSize = function(width, height) {
 
