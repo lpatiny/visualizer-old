@@ -203,7 +203,11 @@ CI.RepoPool.prototype.unListen = function(keys, callback) {
 	this._keys = this._keys || {};
 	this._callbacks = this._callbacks || [];
 	this.bindKeysRecursively(keys, callback, false);
+
 	for(var i = 0; i < this._callbacks.length; i++) {
+		if(!this._callbacks[i])
+			continue;
+		
 		if(this._callbacks[i][1] == callback) {
 			this._callbacks.splice(i, 1);
 			break;

@@ -8,7 +8,7 @@ Fierm.SVGElement.prototype.createElement = function(nodeName, properties, doNotI
 	for(var i in properties)
 		node.setAttributeNS(null, i, properties[i]);
 	this._nodes = this._nodes || [];
-
+	
 	if(!doNotInclude)
 		this._nodes.push(node);
 	return node;
@@ -38,10 +38,12 @@ Fierm.SVGElement.prototype.inDom = function() {};
 
 Fierm.SVGElement.prototype.construct = function(x, y, data) {
 	this._x = x, this._y = y, this._data = data;
+	this._lines = [];
 }
 
 Fierm.SVGElement.prototype.doLine = function() {
 	var el = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+	this._lines.push(el);
 	this._nodes.push(el);
 	return el;
 }
@@ -49,7 +51,6 @@ Fierm.SVGElement.prototype.doLine = function() {
 Fierm.SVGElement.prototype.writeLabel = function() {
 	if(this._data.l) {
 		label = this.createLabel(this._x, this._y, this._data.l);
-
 		Fierm.SVGElement.prototype.Springs.addElement(this, label, this.doLine());
 	}
 }
@@ -145,9 +146,14 @@ Fierm.Pie.prototype.changeZoom = function(zoom) {
 		this._g.setAttributeNS(null, 'transform', 'translate(' + this._x + ' ' + this._y +') scale(' + this._lastRadius + ')');	
 	}
 	
-	if(zoom < 1500)
+	if(zoom < 1500) {
+
+		Fierm.SVGElement.prototype.Springs.forbid();
 		this._labels[0].setAttributeNS(null, 'display', 'none');
-	else {
+		this._lines[0].setAttributeNS(null, 'display', 'none');
+	} else {
+		Fierm.SVGElement.prototype.Springs.allow();
+		this._lines[0].setAttributeNS(null, 'display', 'block');
 		this._labels[0].setAttributeNS(null, 'display', 'block');
 		this._labels[0].setAttributeNS(null, 'font-size', 12 / zoom);
 	}

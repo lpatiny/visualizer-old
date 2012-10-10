@@ -10,10 +10,14 @@ Fierm.SpringLabels.prototype.addElement = function(el, label, line) {
 	this.lines.push(line);
 	this.labels.push(label);
 	this.els.push(el);
+	this.allowed = true;
 }
 
 Fierm.SpringLabels.prototype.resolve = function() {
 	
+	if(!this.allowed)
+		return;
+
 	for(var i = 0; i < this.els.length; i++) {
 		this.coords[i][6] = this.els[i].getOptimalSpringParameter();
 		this.coords[i][8] = this.labels[i].getComputedTextLength();
@@ -22,7 +26,7 @@ Fierm.SpringLabels.prototype.resolve = function() {
 
 	var distance = 40 / Fierm.zoom;
 	var krep = 0.000000001 / Fierm.zoom;
-	var kattr = 2000000 / Fierm.zoom;
+	var kattr = 6000000 / Fierm.zoom;
 
 	/*
 	var krep = 0.10;
@@ -88,7 +92,7 @@ Fierm.SpringLabels.prototype.resolve = function() {
 			totalEnergy += nodeMass * (Math.pow(this.coords[i][4], 2) + Math.pow(this.coords[i][5], 2))
 		}
 console.log(totalEnergy);
-		if(totalEnergy < 0.0000001)
+		if(totalEnergy < 0.000000001)
 			break;
 	}
 console.log(l);
@@ -109,4 +113,14 @@ console.log(l);
 			this.lines[i].setAttribute('vector-effect', 'non-scaling-stroke');			
 		}
 	}
+}
+
+
+Fierm.SpringLabels.prototype.allow = function() {
+	this.allowed = true;
+}
+
+
+Fierm.SpringLabels.prototype.forbid = function() {
+	this.allowed = false;
 }

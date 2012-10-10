@@ -59,7 +59,8 @@ Fierm.SVG.prototype.bindTo = function(dom) {
 Fierm.SVG.prototype.ready = function() {
 	$(this._wrapper).append(this._svgEl);
 	this.setViewBox();
-	var pos = $(this._svgEl).position();
+	var pos = $(this._svgEl).offset();
+	
 	
 	this._svgPosX = pos.left;
 	this._svgPosY = pos.top;
@@ -83,6 +84,7 @@ Fierm.SVG.prototype._setEvents = function() {
 
 		viewRatioX = (event.pageX - self._svgPosX) / self._width;
 		viewRatioY = (event.pageY - self._svgPosY) / self._height;
+		
 		self._dragMove(event);
 	});
 }
