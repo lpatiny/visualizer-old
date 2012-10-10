@@ -97,6 +97,7 @@ CI.Module.prototype._types.grid_selector.View.prototype = {
 				slide: function(event, ui) {
 					var $this = $(this);
 					var colId = $this.data('colid'), lineId = $this.data('lineid');
+
 					self.module.controller.selectorChanged(colId, lineId, ui.values);
 				}
 			});
@@ -115,7 +116,7 @@ CI.Module.prototype._types.grid_selector.View.prototype = {
 			_val[0] = (value ? value[0] : col.defaultMinValue);
 			_val[1] = (value ? value[1] : col.defaultMaxValue);
 			this._selectors[col.name][line.name] = _val;
-			return '<div class="ci-rangebar" data-minvalue="' + col.minValue + '" data-maxvalue="' + col.maxValue + '" data-defaultmin="' + _val[0] + '" data-defaultmax="' + _val[1] + '"></div><input type="hidden" data-colid="' + colId + '" data-lineid="' + lineId + '" />';
+			return '<div class="ci-rangebar" data-minvalue="' + col.minValue + '" data-maxvalue="' + col.maxValue + '" data-defaultmin="' + _val[0] + '" data-defaultmax="' + _val[1] + '" data-colid="' + col.name + '" data-lineid="' + line.name + '"></div>';
 		}
 	},
 
