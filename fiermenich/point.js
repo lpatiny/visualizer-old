@@ -68,6 +68,14 @@ Fierm.SVGElement.prototype.construct = function(x, y, data) {
 
 	CI.RepoHighlight.listen(data._highlight, function(value, keys) {	
 		self.highlight(value);
+	});
+
+	this._highlightgroup.addEventListener('mouseover', function() {
+		CI.RepoHighlight.set(data._highlight, 1);
+	});
+
+	this._highlightgroup.addEventListener('mouseout', function() {
+		CI.RepoHighlight.set(data._highlight, 0);
 	})
 }
 
@@ -90,6 +98,16 @@ Fierm.SVGElement.prototype.setColor = function(color) {
 	this._a.setAttributeNS(null, 'fill', color);
 	this._b.setAttributeNS(null, 'stroke', color);
 }
+
+Fierm.SVGElement.prototype.highlight = function(bln) {
+	//this._currentEl.setAttributeNS(null, 'class', 'nothighlight');
+	if(bln)
+		this._highlightgroup.setAttributeNS(null, 'transform', 'translate(' + this._x + ', ' + this._y + ') scale(5) translate(' + (-this._x) + ', ' + (-this._y) + ')');
+	else
+		this._highlightgroup.removeAttributeNS(null, 'transform');
+
+}
+
 
 
 Fierm.Ellipse = function(x, y, data) {
@@ -114,9 +132,6 @@ Fierm.Ellipse.prototype.filter = function(filter) {
 	}
 }
 
-Fierm.Ellipse.prototype.highlight = function(bln) {
-		this.g.setAttributeNS(null, 'transform', 'scale(3, 3)');
-}
 
 
 Fierm.Pie = function(x, y, data) {
@@ -256,11 +271,3 @@ Fierm.Pie.prototype.filter = function(filter) {
 	}
 }
 
-Fierm.Pie.prototype.highlight = function(bln) {
-	//this._currentEl.setAttributeNS(null, 'class', 'nothighlight');
-	if(bln)
-		this._highlightgroup.setAttributeNS(null, 'transform', 'translate(' + this._x + ', ' + this._y + ') scale(5) translate(' + (-this._x) + ', ' + (-this._y) + ')');
-	else
-		this._highlightgroup.removeAttributeNS(null, 'transform');
-
-}
