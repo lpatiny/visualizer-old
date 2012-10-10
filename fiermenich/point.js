@@ -3,14 +3,19 @@ if(typeof Fierm == 'undefined') Fierm = {};
 Fierm.SVGElement = function() {};
 Fierm.SVGElement.prototype = {};
 
-Fierm.SVGElement.prototype.createElement = function(nodeName, properties, doNotInclude) {
+Fierm.SVGElement.prototype.createElement = function(nodeName, properties, doNotInclude, single) {
 	var node = document.createElementNS('http://www.w3.org/2000/svg', nodeName);
 	for(var i in properties)
 		node.setAttributeNS(null, i, properties[i]);
 	this._nodes = this._nodes || [];
 	
-	if(!doNotInclude)
-		this._nodes.push(node);
+	if(!doNotInclude) {
+		if(!single)
+			this._highlightgroup.appendChild(node);
+		else
+			this._nodes.push(node);
+
+	}
 	return node;
 }
 
@@ -58,6 +63,12 @@ Fierm.SVGElement.prototype.inDom = function() {};
 Fierm.SVGElement.prototype.construct = function(x, y, data) {
 	this._x = x, this._y = y, this._data = data;
 	this._label, this._line;
+	var self = this;
+	this._highlightgroup = this.createElement('g', {}, false, true);
+
+	CI.RepoHighlight.listen(data._highlight, function(value, keys) {	
+		self.highlight(value);
+	})
 }
 
 Fierm.SVGElement.prototype.doLine = function() {
@@ -75,17 +86,29 @@ Fierm.SVGElement.prototype.writeLabel = function() {
 }
 
 Fierm.Ellipse = function(x, y, data) {
-	this.createElement('circle', {cx: 0, cy: 0, r: 1, fill: data.c, opacity: data.o, transform: 'translate(' + x + ' ' + y + ') rotate( ' + data.a + ') scale(' + data.w + ' ' + data.h + ')'});
-	this.createElement('circle', {cx: 0, cy: 0, r: 1, fill: 'transparent', stroke: data.c, 'vector-effect': 'non-scaling-stroke', transform: 'translate(' + x + ' ' + y + ') rotate( ' + data.a + ') scale(' + data.w + ' ' + data.h + ')'});
+	
+	this.construct(x,y,data);
+
+	this.g = this.createElement('g');
+	this._a = this.createElement('circle', {cx: 0, cy: 0, r: 1, fill: data.c, opacity: data.o, transform: 'translate(' + x + ' ' + y + ') rotate( ' + data.a + ') scale(' + data.w + ' ' + data.h + ')'}, false);
+	this._b = this.createElement('circle', {cx: 0, cy: 0, r: 1, fill: 'transparent', stroke: data.c, 'vector-effect': 'non-scaling-stroke', transform: 'translate(' + x + ' ' + y + ') rotate( ' + data.a + ') scale(' + data.w + ' ' + data.h + ')'}, false);
+
+	this.g.appendChild(this._a);
+	this.g.appendChild(this._b);
+
 	this._data = data;
 	
 }
 $.extend(Fierm.Ellipse.prototype, Fierm.SVGElement.prototype);
 Fierm.Ellipse.prototype.filter = function(filter) {
 	if(filter[this._data.n] !== undefined) {
-		this._nodes[0].setAttributeNS(null, 'display', (filter[this._data.n] ? 'block' : 'none'));
-		this._nodes[1].setAttributeNS(null, 'display', (filter[this._data.n] ? 'block' : 'none'));
+		this._a.setAttributeNS(null, 'display', (filter[this._data.n] ? 'block' : 'none'));
+		this._b.setAttributeNS(null, 'display', (filter[this._data.n] ? 'block' : 'none'));
 	}
+}
+
+Fierm.Ellipse.prototype.highlight = function(bln) {
+		this.g.setAttributeNS(null, 'transform', 'scale(3, 3)');
 }
 
 
@@ -223,6 +246,14 @@ Fierm.Pie.prototype.filter = function(filter) {
 			this._displayed = true;
 			this._currentEl.setAttributeNS(null, 'display', 'block');
 		}
-
 	}
+}
+
+Fierm.Pie.prototype.highlight = function(bln) {
+	//this._currentEl.setAttributeNS(null, 'class', 'nothighlight');
+	if(bln)
+		this._highlightgroup.setAttributeNS(null, 'transform', 'translate(' + this._x + ', ' + this._y + ') scale(5) translate(' + (-this._x) + ', ' + (-this._y) + ')');
+	else
+		this._highlightgroup.removeAttributeNS(null, 'transform');
+
 }

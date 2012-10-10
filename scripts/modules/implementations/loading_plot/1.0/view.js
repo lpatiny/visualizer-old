@@ -101,6 +101,7 @@ CI.Module.prototype._types.loading_plot.View.prototype = {
 								var el = new Fierm.Pie(datas[k].x, datas[k].y, datas[k]);
 							else if(type == 'ellipse')
 								var el = new Fierm.Ellipse(datas[k].x, datas[k].y, datas[k]);
+
 							el.setLabelVisibility(layers[i].displayLabels);
 							moduleValue.value.series[j].data[k].instance = el;
 							svg.add(el);
