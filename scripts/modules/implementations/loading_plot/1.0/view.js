@@ -106,7 +106,7 @@ CI.Module.prototype._types.loading_plot.View.prototype = {
 							if(layers[i].color)
 								el.setColor(layers[i].color);
 
-							this._instances[j] = this._instances[j] || [];
+							this._instances[j] = this._instances[j] || [];
 							this._instances[j][k] = el;
 							svg.add(el);
 						}
