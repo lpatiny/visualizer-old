@@ -95,6 +95,7 @@ CI.DataType.Structures = {
 			'title': 'string',
 			'series': {
 				'type': 'array',
+				'nbElements': 6,
 				'elements': {
 					'type': 'object',
 					'elements': {
@@ -121,6 +122,40 @@ CI.DataType.Structures = {
 				}
 			}
 
+		}
+	},
+
+
+	'gridSelector': {
+		'type': 'object',
+		'elements': {
+			'categories': {
+				'type': 'array',
+				'elements': {
+					'type': 'object',
+					'elements': {
+						'selectorType': 'string',
+						'name': 'string',
+						'label': 'string',
+						'defaultValue': 'number',
+						'defaultMaxValue': 'number',
+						'defaultMinValue': 'number',
+						'maxValue': 'number',
+						'minValue': 'number'
+					} 
+				}
+			},
+
+			'variables': {
+				'type': 'array',
+				'elements': {
+					'type': 'object',
+					'elements': {
+						'name': 'string',
+						'label': 'strig'
+					}
+				}
+			}
 		}
 	},
 
@@ -555,9 +590,12 @@ CI.DataType.getJPathsFromStructure = function(structure, title, jpathspool, keys
 				// Array which length is nown
 				if(!(structure.elements instanceof Array))
 					structure.elements = [structure.elements];
+				var len = structure.elements.length;
+				if(structure.nbElements)
+					len = structure.nbElements;
 
-				for(var i = 0; i < structure.elements.length; i++)
-					CI.DataType.getJPathsFromStructure(structure.elements[i], i + "", children, keystr);
+				for(var i = 0; i < len; i++)
+					CI.DataType.getJPathsFromStructure(structure.elements[i] || structure.elements[0], i + "", children, keystr);
 				
 	
 				/*

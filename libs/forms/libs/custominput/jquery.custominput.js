@@ -23,9 +23,10 @@ jQuery.fn.customInput = function(){
 				function(){ $(this).removeClass('hover'); }
 			);
 			/* Fix for jQuery UI ? */
-			label.bind('click', function() {
-				input.trigger('click');
-			})
+			if(input.parent().parent().hasClass('bi-formfield-checkboxcontainer'))
+				label.bind('click', function() {
+					input.trigger('click');
+				});
 			//bind custom event, trigger it, bind click,focus,blur events					
 			input.bind('updateState', function(){	
 				window.setTimeout(function() { input.is(':checked') ? label.addClass('checked') : label.removeClass('checked checkedHover checkedFocus'); }, 1);

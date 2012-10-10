@@ -382,4 +382,12 @@ div.ci-module-display_value div.ci-module-content img {
 	max-height: 100%;
 }
 
+.ci-display-grid-selector table {
+	width: 100%;
+}
 
+
+.ci-display-grid-selector td {
+	padding-top: 10px;
+	text-align: center;
+}

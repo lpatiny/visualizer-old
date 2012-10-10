@@ -6,15 +6,15 @@
  * Dual licensed under the MIT or GPL Version 2 licenses.
  */
 
-if(typeof CI.Module.prototype._types.grid == 'undefined')
-	CI.Module.prototype._types.grid = {};
+if(typeof CI.Module.prototype._types.grid_selector == 'undefined')
+	CI.Module.prototype._types.grid_selector = {};
 
-CI.Module.prototype._types.grid.Controller = function(module) {
+CI.Module.prototype._types.grid_selector.Controller = function(module) {
 	
 	CI.Module.prototype._impl.controller.init(module, this);
 }
 
-CI.Module.prototype._types.grid.Controller.prototype = {
+CI.Module.prototype._types.grid_selector.Controller.prototype = {
 	
 	
 	init: function() {
@@ -25,85 +25,42 @@ CI.Module.prototype._types.grid.Controller.prototype = {
 			return;
 	},
 	
-	lineHover: function(element) {
-		var actions;
-		if(!(actions = this.module.definition.dataSend))	
-			return;	
-
-
-		for(var i = 0; i < actions.length; i++) {
-	//		CI.API.blankSharedVar(actions[i].name);
-
-
-			if(actions[i].event == "onHover")
-				CI.API.setSharedVarFromJPath(actions[i].name, element, actions[i].jpath);
-		}
-		
-		CI.RepoHighlight.set(element._highlight, 1);
-
-	},
-
-	lineOut: function(element) {
-		CI.RepoHighlight.set(element._highlight, 0);
-	},
-
-	lineClick: function(element) {
-		
-		var actions;
-		if(!(actions = this.module.definition.dataSend))	
-			return;
-				
-		for(var i = 0; i < actions.length; i++) {
-			if(actions[i].event == "onSelect") {
-				(function(element, actionName, jpath) {
-					CI.API.setSharedVarFromJPath(actionName, element, jpath);
-				}) (element, actions[i].name, actions[i].jpath)
-			}
-		}
-	},
-	
 	configurationSend: {
 
 		events: {
 
-			onSelect: {
-				label: 'Select a line',
-				description: 'Click on a line to select it'
-			},
-			
-			onHover: {
-				label: 'Hovers a line',
-				description: 'Pass the mouse over a line to select it'
+			onChangePref: {
+				label: 'A preference has been changed',
+				description: 'When a preference changes'
 			}
+			
 		},
 		
 		rels: {
-			'element': {
-				label: 'Row',
-				description: 'Returns the selected row in the list'
+			'listPref': {
+				label: 'Preference grid',
+				description: ''
 			}
 		}
 		
 	},
 	
 	configurationReceive: {
-		list: {
-			type: ["array", "arrayXY"],
-			label: 'List',
-			description: 'Any list of displayable element'
+		preferences: {
+			type: ["array"],
+			label: 'Preferences',
+			description: 'A list of preferences'
 		}		
 	},
 	
 	
 	moduleInformations: {
-		moduleName: 'Grid'
+		moduleName: 'Selector Grid'
 	},
 	
 	
-	
-	
 	doConfiguration: function(section) {
-		
+	/*	
 		
 		var groupfield = new BI.Forms.GroupFields.List('gencfg');
 		section.addFieldGroup(groupfield);
@@ -152,12 +109,12 @@ CI.Module.prototype._types.grid.Controller.prototype = {
 		});
 		field.implementation.setOptions(jpaths);
 		field.setTitle(new CI.Title('Value jPath'));
-		
+		*/
 		return true;
 	},
 	
 	doFillConfiguration: function() {
-		
+		/*
 		var cols = this.module.getConfiguration().colsjPaths;
 		var nblines = this.module.getConfiguration().nbLines || 20;
 		var colorjPath = this.module.getConfiguration().colorjPath || '';
@@ -182,9 +139,11 @@ CI.Module.prototype._types.grid.Controller.prototype = {
 				coljpath: jpaths
 			}]
 		}
+		*/
 	},
 	
 	doSaveConfiguration: function(confSection) {
+		/*
 		var group = confSection[0].cols[0];
 		var cols = {};
 		for(var i = 0; i < group.length; i++)
@@ -193,9 +152,10 @@ CI.Module.prototype._types.grid.Controller.prototype = {
 		this.module.getConfiguration().nbLines = confSection[0].gencfg[0].nblines[0];
 		this.module.getConfiguration().colorjPath = confSection[0].gencfg[0].colorjpath[0];
 		this.module.getConfiguration().displaySearch = !!confSection[0].gencfg[0].displaySearch[0][0];
+		*/
 	},
 
 	export: function() {
-		return this.module.view.table.exportToTabDelimited();
+		//return this.module.view.table.exportToTabDelimited();
 	}
 }
