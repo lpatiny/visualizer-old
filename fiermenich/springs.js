@@ -14,7 +14,7 @@ Fierm.SpringLabels.prototype.addElement = function(el, label, line) {
 }
 
 Fierm.SpringLabels.prototype.resolve = function() {
-	
+	return;
 	if(!this.allowed)
 		return;
 
