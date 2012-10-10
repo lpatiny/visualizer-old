@@ -128,7 +128,8 @@ BI.Forms.GroupFields.List.prototype = {
 		
 		for(var i in json) {
 			var name = i;
-			var field = fieldsByName[name];		
+			
+			var field = fieldsByName[name];
 			field.resetDuplicate();
 			for(var j = 0; j < json[i].length; j++) {
 				if(j > 0)

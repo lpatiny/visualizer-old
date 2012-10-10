@@ -14,14 +14,33 @@ Fierm.SVGElement.prototype.createElement = function(nodeName, properties, doNotI
 	return node;
 }
 
+
+Fierm.SVGElement.prototype.setLabelVisibility = function(bln) {
+	this._labelVisibility = bln;
+}
+
+Fierm.SVGElement.prototype.doDisplayLabel = function(bln, zoom) {
+
+	if(bln && this._labelVisibility) {
+		
+		Fierm.SVGElement.prototype.Springs.allow();
+		this._line.setAttributeNS(null, 'display', 'block');
+		this._label.setAttributeNS(null, 'display', 'block');
+		this._label.setAttributeNS(null, 'font-size', 12 / zoom);
+	} else {
+		Fierm.SVGElement.prototype.Springs.forbid();
+		this._label.setAttributeNS(null, 'display', 'none');
+		this._line.setAttributeNS(null, 'display', 'none');
+	}
+}
+
 Fierm.SVGElement.prototype.createLabel = function(x, y, labelTxt) {
 	var label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
 	label.textContent = labelTxt;
 	label.setAttributeNS(null, 'x', x);
 	label.setAttributeNS(null, 'y', y);
 	label.setAttributeNS(null, 'font-size', 12 / Fierm.initZoom);
-	this._labels = this._labels || [];
-	this._labels.push(label);
+	this._label = label;
 	return label;
 }
 
@@ -38,12 +57,12 @@ Fierm.SVGElement.prototype.inDom = function() {};
 
 Fierm.SVGElement.prototype.construct = function(x, y, data) {
 	this._x = x, this._y = y, this._data = data;
-	this._lines = [];
+	this._label, this._line;
 }
 
 Fierm.SVGElement.prototype.doLine = function() {
 	var el = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-	this._lines.push(el);
+	this._line = el;
 	this._nodes.push(el);
 	return el;
 }
@@ -87,6 +106,10 @@ Fierm.Pie = function(x, y, data) {
 $.extend(Fierm.Pie.prototype, Fierm.SVGElement.prototype);
 
 Fierm.Pie.prototype.inDom = function() {
+
+	if(!this._chart)
+		return;
+
 	for(var i = 0; i < this._chart.length; i++) {
 		var el = this.createElement('path', {fill: this._chart[i].c, stroke: 'black', 'stroke-width': 1, 'stroke-linejoin': 'round', 'vector-effect': 'non-scaling-stroke'}, false);
 		this._g.appendChild(el);
@@ -146,17 +169,7 @@ Fierm.Pie.prototype.changeZoom = function(zoom) {
 		this._g.setAttributeNS(null, 'transform', 'translate(' + this._x + ' ' + this._y +') scale(' + this._lastRadius + ')');	
 	}
 	
-	if(zoom < 1500) {
-
-		Fierm.SVGElement.prototype.Springs.forbid();
-		this._labels[0].setAttributeNS(null, 'display', 'none');
-		this._lines[0].setAttributeNS(null, 'display', 'none');
-	} else {
-		Fierm.SVGElement.prototype.Springs.allow();
-		this._lines[0].setAttributeNS(null, 'display', 'block');
-		this._labels[0].setAttributeNS(null, 'display', 'block');
-		this._labels[0].setAttributeNS(null, 'font-size', 12 / zoom);
-	}
+	this.doDisplayLabel(zoom < 1500 ? true : false, zoom);
 }
 
 Fierm.Pie.prototype.getOptimalSpringParameter = function() {

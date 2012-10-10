@@ -90,23 +90,35 @@ CI.Module.prototype._types.loading_plot.Controller.prototype = {
 
 
 		/* */
+		var jpaths = [];
+		
+		CI.DataType.getJPathsFromElement(data.value.series[0].data[0], jpaths);
 		var field = groupfield.addField({
 			type: 'Combo',
 			name: 'colorjpath'
 		});
-		field.setTitle(new CI.Title('Color'));
-		
+		field.setTitle(new CI.Title('Color (jPath)'));
+		field.implementation.setOptions(jpaths);
+		/* */
 
+
+		/* */
+		CI.DataType.getJPathsFromElement(data.value.series[0].data[0], jpaths);
+		var field = groupfield.addField({
+			type: 'Color',
+			name: 'color'
+		});
+		field.setTitle(new CI.Title('Color (default)'));
 		/* */
 
 
 		var field = groupfield.addField({
 			type: 'Checkbox',
-			name: 'display_labels'
+			name: 'labels'
 		});
 		field.setTitle(new CI.Title('Labels'))
 		
-		field.implementation.setOptions({'display_labels': 'Display', 'forcefield': 'Activate force field'});
+		field.implementation.setOptions({'display_labels': 'Display'/*, 'forcefield': 'Activate force field'*/});
 
 
 		return true;
@@ -119,8 +131,7 @@ CI.Module.prototype._types.loading_plot.Controller.prototype = {
 		var titles = [];
 		var layers = [];
 		for(var i = 0; i < cfgLayers.length; i++) {
-
-			var cfgLocalLayer = { groups: {config: [{ el: [cfgLayers[i].layer], type: [cfgLayers[i].display] }] } };
+			var cfgLocalLayer = { groups: {config: [{ el: [cfgLayers[i].layer], type: [cfgLayers[i].display], colorjpath: [cfgLayers[i].colorjpath], color: [cfgLayers[i].color], labels: [[(cfgLayers[i].displayLabels ? 'display_labels' : null)]] }] } };
 			layers.push(cfgLocalLayer)
 		}
 
@@ -133,11 +144,17 @@ CI.Module.prototype._types.loading_plot.Controller.prototype = {
 	
 	doSaveConfiguration: function(confSection) {
 
+		var displayLabels;
 		var group = confSection[0]._module_layers;
 		
 		var layers = [];
 		for(var i = 0; i < group.length; i++) {
-			layers.push({ layer: group[i].config[0].el[0], display: group[i].config[0].type[0] });
+			var labels = group[i].config[0].labels[0];
+			displayLabels = false;
+			for(var j = 0; j < labels.length; j++)
+				if(labels[j] == 'display_labels')
+					displayLabels = true;
+			layers.push({ layer: group[i].config[0].el[0], display: group[i].config[0].type[0], color: group[i].config[0].color[0], colorjpath: group[i].config[0].colorjpath[0], displayLabels: displayLabels });
 		}
 	
 		this.module.getConfiguration().layers = layers;	
