@@ -46,9 +46,9 @@ CI.Module.prototype._types.grid_selector.View.prototype = {
 			var lines = moduleValue.variables;
 			this._selectors = {};
 			
-			html = '<table>';
+			html = '<table cellpadding="0" cellspacing="0">';
 			for(var i = -1, l = lines.length; i < l; i++) {
-				html += '<tr data-lineid="' + i + '">';
+				html += '<tr data-lineid="' + i + '" ' + (i > -1 ? ('style="background-color: ' + (lines[i].color) + '"') : '') + '>';
 
 				if(i == -1) // First line
 					html += '<td></td>';
