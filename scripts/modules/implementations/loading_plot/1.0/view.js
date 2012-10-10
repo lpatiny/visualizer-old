@@ -41,8 +41,22 @@ CI.Module.prototype._types.loading_plot.View.prototype = {
 
 		preferences: function(moduleValue) {
 
+			if(!this._lastValue)
+				return;
+
 			for(var i in moduleValue) {
 
+				// i = descriptor, family, ingredient
+				for(var j = 0; j < this._lastValue.series.length; j++) {
+					if(this._lastValue.series[j].category == i) {
+						console.log(moduleValue);
+						for(var k = 0; k < this._lastValue.series[j].data.length; k++) {
+							this._lastValue.series[j].data[k].instance.filter(moduleValue[i]);
+							if(this._lastValue.series[j].data[k].instance._failure['phenolic'] == true)
+								console.log('ALERT');
+						}
+					}
+				}
 			}
 
 		},
@@ -69,6 +83,7 @@ CI.Module.prototype._types.loading_plot.View.prototype = {
 
 			svg.initZoom();
 			Fierm.SVGElement.prototype.Springs = Springs;
+			this._lastValue = $.extend({}, moduleValue.value);
 
 			if(!moduleValue.value || !moduleValue.value.series)
 				return;
@@ -88,11 +103,8 @@ CI.Module.prototype._types.loading_plot.View.prototype = {
 								var el = new Fierm.Pie(datas[k].x, datas[k].y, datas[k]);
 							else if(type == 'ellipse')
 								var el = new Fierm.Ellipse(datas[k].x, datas[k].y, datas[k]);
-
-							console.log(layers[i].displayLabels, type);
-							console.log();
-
 							el.setLabelVisibility(layers[i].displayLabels);
+							moduleValue.value.series[j].data[k].instance = el;
 							svg.add(el);
 						}
 						break;
