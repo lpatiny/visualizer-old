@@ -88,6 +88,42 @@ CI.DataType.Structures = {
 		}
 	},
 
+
+	'loading': {
+		'type': 'object',
+		'elements': {
+			'title': 'string',
+			'series': {
+				'type': 'array',
+				'elements': {
+					'type': 'object',
+					'elements': {
+						'label': 'string',
+						'data': {
+							'type': 'array',
+							'elements': {
+								'type': 'object',
+								'elements': {
+									'a': 'number',
+									'c': 'string',
+									'h': 'number',
+									'info': 'object',
+									'l': 'string',
+									'n': 'string',
+									'o': 'number',
+									'w': 'number',
+									'x': 'number',
+									'y': 'number'
+								}
+							}
+						}
+					}
+				}
+			}
+
+		}
+	},
+
 	'chart': {
 
 		"type": "object",

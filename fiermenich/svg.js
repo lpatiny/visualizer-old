@@ -8,58 +8,62 @@ Fierm.SVG = function(width, height, viewWidth, viewHeight) {
 }
 
 Fierm.SVG.prototype = {};
-Fierm.SVG.prototype.create = function(width, height, viewWidth, viewHeight) {
+Fierm.SVG.prototype.create = function() {
 	var self = this;
-
-	this._width = width;
-	this._height = height;
-
-	this._viewWidth = viewWidth;
-	this._viewHeight = viewHeight;
 
 	this._els = [];
 
-	this._viewBox = [0, 0, viewWidth, viewHeight];
 	this._svgEl = document.createElementNS(this._nameSpace, 'svg');
 	this._svgEl.setAttributeNS("http://www.w3.org/2000/xmlns/", "xmlns:xlink", "http://www.w3.org/1999/xlink");
-	this._svgEl.setAttribute('width', width + this._px);
-	this._svgEl.setAttribute('height', height + this._px);
 	this._svgEl.setAttribute('draggable', 'true');
+	this._svgEl.setAttribute('preserveAspectRatio', 'xMidYMid slice');
 
 	this._groupElements = document.createElementNS(this._nameSpace, 'g');
 	this._svgEl.appendChild(this._groupElements);
 
 	this._groupLabels = document.createElementNS(this._nameSpace, 'g');
 	this._svgEl.appendChild(this._groupLabels);
-/*
-	line = document.createElementNS(this._nameSpace, 'line');
-	this._svgEl.appendChild(line);
-	line.setAttributeNS(null, 'x1', '100');
-	line.setAttributeNS(null, 'x2', '100');
-	line.setAttributeNS(null, 'y1', '0');
-	line.setAttributeNS(null, 'y2', '1000');
-	line.setAttributeNS(null, 'stroke', 'black');
-
-	line = document.createElementNS(this._nameSpace, 'line');
-	this._svgEl.appendChild(line);
-	line.setAttributeNS(null, 'x1', '0');
-	line.setAttributeNS(null, 'x2', '1000');
-	line.setAttributeNS(null, 'y1', '100');
-	line.setAttributeNS(null, 'y2', '100');
-	line.setAttributeNS(null, 'stroke', 'black');
-*/
 
 	this.deltaZoom(0, 0, 0);
 	this._setEvents();
-//$("#main").css({marginLeft: 100, marginTop: 200});
-	document.getElementById("main").appendChild(this._svgEl);
+}
 
+Fierm.SVG.prototype.setViewBoxWidth = function(w, h) {
+	this._viewWidth = w;
+	this._viewHeight = h;
+	this._viewBox = [0, 0, this._viewWidth, this._viewHeight];
+}
 
+Fierm.SVG.prototype.setSize = function(width, height) {
+
+	this._width = width;
+	this._height = height;
+
+	this._svgEl.setAttribute('width', width + this._px);
+	this._svgEl.setAttribute('height', height + this._px);
+}
+
+Fierm.SVG.prototype.initZoom = function() {
+
+	var ratioX = this._viewWidth / this._width;
+	var ratioY = this._viewHeight / this._height;
+	var ratio;
+	Fierm.initZoom = 1 / ratioX
+	Fierm.zoom = 1 / ratioX;
+}
+
+Fierm.SVG.prototype.bindTo = function(dom) {
+	this._wrapper = dom;
+}
+
+Fierm.SVG.prototype.ready = function() {
+	$(this._wrapper).append(this._svgEl);
 	this.setViewBox();
 	var pos = $(this._svgEl).position();
 	
 	this._svgPosX = pos.left;
 	this._svgPosY = pos.top;
+
 }
 
 Fierm.SVG.prototype._setEvents = function() {
@@ -117,6 +121,7 @@ Fierm.SVG.prototype._dragStop = function() {
 }
 
 Fierm.SVG.prototype.deltaZoom = function(x, y, delta) {
+	var self = this;
 	if(!this._currentDelta) {
 		this._currentDelta = 0;
 		this._accumulatedDelta = 0;
@@ -139,6 +144,11 @@ Fierm.SVG.prototype.deltaZoom = function(x, y, delta) {
 
 	Fierm.zoom = this._width / this._viewBox[2];
 	this.changeZoomElements(this._width / this._viewBox[2]);
+
+	window.clearTimeout(this._timeoutZoom);
+	this._timeoutZoom = window.setTimeout(function() {
+		Fierm.SVGElement.prototype.Springs.resolve();
+	}, 2000);
 
 	//parent.appendChild(this._svgEl);
 	console.timeEnd('salut');

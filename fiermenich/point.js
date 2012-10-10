@@ -49,7 +49,8 @@ Fierm.SVGElement.prototype.doLine = function() {
 Fierm.SVGElement.prototype.writeLabel = function() {
 	if(this._data.l) {
 		label = this.createLabel(this._x, this._y, this._data.l);
-		Springs.addElement(this, label, this.doLine());
+
+		Fierm.SVGElement.prototype.Springs.addElement(this, label, this.doLine());
 	}
 }
 
@@ -61,8 +62,6 @@ Fierm.Circle = function(x, y, data) {
 $.extend(Fierm.Circle.prototype, Fierm.SVGElement.prototype);
 
 
-
-
 Fierm.Pie = function(x, y, data) {
 	this.construct(x,y,data);
 	this.pieElements = [];
@@ -71,7 +70,7 @@ Fierm.Pie = function(x, y, data) {
 	this._rmin = 1;
 	this._rzoom0 = 3;
 	this._rthresh = 10;
-	this._rmaxpie = 100;
+	this._rmaxpie = 30;
 	this._circleSlope = (this._rzoom0 - this._rmin) / Fierm.initZoom;
 	this._zoomThresh = (this._rthresh - this._rzoom0) / this._circleSlope;
 	this._lastAngle = 0;
@@ -124,6 +123,7 @@ Fierm.Pie.prototype.setCircleVisibility = function(bln) {
 
 
 Fierm.Pie.prototype.changeZoom = function(zoom) {
+	this._zoom = zoom;
 	if(zoom < this._zoomThresh) {
 		this.setPieVisibility(false);
 		this.setCircleVisibility(true);
@@ -141,17 +141,26 @@ Fierm.Pie.prototype.changeZoom = function(zoom) {
 		var rad = this._rmin + (this._circleSlope * zoom);
 		if(rad > this._rmaxpie)
 			rad = this._rmaxpie;
-
 		this._lastRadius = rad / zoom;
 		this._g.setAttributeNS(null, 'transform', 'translate(' + this._x + ' ' + this._y +') scale(' + this._lastRadius + ')');	
 	}
 	
-	this._labels[0].setAttributeNS(null, 'font-size', 12 / zoom);
+	if(zoom < 1500)
+		this._labels[0].setAttributeNS(null, 'display', 'none');
+	else {
+		this._labels[0].setAttributeNS(null, 'display', 'block');
+		this._labels[0].setAttributeNS(null, 'font-size', 12 / zoom);
+	}
 }
 
 Fierm.Pie.prototype.getOptimalSpringParameter = function() {
 	return this._lastRadius * 1.3;
 }
+
+Fierm.Pie.prototype.getLabelHeight = function() {
+	return 12 / this._zoom;
+}
+
 
 Fierm.Ellipse = function() {}
 

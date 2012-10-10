@@ -19,6 +19,8 @@ for(var i = 0, l = datas.length; i < l; i++) {
 	svg.add(pie);
 }
 
+svg.ready();
+
 
 
 

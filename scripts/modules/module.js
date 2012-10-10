@@ -410,11 +410,13 @@ CI.Module.prototype._impl = {
 		},
 
 		listenCallback: function(varValue, varName) {
+
 			if(!this.sourceMap)
 				return;
 			var value = this.buildData(varValue, this.sourceMap[varName]);
 			this.data[varName] = varValue;
 			var rel = this.module.getDataRelFromName(varName);
+			
 			if(rel && this.module.view.update2 && this.module.view.update2[rel])
 				this.module.view.update2[rel].call(this.module.view, varValue);
  		},
