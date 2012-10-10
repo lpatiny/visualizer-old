@@ -21,8 +21,21 @@ CI.Module.prototype._types.grid_selector.Controller.prototype = {
 		
 		var module = this.module;
 		var actions;
+		this._currentValue = {};
 		if(!(actions = this.module.definition.dataSend))	
 			return;
+	},
+
+	selectorChanged: function(col, line, value) {
+		this._currentValue[col] = this._currentValue[col] || {};
+		this._currentValue[col][line] = value;
+		this.module.getConfiguration()._data = this._currentValue;
+		
+	},
+
+	setSelector: function(select) {
+		this._currentValue = select;
+		this.module.getConfiguration()._data = this._currentValue;	
 	},
 	
 	configurationSend: {

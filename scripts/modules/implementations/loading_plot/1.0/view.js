@@ -61,13 +61,13 @@ CI.Module.prototype._types.loading_plot.View.prototype = {
 			svg.initZoom();
 			Fierm.SVGElement.prototype.Springs = Springs;
 
-			var datas = json.scatter.value.series[0].data;
+			var datas = moduleValue.value.series[0].data;
 			for(var i = 0, l = datas.length; i < l; i++) {
 				var pie = new Fierm.Circle(datas[i].x, datas[i].y, datas[i]);
 				svg.add(pie);
 			}
 
-			var datas = json.scatter.value.series[1].data;
+			var datas = moduleValue.value.series[1].data;
 			for(var i = 0, l = datas.length; i < l; i++) {
 				var pie = new Fierm.Pie(datas[i].x, datas[i].y, datas[i]);
 				svg.add(pie);
