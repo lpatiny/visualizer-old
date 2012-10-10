@@ -55,12 +55,12 @@ Fierm.SVGElement.prototype.writeLabel = function() {
 	}
 }
 
-Fierm.Circle = function(x, y, data) {
+Fierm.Ellipse = function(x, y, data) {
 	this.createElement('circle', {cx: x, cy: y, r: 1, fill: data.c, opacity: data.o, transform: 'translate(' + (x + data.w/2) + ' ' + (y + data.h/2) + ') rotate( ' + data.a + ') scale(' + data.w + ' ' + data.h + ')'});
 	this.createElement('circle', {cx: x, cy: y, r: 1, fill: 'transparent', stroke: data.c, 'vector-effect': 'non-scaling-stroke', transform: 'translate(' + (x + data.w/2) + ' ' + (y + data.h/2) + ') rotate( ' + data.a + ') scale(' + data.w + ' ' + data.h + ')'});
 }
 
-$.extend(Fierm.Circle.prototype, Fierm.SVGElement.prototype);
+$.extend(Fierm.Ellipse.prototype, Fierm.SVGElement.prototype);
 
 
 Fierm.Pie = function(x, y, data) {
@@ -168,6 +168,3 @@ Fierm.Pie.prototype.getLabelHeight = function() {
 }
 
 
-Fierm.Ellipse = function() {}
-
-$.extend(Fierm.Ellipse.prototype, Fierm.SVGElement.prototype);

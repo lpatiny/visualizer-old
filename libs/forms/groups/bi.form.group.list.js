@@ -68,7 +68,7 @@ BI.Forms.GroupFields.List.prototype = {
 
 	duplicate: function(section) {
 		
-		var group = new BI.Forms.GroupFields.List();
+		var group = new BI.Forms.GroupFields.List(this.name);
 		section.addFieldGroup(group);
 		for(var i = 0; i < this.fields.length; i++)
 			var field = this.fields[i].duplicate(group);
@@ -133,6 +133,7 @@ BI.Forms.GroupFields.List.prototype = {
 			for(var j = 0; j < json[i].length; j++) {
 				if(j > 0)
 					field.addField();
+
 				field.implementation.setValue(j, json[i][j]);
 			}
 		}

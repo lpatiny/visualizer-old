@@ -23,7 +23,7 @@ CI.Module.prototype._types['2d_list'].Controller.prototype = {
 		var actions;
 		if(!(actions = this.module.definition.dataSend))	
 			return;
-		console.log(actions);
+		
 		for(var i = 0; i < actions.length; i++) {
 			
 			var j = i;
@@ -155,16 +155,16 @@ CI.Module.prototype._types['2d_list'].Controller.prototype = {
 		var height = this.module.getConfiguration().height || "";
 		var width = this.module.getConfiguration().width || "";
 		
-		return {
-			module: [{
-				colnumber: [cols],
-				valjPath: [valJpath],
-				colorjPath: [colorJpath],
-				width: [width],
-				height: [height]
-			}]
+		return { groups: {
+				module: [{
+					colnumber: [cols],
+					valjPath: [valJpath],
+					colorjPath: [colorJpath],
+					width: [width],
+					height: [height]
+				}]
+			}
 		}
-		
 	},
 	
 	

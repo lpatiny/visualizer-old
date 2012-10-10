@@ -39,6 +39,15 @@ CI.Module.prototype._types.loading_plot.View.prototype = {
 
 	update2: {
 
+		preferences: function(moduleValue) {
+
+			for(var i in moduleValue) {
+
+			}
+
+		},
+
+
 		loading: function(moduleValue) {
 		
 			if(!moduleValue)
@@ -61,16 +70,29 @@ CI.Module.prototype._types.loading_plot.View.prototype = {
 			svg.initZoom();
 			Fierm.SVGElement.prototype.Springs = Springs;
 
-			var datas = moduleValue.value.series[0].data;
-			for(var i = 0, l = datas.length; i < l; i++) {
-				var pie = new Fierm.Circle(datas[i].x, datas[i].y, datas[i]);
-				svg.add(pie);
-			}
+			if(!moduleValue.value || !moduleValue.value.series)
+				return;
 
-			var datas = moduleValue.value.series[1].data;
-			for(var i = 0, l = datas.length; i < l; i++) {
-				var pie = new Fierm.Pie(datas[i].x, datas[i].y, datas[i]);
-				svg.add(pie);
+			var cfg = this.module.getConfiguration();
+			var layers = cfg.layers;
+
+			for(var i = 0; i < layers.length; i++) {
+				var layerId = layers[i].layer;
+				var type = layers[i].display || 'ellipse';
+				
+				for(var j = 0; j < moduleValue.value.series.length; j++) {
+					if(moduleValue.value.series[j].category == layerId) {
+						var datas = moduleValue.value.series[j].data;
+						for(var k = 0, l = datas.length; k < l; k++) {
+							console.log(type);
+							if(type == 'pie')
+								svg.add(new Fierm.Pie(datas[k].x, datas[k].y, datas[k]));
+							else if(type == 'ellipse')
+								svg.add(new Fierm.Ellipse(datas[k].x, datas[k].y, datas[k]));
+						}
+						break;
+					}
+				}
 			}
 
 			svg.ready();

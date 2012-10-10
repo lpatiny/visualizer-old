@@ -11,6 +11,7 @@ BI.Forms.Section = function(name, options) {
 	this.sections = [];
 	
 	this.options = $.extend(true, {}, BI.Forms.Section.prototype.defaults, options);
+
 	this.fieldNames = [];
 }
 
@@ -258,13 +259,25 @@ BI.Forms.Section.prototype = {
 	},
 	
 	remove: function() {
-		
 		for(var i = 0; i < this.fieldGroups.length; i++)
 			this.fieldGroups[i].remove();
+		for(var i = 0; i < this.sections.length; i++)
+			this.sections[i].remove();
 		this.dom.remove();
-		this.getForm().removeSection(this);
+		if(this.parentSection)
+			this.parentSection.removeSection(this);
+		else
+			this.getForm().removeSection(this);
 		this.showControls(this.getParent());
 	},
+
+	removeSection: function(section) {
+		this.sections[section.getId()] = null;
+		this.sections.splice(section.getId(), 1);
+		this.renumberSections();
+	},
+	
+
 	
 	removeFieldGroup: function(group) {
 		this.fieldGroups[group.getId()] = null;
@@ -292,8 +305,9 @@ BI.Forms.Section.prototype = {
 			if(!section.dom)
 				continue;
 			
-			var head = section.dom.find('.bi-form-section-header');
+			var head = section.dom.children('.bi-form-section-header');
 			head.find('span').show();
+			
 			
 			if(!section.options.multiple)
 				head.find('span.bi-form-section-add').hide();
@@ -328,7 +342,7 @@ BI.Forms.Section.prototype = {
 				var section = sectionsByName[sectionName].shift();
 				lastSection = section;
 			} else {
-				var section = lastSection.duplicate();
+				var section = lastSection.duplicate(parent);
 			}
 			
 			var sectionsXML;
@@ -356,7 +370,7 @@ BI.Forms.Section.prototype = {
 							var group = groupsByName[groupName].shift();
 							lastGroup = group;
 						} else
-							var group = lastGroup.duplicate();
+							var group = lastGroup.duplicate(parent);
 						
 						switch(this.nodeName) {
 							case 'list':
@@ -387,7 +401,6 @@ BI.Forms.Section.prototype = {
 		
 		var lastSection;
 		
-		
 		for(var i in jsonObject.sections) {
 			var sectionName = i;
 			
@@ -398,7 +411,7 @@ BI.Forms.Section.prototype = {
 					var section = sectionsByName[sectionName].shift();
 					lastSection = section;
 				} else {
-					var section = lastSection.duplicate();
+					var section = lastSection.duplicate(parent);
 				}
 				
 				//if(jsonObject.sections[i][j].sections && jsonObject.sections[i][j].sections.length > 0)
@@ -419,14 +432,13 @@ BI.Forms.Section.prototype = {
 				
 				var groupName = k;
 				for(var l = 0; l < jsonObject.groups[k].length; l++) {
-					
-					
-					if(groupsByName[groupName].length > 0) {
+				
+					if(groupsByName[groupName] && groupsByName[groupName].length > 0) {
 						var group = groupsByName[groupName].shift();
 						lastGroup = group;
 					} else
-						var group = lastGroup.duplicate();
-					
+						var group = lastGroup.duplicate(parent);
+				
 					group.fillJson(jsonObject.groups[k][l]);
 				}
 			}
@@ -467,15 +479,17 @@ BI.Forms.Section.prototype = {
 		
 		
 		for(var i = 0; i < section.sections.length; i++) {
+		
 			if(values[section.sections[i].getName()] == undefined)
 				values[section.sections[i].getName()] = [];
 			var value = {};
 			values[section.sections[i].getName()].push(value);
-			BI.Forms.Section.prototype.getValue(parent.sections[i], value);
+			BI.Forms.Section.prototype.getValue(section.sections[i], value);
+		
 		}
 		
 		if(section.fieldGroups) {
-			
+		
 			for(var i = 0; i < section.fieldGroups.length; i++) {
 				
 				

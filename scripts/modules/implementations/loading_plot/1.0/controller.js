@@ -42,114 +42,105 @@ CI.Module.prototype._types.loading_plot.Controller.prototype = {
 			type: ["loading"],
 			label: 'Loading variable',
 			description: 'The main variable'
-		}		
+		},
+
+		preferences: {
+			type: ["object"],
+			label: 'Preferences',
+			description: 'The preferences'
+		}
 	},
-	
 	
 	moduleInformations: {
 		moduleName: 'Loading plot'
 	},
 	
-	
-	
-	
 	doConfiguration: function(section) {
-		/*
 		
-		var groupfield = new BI.Forms.GroupFields.List('gencfg');
-		section.addFieldGroup(groupfield);
-		
-		var field = groupfield.addField({
-			type: 'Text',
-			name: 'nblines'
-		});
-		field.setTitle(new CI.Title('Lines per page'));
-		
-		var data = this.module.getDataFromRel('list');
+		var section2 = new BI.Forms.Section('_module_layers', {multiple: true});
+		section2.setTitle(new CI.Title('Layer'));
+		section.addSection(section2, 1);
+
+		var groupfield = new BI.Forms.GroupFields.List('config');
+		section2.addFieldGroup(groupfield);
+
+
+		/* */
+		var opts = [];
+		var data = this.module.getDataFromRel('loading');
 		var jpaths = [];
-		
-		if(CI.DataType.getType(data) == 'array') 
-			CI.DataType.getJPathsFromElement(data[0], jpaths);
-		else if(CI.DataType.getType(data) == 'arrayXY')
-			CI.DataType.getJPathsFromElement(data, jpaths);
-		
+		if(data && data.value)
+			for(var i = 0; i < data.value.series.length; i++) 
+				opts.push({title: data.value.series[i].label, key: data.value.series[i].category });
+		var field = groupfield.addField({
+			type: 'Combo',
+			name: 'el'
+		});
+		field.implementation.setOptions(opts);
+		field.setTitle(new CI.Title('Layer'));
+		/* */
+
+
+		var field = groupfield.addField({
+			type: 'Combo',
+			name: 'type'
+		});
+		field.implementation.setOptions([{key: 'ellipse', title: 'Ellipse / Circle'}, {key: 'pie', title: 'Pie Chart'}]);
+		field.setTitle(new CI.Title('Display as'));
+
+
+		/* */
 		var field = groupfield.addField({
 			type: 'Combo',
 			name: 'colorjpath'
 		});
+		field.setTitle(new CI.Title('Color'));
 		
-		field.implementation.setOptions(jpaths);
-		field.setTitle(new CI.Title('Color jPath'));
+
+		/* */
+
 
 		var field = groupfield.addField({
 			type: 'Checkbox',
-			name: 'displaySearch'
+			name: 'display_labels'
 		});
-		field.implementation.setOptions({ 'allow': 'Allow searching'});
-		field.setTitle(new CI.Title('Searching'));
+		field.setTitle(new CI.Title('Labels'))
 		
+		field.implementation.setOptions({'display_labels': 'Display', 'forcefield': 'Activate force field'});
 
 
-		var groupfield = new BI.Forms.GroupFields.Table('cols');
-		section.addFieldGroup(groupfield);
-		
-		var field = groupfield.addField({
-			type: 'Text',
-			name: 'coltitle'
-		});
-		field.setTitle(new CI.Title('Columns title'));
-		
-		var field = groupfield.addField({
-			type: 'Combo',
-			name: 'coljpath'
-		});
-		field.implementation.setOptions(jpaths);
-		field.setTitle(new CI.Title('Value jPath'));
-		*/
 		return true;
 	},
 	
 	doFillConfiguration: function() {
 		
-		/*var cols = this.module.getConfiguration().colsjPaths;
-		var nblines = this.module.getConfiguration().nbLines || 20;
-		var colorjPath = this.module.getConfiguration().colorjPath || '';
-		var search = this.module.getConfiguration().displaySearch || false;
+		var cfgLayers = this.module.getConfiguration().layers || [];
 		
 		var titles = [];
-		var jpaths = [];
-		for(var i in cols) {
-			titles.push(i);
-			jpaths.push(cols[i].jpath);
+		var layers = [];
+		for(var i = 0; i < cfgLayers.length; i++) {
+
+			var cfgLocalLayer = { groups: {config: [{ el: [cfgLayers[i].layer], type: [cfgLayers[i].display] }] } };
+			layers.push(cfgLocalLayer)
 		}
 
-
-		return {
-			
-			gencfg: [{
-				nblines: [nblines],
-				colorjpath: [colorjPath],
-				displaySearch: [[search ? 'allow' : '']]
-			}],
-			
-			cols: [{
-				coltitle: titles,
-				coljpath: jpaths
-			}]
-		}
-		*/
+		el = { sections: {
+			_module_layers: layers
+			}
+		};
+		return el;
 	},
 	
 	doSaveConfiguration: function(confSection) {
-		/*var group = confSection[0].cols[0];
-		var cols = {};
-		for(var i = 0; i < group.length; i++)
-			cols[group[i].coltitle] = { jpath: group[i].coljpath };
-		this.module.getConfiguration().colsjPaths = cols;
-		this.module.getConfiguration().nbLines = confSection[0].gencfg[0].nblines[0];
-		this.module.getConfiguration().colorjPath = confSection[0].gencfg[0].colorjpath[0];
-		this.module.getConfiguration().displaySearch = !!confSection[0].gencfg[0].displaySearch[0][0];
-		*/
+
+		var group = confSection[0]._module_layers;
+		
+		var layers = [];
+		for(var i = 0; i < group.length; i++) {
+			layers.push({ layer: group[i].config[0].el[0], display: group[i].config[0].type[0] });
+		}
+	
+		this.module.getConfiguration().layers = layers;	
 	},
 
 	export: function() {

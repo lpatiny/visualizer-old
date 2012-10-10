@@ -137,6 +137,7 @@ BI.Forms.Fields.Combo.prototype = {
 	
 	
 	setValue: function(index, value) {
+		
 		this.main.changeValue(index, value);
 		this.checkFillState(index);
 	},

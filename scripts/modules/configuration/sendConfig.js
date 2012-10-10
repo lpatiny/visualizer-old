@@ -118,14 +118,19 @@ $(document).bind('configModule', function(event, module) {
 		});
 		field.setTitle(new CI.Title('Stored in variable'));
 		
+
+
+
 		
 		var save = new CI.Buttons.Button('Save', function() {
 			
 			
 			inst.dom.trigger('stopEditing');
 			var value = inst.getValue();
+
 			module.setTitle(value.general[0].general[0].moduletitle[0]);
 			module.definition.bgColor = value.general[0].general[0].bgcolor[0];
+
 			module.setSendVars(value.send[0].sentvars[0]);
 			module.setSourceVars(value.receive[0].receivedvars[0]);
 			
@@ -146,10 +151,8 @@ $(document).bind('configModule', function(event, module) {
 			inst.getDom().dialog('close');
 		});
 		
-		
 		save.setColor('blue');
 		this.addButtonZone().addButton(save);
-		
 			
 	}, function() {
 		
@@ -180,7 +183,7 @@ $(document).bind('configModule', function(event, module) {
 		var fill = {
 			sections: {
 				general: [ { groups: { general: [{ moduletitle: [module.getTitle()], bgcolor: [ module.definition.bgColor ] }] } } ],
-				module: [ { groups: module.controller.doFillConfiguration ? module.controller.doFillConfiguration() : [] } ],
+				module: [ /*{ groups: */module.controller.doFillConfiguration ? module.controller.doFillConfiguration() : []/* } */],
 				send: [ { groups: {sentvars: [sentVars]}} ],
 				receive: [ { groups: {receivedvars: [receivedVars]}} ]
 			}

@@ -30,12 +30,28 @@ CI.Module.prototype._types.grid_selector.Controller.prototype = {
 		this._currentValue[col] = this._currentValue[col] || {};
 		this._currentValue[col][line] = value;
 		this.module.getConfiguration()._data = this._currentValue;
-		
+
+		this.sendEvent();
 	},
 
 	setSelector: function(select) {
 		this._currentValue = select;
 		this.module.getConfiguration()._data = this._currentValue;	
+
+		this.sendEvent();
+	},
+
+	sendEvent: function() {
+
+		var actions;
+		if(!(actions = this.module.definition.dataSend))	
+			return;
+				
+		for(var i = 0; i < actions.length; i++) {
+			if(actions[i].event == "onChangePref") {
+				CI.Repo.set(actions[i].name, this._currentValue);
+			}
+		}
 	},
 	
 	configurationSend: {
