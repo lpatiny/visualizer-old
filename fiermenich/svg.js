@@ -245,6 +245,8 @@ Fierm.SVG.prototype.add = function(el) {
 
 
 Fierm.SVG.prototype.getElementsForSprings = function() {
+
+	//console.log(this._zoneMinX, this._zoneMinY, this._zoneNbX, this._zoneNbY)
 	var coords = [];
 	for(var i = 0; i <= this._zoneNbX; i++) {
 		for(var j = 0; j <= this._zoneNbY; j++) {

@@ -41,11 +41,11 @@ Fierm.SVGElement.prototype.getCoordsSprings = function(coords) {
 	if(!this._forceField)
 		return;
 	if(this.isLabelVisible())
-		coords.push([ this._x, this._y, this._x, this._y, 0, 0, this.getOptimalSpringParameter(), this._label]);
+		coords.push([ this._x, this._y, this._x, this._y, 0, 0, this.getOptimalSpringParameter(), this._label, this._line]);
 }
 
 Fierm.SVGElement.prototype.setLabelDisplayThreshold = function(val) {
-	this._zoomThreshLabel = val;
+	this._zoomThreshLabel = parseFloat(val);
 	this.changeZoom();
 }
 
@@ -75,19 +75,22 @@ Fierm.SVGElement.prototype.labelVisibility = function() {
 			if(this._label) {
 				this._label.setAttributeNS(null, 'pointer-events', 'none');
 				this._label.setAttributeNS(null, 'display', 'block');
+				this._labelVisible = true;
 			}
-			this._labelVisible = true;
 		}
-
-		this._label.setAttributeNS(null, 'transform', 'translate(' + this._x + ' ' + this._y + ') scale(' + (this.svg._izoom / this.svg._zoom) + ') translate(-' + this._x + ' -' + this._y + ')');
+		this._label.setAttributeNS(null, 'font-size', this._fontsize / this.svg._zoom);
 
 	} else {
+		
 		if(this._labelVisible) {
-			if(this._label)
+			
+			if(this._label) {
+				this._labelVisible = false;
 				this._label.setAttributeNS(null, 'display', 'none');
+			}
 			if(this._line)
 				this._line.setAttributeNS(null, 'display', 'none');
-			this._labelVisible = false;
+			
 		}
 	}
 }
@@ -96,7 +99,7 @@ Fierm.SVGElement.prototype.isLabelVisible = function() {
 	return this._labelVisible;
 }
 
-Fierm.SVGElement.prototype.doDisplayLabel = function(bln, zoom) {
+Fierm.SVGElement.prototype.doDisplayLabel = function(bln) {
 	this._visibility.zoom = bln;
 	this.labelVisibility();
 }
@@ -109,8 +112,7 @@ Fierm.SVGElement.prototype.forceField = function(bln) {
 Fierm.SVGElement.prototype.setLabelSize = function(fontsize) {
 	
 	if(this._label)
-		this._label.setAttributeNS(null, 'font-size', fontsize / this.svg._izoom);
-
+		this._label.setAttributeNS(null, 'font-size', fontsize / this.svg._zoom);
 	this._fontsize = fontsize;
 }
 
@@ -119,10 +121,12 @@ Fierm.SVGElement.prototype.createLabel = function(x, y, labelTxt) {
 	label.textContent = labelTxt;
 	label.setAttributeNS(null, 'x', x);
 	label.setAttributeNS(null, 'y', y);
-	label.setAttributeNS(null, 'font-size', this._fontsize / this.svg._izoom);
+//	label.setAttributeNS(null, 'font-size', this._fontsize / this.svg._izoom);
 	label.setAttributeNS(null, 'fill', this._lc || this._data.lc || 'black');
-	label.setAttributeNS(null, 'transform', 'translate(' + this._x + ' ' + this._y + ') scale(' + (this.svg._izoom / this.svg._zoom) + ') translate(-' + this._x + ' -' + this._y + ')');
+	//label.setAttributeNS(null, 'transform', 'translate(' + this._x + ' ' + this._y + ') scale(' + (this.svg._izoom / this.svg._zoom) + ') translate(-' + this._x + ' -' + this._y + ')');
 	//this._nodes.push(label);
+
+	this.labelVisibility();
 	this._label = label;
 	return label;
 }
@@ -160,8 +164,11 @@ Fierm.SVGElement.prototype.doLine = function() {
 }
 
 Fierm.SVGElement.prototype.writeLabel = function() {
-	if(this._data.l)
+
+	if(this._data.l) {
 		label = this.createLabel(this._x, this._y, this._data.l);
+		this.doLine();
+	}
 }
 
 Fierm.SVGElement.prototype.setColor = function(color) {
@@ -173,16 +180,15 @@ Fierm.SVGElement.prototype.setColor = function(color) {
 Fierm.SVGElement.prototype.highlight = function(bln) {
 	//this._currentEl.setAttributeNS(null, 'class', 'nothighlight');
 	if(bln) {
-		this._label.setAttributeNS(null, 'font-size', this._fontsize * 2 / this.svg._izoom);
 		this._highlightgroup.setAttributeNS(null, 'transform', 'translate(' + this._x + ', ' + this._y + ') scale(5) translate(' + (-this._x) + ', ' + (-this._y) + ')');
 		this._visibility.force = true;
 		this.labelVisibility();
-
+		this._label.setAttributeNS(null, 'font-size', this._fontsize * 2 / this.svg._zoom);
 	} else {
-		this._label.setAttributeNS(null, 'font-size', this._fontsize / this.svg._izoom);
 		this._highlightgroup.removeAttributeNS(null, 'transform');
 		this._visibility.force = false;
 		this.labelVisibility();
+		this._label.setAttributeNS(null, 'font-size', this._fontsize / this.svg._zoom);
 	}
 
 	if(this.implHighlight)
@@ -195,6 +201,7 @@ Fierm.Ellipse = function(svg, x, y, data) {
 	
 	this.construct(svg,x,y,data);
 	this._displayed = true;
+	this._labelVisible = true;
 
 	this.g = this.createElement('g');
 	this._a = this.createElement('circle', {cx: 0, cy: 0, r: 1, fill: data.c, opacity: data.o, transform: 'translate(' + x + ' ' + y + ') rotate( ' + data.a + ') scale(' + data.w + ' ' + data.h + ')'}, false);
@@ -219,8 +226,7 @@ Fierm.Ellipse.prototype.filter = function(filter) {
 }
 
 Fierm.Ellipse.prototype.getOptimalSpringParameter = function() {
-
-	return (this._data.w, this._data.h);
+	return Math.max(this._data.w, this._data.h) * 1.2;
 }
 
 Fierm.Ellipse.prototype.inDom = function() {
@@ -228,7 +234,8 @@ Fierm.Ellipse.prototype.inDom = function() {
 }
 
 Fierm.Ellipse.prototype.changeZoom = function() {
-	this.doDisplayLabel(this.svg._zoom < this._zoomThreshLabel ? false : true, this.svg._zoom);
+	
+	this.doDisplayLabel(this.svg._zoom >= this._zoomThreshLabel);
 }
 
 Fierm.Pie = function(svg,x, y, data) {
@@ -331,12 +338,11 @@ Fierm.Pie.prototype.changeZoom = function() {
 		this._g.setAttributeNS(null, 'transform', 'translate(' + this._x + ' ' + this._y +') scale(' + this._lastRadius + ')');	
 		this._currentEl = this._g;
 	}
-
-	this.doDisplayLabel(zoom < this._zoomThreshLabel ? false : true, zoom);
+	this.doDisplayLabel(zoom >= this._zoomThreshLabel);
 }
 
 Fierm.Pie.prototype.getOptimalSpringParameter = function() {
-	return this._lastRadius * 2;
+	return this._lastRadius * 1.5;
 }
 
 
