@@ -41,7 +41,7 @@ Fierm.SVGElement.prototype.getCoordsSprings = function(coords) {
 	if(!this._forceField)
 		return;
 	if(this.isLabelVisible())
-		coords.push([ this._x, this._y, this._x * 1.001, this._y * 1.001, 0, 0, this.getOptimalSpringParameter(), this._label]);
+		coords.push([ this._x, this._y, this._x, this._y, 0, 0, this.getOptimalSpringParameter(), this._label]);
 }
 
 Fierm.SVGElement.prototype.setLabelDisplayThreshold = function(val) {

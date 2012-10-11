@@ -14,13 +14,13 @@ Fierm.SpringLabels.prototype.addElement = function(el, label, line) {
 Fierm.SpringLabels.prototype.resolve = function() {
 	
 	var coords = this.svg.getElementsForSprings();
-console.log(coords);
+
 	/*if(!this.allowed)
 		return;
 */
 	var distance = 20 / this.svg._zoom;
 	var krep = 0;//0.00000005;
-	var kattr = 60000000 / this.svg._zoom;
+	var kattr = 600 / this.svg._zoom;
 
 	/*
 	var krep = 0.10;
@@ -31,33 +31,43 @@ console.log(coords);
 	var nodeMass = 5000000;
 	var l = 0;
 	var log = 0;
+	var allowBreak;
 
 	while(true) {
 
 		l++;
-		if(l > 600)
+		if(l > 60)
 			break;
-
+		allowBreak = true;
 		var totalEnergy = 0;
 		for(var i = coords.length - 1; i >= 0; i--) {
-
+/*
 			if(i == 0)
 				console.log(coords[i][6]);
-
+*/
 			var force = [0, 0];
 
 			var distX = (coords[i][0] - coords[i][2]);
 			var distY = (coords[i][1] - coords[i][3]);
+
 			var dist = Math.pow(Math.pow(distX, 2) + Math.pow(distY, 2), 1/2);
+console.log(dist, coords[i][6]);
 			if(dist < coords[i][6]) {
-				coords[i][0] = (coords[i][0] - coords[i][2]) * (coords[i][6] / dist) + coords[i][2];
-				coords[i][1] = (coords[i][1] - coords[i][3]) * (coords[i][6] / dist) + coords[i][3];
+				if(dist == 0) {
+					coords[i][0] = coords[i][0] + coords[i][6];
+				} else {
+					coords[i][0] = (coords[i][0] - coords[i][2]) * (coords[i][6] / dist) + coords[i][2];
+					coords[i][1] = (coords[i][1] - coords[i][3]) * (coords[i][6] / dist) + coords[i][3];
+				}
+				allowBreak = false;
 			} else {
+
 				force[0] -= kattr * Math.pow((dist - coords[i][6]), 3) * distX / dist * 0.2;
 				force[1] -= kattr * Math.pow((dist - coords[i][6]), 3) * distY / dist * 5;
 			}
 
 			for(var j = coords.length - 1; j >= 0; j--) {
+				continue;
 				if(j == i)
 					continue;
 				distX = Math.pow((coords[j][0] - coords[i][0]), 2);
@@ -70,7 +80,7 @@ console.log(coords);
 			}
 
 			if(i == 0)
-				console.log(coords[i]);
+				console.log(force);
 
 			coords[i][4] = (coords[i][4] + timestep * force[0]) * damping;
 			coords[i][5] = (coords[i][5] + timestep * force[1]) * damping;
@@ -82,7 +92,7 @@ console.log(coords);
 		}
 		if(isNaN(totalEnergy))
 			break;
-		if(totalEnergy < 0.000000000001)
+		if(allowBreak && totalEnergy < 0.000000000001)
 			break;
 	}
 
@@ -91,6 +101,7 @@ console.log(coords);
 	for(var i = 0; i < coords.length; i++) {
 		
 		if(!isNaN(coords[i][0]) && coords[i][7]) {
+			console.log(coords[i][0]);
 			coords[i][7].setAttributeNS(null, 'x', coords[i][0]);
 			coords[i][7].setAttributeNS(null, 'y', coords[i][1]);
 		}

@@ -95,7 +95,6 @@ Fierm.SVG.prototype._setEvents = function() {
 		self.deltaZoom(event.pageX - self._svgPosX, event.pageY - self._svgPosY, delta);
 		return false;
 	});
-
 	this._svgEl.addEventListener('mousedown', function(event) {
 		self._dragStart(event);
 	});
@@ -103,10 +102,8 @@ Fierm.SVG.prototype._setEvents = function() {
 		self._dragStop(event);
 	});
 	this._svgEl.addEventListener('mousemove', function(event) {
-
 		viewRatioX = (event.pageX - self._svgPosX) / self._width;
 		viewRatioY = (event.pageY - self._svgPosY) / self._height;
-		
 		self._dragMove(event);
 	});
 }
@@ -116,7 +113,6 @@ Fierm.SVG.prototype._dragStart = function(event) {
 	this._dragging = true;
 	this._dragX = event.pageX;
 	this._dragY = event.pageY;
-
 	return;
 }
 
