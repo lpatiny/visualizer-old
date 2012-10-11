@@ -42,14 +42,18 @@ Fierm.SVGElement.prototype.doDisplayLabel = function(bln, zoom) {
 		
 		if(this._line)
 			this._line.setAttributeNS(null, 'display', 'block');
-		this._label.setAttributeNS(null, 'pointer-events', 'none');
-		this._label.setAttributeNS(null, 'display', 'block');
-		this._label.setAttributeNS(null, 'transform', 'translate(' + this._x + ' ' + this._y + ') scale(' + (Fierm.initZoom / Fierm.zoom) + ') translate(-' + this._x + ' -' + this._y + ')');
+
+		if(this._label) {
+			this._label.setAttributeNS(null, 'pointer-events', 'none');
+			this._label.setAttributeNS(null, 'display', 'block');
+			this._label.setAttributeNS(null, 'transform', 'translate(' + this._x + ' ' + this._y + ') scale(' + (Fierm.initZoom / Fierm.zoom) + ') translate(-' + this._x + ' -' + this._y + ')');
+		}
 		//this._label.setAttributeNS(null, 'font-size', 12 / zoom);
 		this._labelVisibility = true;
 	} else {
 		
-		this._label.setAttributeNS(null, 'display', 'none');
+		if(this._label)
+			this._label.setAttributeNS(null, 'display', 'none');
 		if(this._line)
 			this._line.setAttributeNS(null, 'display', 'none');
 		this._labelVisibility = false;
