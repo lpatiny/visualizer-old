@@ -111,6 +111,8 @@ CI.Module.prototype._types.loading_plot.View.prototype = {
 								el.setLabelSize(layers[i].labelsize);
 							el.forceField(layers[i].forceField);
 							
+							if(layers[i].labelzoomthreshold !== '')
+								el.setLabelDisplayThreshold(layers[i].labelzoomthreshold);
 
 							el.hoverCallback = function() {
 								self.module.controller.hover(this._data);

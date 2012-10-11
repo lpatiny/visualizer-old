@@ -27,6 +27,10 @@ Fierm.SVGElement.prototype.getCoordsSprings = function(coords) {
 		coords.push([ this._x, this._y, this._x * 1.001, this._y * 1.001, 0, 0, this.getOptimalSpringParameter(), this._label]);
 }
 
+Fierm.SVGElement.prototype.setLabelDisplayThreshold = function(val) {
+	this._zoomThreshLabel = val;
+	this.changeZoom(Fierm.Zoom);
+}
 
 Fierm.SVGElement.prototype.allowLabelDisplay = function(bln) {
 	this.allowLabelDisplay = bln;
@@ -93,6 +97,8 @@ Fierm.SVGElement.prototype.construct = function(x, y, data) {
 	var self = this;
 	this._highlightgroup = this.createElement('g', {class: 'highlightgroup'}, false, true);
 
+	this._zoomThreshLabel = 1500;
+
 	CI.RepoHighlight.listen(data._highlight, function(value, keys) {	
 		self.highlight(value);
 	});
@@ -155,10 +161,10 @@ Fierm.Ellipse = function(x, y, data) {
 	this.g.appendChild(this._b);
 
 	this.writeLabel();
-
+	this.changeZoom(Fierm.initZoom);
 	this._data = data;
-	
 }
+
 $.extend(Fierm.Ellipse.prototype, Fierm.SVGElement.prototype);
 Fierm.Ellipse.prototype.filter = function(filter) {
 	if(filter[this._data.n] !== undefined) {
@@ -167,8 +173,8 @@ Fierm.Ellipse.prototype.filter = function(filter) {
 	}
 }
 
-
 Fierm.Ellipse.prototype.getOptimalSpringParameter = function() {
+
 	return (this._data.w, this._data.h);
 }
 
@@ -178,7 +184,7 @@ Fierm.Ellipse.prototype.inDom = function() {
 
 Fierm.Ellipse.prototype.changeZoom = function(zoom) {
 	
-	this.doDisplayLabel(zoom < 1500 ? false : true, zoom);
+	this.doDisplayLabel(zoom < this._zoomThreshLabel ? false : true, zoom);
 }
 
 
@@ -283,7 +289,7 @@ Fierm.Pie.prototype.changeZoom = function(zoom) {
 		this._currentEl = this._g;
 	}
 	
-	this.doDisplayLabel(zoom < 1500 ? false : true, zoom);
+	this.doDisplayLabel(zoom < this._zoomThreshLabel ? false : true, zoom);
 }
 
 Fierm.Pie.prototype.getOptimalSpringParameter = function() {

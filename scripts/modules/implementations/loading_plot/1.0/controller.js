@@ -147,6 +147,14 @@ CI.Module.prototype._types.loading_plot.Controller.prototype = {
 		field.setTitle(new CI.Title('Label size'));
 
 
+
+		var field = groupfield.addField({
+			type: 'Text',
+			name: 'labelzoomthreshold'
+		});
+		field.setTitle(new CI.Title('Zoom for label display'));
+
+
 		return true;
 	},
 	
@@ -157,7 +165,7 @@ CI.Module.prototype._types.loading_plot.Controller.prototype = {
 		var titles = [];
 		var layers = [];
 		for(var i = 0; i < cfgLayers.length; i++) {
-			var cfgLocalLayer = { groups: {config: [{ el: [cfgLayers[i].layer], type: [cfgLayers[i].display], labelsize: [cfgLayers[i].labelsize], /*colorjpath: [cfgLayers[i].colorjpath], */color: [cfgLayers[i].color], labels: [[(cfgLayers[i].displayLabels ? 'display_labels' : null), (cfgLayers[i].forceField ? 'forcefield' : null)]] }] } };
+			var cfgLocalLayer = { groups: {config: [{ el: [cfgLayers[i].layer], type: [cfgLayers[i].display], labelzoomthreshold: [cfgLayers[i].labelzoomthreshold], labelsize: [cfgLayers[i].labelsize], /*colorjpath: [cfgLayers[i].colorjpath], */color: [cfgLayers[i].color], labels: [[(cfgLayers[i].displayLabels ? 'display_labels' : null), (cfgLayers[i].forceField ? 'forcefield' : null)]] }] } };
 			layers.push(cfgLocalLayer)
 		}
 
@@ -183,7 +191,7 @@ CI.Module.prototype._types.loading_plot.Controller.prototype = {
 				if(labels[j] == 'forcefield')
 					forcefield = true;
 			}
-			layers.push({ layer: group[i].config[0].el[0], labelsize: group[i].config[0].labelsize[0], display: group[i].config[0].type[0], color: group[i].config[0].color[0], /*colorjpath: group[i].config[0].colorjpath[0],*/ displayLabels: displayLabels, forceField: forcefield });
+			layers.push({ layer: group[i].config[0].el[0], labelsize: group[i].config[0].labelsize[0], display: group[i].config[0].type[0], color: group[i].config[0].color[0], /*colorjpath: group[i].config[0].colorjpath[0],*/ displayLabels: displayLabels, forceField: forcefield, labelzoomthreshold: group[i].config[0].labelzoomthreshold[0] });
 		}
 	
 		this.module.getConfiguration().layers = layers;	
