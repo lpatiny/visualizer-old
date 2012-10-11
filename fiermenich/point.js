@@ -160,10 +160,8 @@ Fierm.SVGElement.prototype.highlight = function(bln) {
 		this.doDisplayLabel(false, Fierm.zoom);
 	}
 
-
 	if(this.implHighlight)
 		this.implHighlight();
-
 }
 
 
@@ -318,12 +316,12 @@ Fierm.Pie.prototype.getOptimalSpringParameter = function() {
 
 
 Fierm.Pie.prototype.filter = function(filter) {
-
+	var val = 0;
 	for(var i in filter) {
-		if(this.charthashmap[i] == undefined)
-			continue;
+		if(this.charthashmap[i] !== undefined)
+			val = this.charthashmap[i];
 
-		var inside = (this.charthashmap[i] >= filter[i][0] && this.charthashmap[i] <= filter[i][1]);
+		var inside = (val >= filter[i][0] && val <= filter[i][1]);
 		if(!inside)
 			this._failure[i] = true;
 		
