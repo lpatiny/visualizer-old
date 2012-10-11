@@ -62,6 +62,7 @@ CI.Module.prototype._types.loading_plot.View.prototype = {
 
 		loading: function(moduleValue) {
 		
+			var self = this;
 			if(!moduleValue)
 				return;
 
@@ -77,7 +78,7 @@ CI.Module.prototype._types.loading_plot.View.prototype = {
 			svg.setViewBoxWidth(1, 1);
 			svg.bindTo(this.dom);
 
-			var Springs = new Fierm.SpringLabels();
+			var Springs = new Fierm.SpringLabels(svg);
 
 			svg.initZoom();
 			Fierm.SVGElement.prototype.Springs = Springs;
@@ -102,9 +103,12 @@ CI.Module.prototype._types.loading_plot.View.prototype = {
 							else if(type == 'ellipse')
 								var el = new Fierm.Ellipse(datas[k].x, datas[k].y, datas[k]);
 
-							el.setLabelVisibility(layers[i].displayLabels);
+							el.allowLabelDisplay(layers[i].displayLabels);
 							if(layers[i].color)
 								el.setColor(layers[i].color);
+							el.hoverCallback = function() {
+								self.module.controller.hover(this._data);
+							}
 
 							this._instances[j] = this._instances[j] || [];
 							this._instances[j][k] = el;

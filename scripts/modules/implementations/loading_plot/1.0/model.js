@@ -25,23 +25,25 @@ $.extend(CI.Module.prototype._types.loading_plot.Model.prototype, {
 			// It's an array of equivalent elements
 			// Don't need to merge a list
 			// It's like that since the data is typed and we know the structure
-			var data = data[0];
+			
 			var jpaths = []; 
-			CI.DataType.getJPathsFromElement(data, jpaths);
+			var structure = [];
+			var structure = CI.DataType.getStructureFromElement(data, structure)
+			
+			if(rel == 'element')
+				CI.DataType.getJPathsFromStructure(structure.elements.series.elements.elements.data.elements, null, jpaths);
 			return jpaths;
 		}
 
 		switch(rel) {
 			case 'element':
-				rel = 'list';
+				relObj = 'loading';
 			break;
 		}
-		var data = this.module.getDataFromRel(rel);
-		if(!data || data == null)
-			return;
-		//data = data.getData();
-		if(data == null)
-			return;
+
+		var data = this.module.getDataFromRel(relObj);
+		
+		
 		return getjPath(data);
 	}
 });

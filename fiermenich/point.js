@@ -18,23 +18,31 @@ Fierm.SVGElement.prototype.createElement = function(nodeName, properties, doNotI
 	return node;
 }
 
+Fierm.SVGElement.prototype.getCoordsSprings = function(coords) {
+	if(this.allowLabelDisplay && this._labelVisibility && this._displayed)
+		coords.push([ this._x, this._y, this._x * 1.001, this._y * 1.001, 0, 0, this.getOptimalSpringParameter(), this._label]);
+}
 
-Fierm.SVGElement.prototype.setLabelVisibility = function(bln) {
-	this._labelVisibility = bln;
+
+Fierm.SVGElement.prototype.allowLabelDisplay = function(bln) {
+	this.allowLabelDisplay = bln;
 }
 
 Fierm.SVGElement.prototype.doDisplayLabel = function(bln, zoom) {
 
-	if(bln && this._labelVisibility) {
-		Fierm.SVGElement.prototype.Springs.allow();
+	if(bln && this.allowLabelDisplay && this._displayed) {
+		
 		this._line.setAttributeNS(null, 'display', 'block');
+		this._label.setAttributeNS(null, 'pointer-events', 'none');
 		this._label.setAttributeNS(null, 'display', 'block');
-
-		this._label.setAttributeNS(null, 'font-size', 12 / zoom);
+		this._label.setAttributeNS(null, 'transform', 'translate(' + this._x + ' ' + this._y + ') scale(' + (Fierm.initZoom / Fierm.zoom) + ') translate(-' + this._x + ' -' + this._y + ')');
+		//this._label.setAttributeNS(null, 'font-size', 12 / zoom);
+		this._labelVisibility = true;
 	} else {
-		Fierm.SVGElement.prototype.Springs.forbid();
+		
 		this._label.setAttributeNS(null, 'display', 'none');
 		this._line.setAttributeNS(null, 'display', 'none');
+		this._labelVisibility = false;
 	}
 }
 
@@ -44,6 +52,7 @@ Fierm.SVGElement.prototype.createLabel = function(x, y, labelTxt) {
 	label.setAttributeNS(null, 'x', x);
 	label.setAttributeNS(null, 'y', y);
 	label.setAttributeNS(null, 'font-size', 12 / Fierm.initZoom);
+	label.setAttributeNS(null, 'transform', 'translate(' + this._x + ' ' + this._y + ') scale(' + (Fierm.initZoom / Fierm.zoom) + ') translate(-' + this._x + ' -' + this._y + ')');
 	//this._nodes.push(label);
 	this._label = label;
 	return label;
@@ -64,20 +73,25 @@ Fierm.SVGElement.prototype.construct = function(x, y, data) {
 	this._x = x, this._y = y, this._data = data;
 	this._label, this._line;
 	var self = this;
-	this._highlightgroup = this.createElement('g', {}, false, true);
+	this._highlightgroup = this.createElement('g', {class: 'highlightgroup'}, false, true);
 
 	CI.RepoHighlight.listen(data._highlight, function(value, keys) {	
 		self.highlight(value);
 	});
 
-	this._highlightgroup.addEventListener('mouseover', function() {
-		CI.RepoHighlight.set(data._highlight, 1);
-	});
-
-	this._highlightgroup.addEventListener('mouseout', function() {
-		CI.RepoHighlight.set(data._highlight, 0);
-	})
 }
+
+Fierm.SVGElement.prototype.mouseover = function() {
+	CI.RepoHighlight.set(this._data._highlight, 1);
+	if(this.hoverCallback)
+		this.hoverCallback.call(this);
+}
+
+Fierm.SVGElement.prototype.mouseout = function() {
+	CI.RepoHighlight.set(this._data._highlight, 0);
+}
+
+
 
 Fierm.SVGElement.prototype.doLine = function() {
 	var el = document.createElementNS('http://www.w3.org/2000/svg', 'line');
@@ -133,6 +147,15 @@ Fierm.Ellipse.prototype.filter = function(filter) {
 }
 
 
+Fierm.Ellipse.prototype.getOptimalSpringParameter = function() {
+	return (this._data.w, this._data.h);
+}
+
+Fierm.Ellipse.prototype.inDom = function() {
+	this._highlightgroup.setAttributeNS(null, 'data-id', this.id);
+}
+
+
 
 Fierm.Pie = function(x, y, data) {
 	this.construct(x,y,data);
@@ -166,6 +189,7 @@ Fierm.Pie.prototype.inDom = function() {
 	if(!this._chart)
 		return;
 
+	this._highlightgroup.setAttributeNS(null, 'data-id', this.id);
 
 	for(var i = 0; i < this._chart.length; i++) {
 
@@ -237,7 +261,7 @@ Fierm.Pie.prototype.changeZoom = function(zoom) {
 }
 
 Fierm.Pie.prototype.getOptimalSpringParameter = function() {
-	return this._lastRadius * 1.3;
+	return this._lastRadius * 2;
 }
 
 Fierm.Pie.prototype.getLabelHeight = function() {
@@ -258,6 +282,9 @@ Fierm.Pie.prototype.filter = function(filter) {
 
 			this._currentEl.setAttributeNS(null, 'display', 'none');
 			this._displayed = false;
+
+			if(this.allowLabelDisplay && this._labelVisibility)
+				this._label.setAttributeNS(null, 'display', 'none');
 		
 		} else if(!this._displayed && this._failure[i] && inside) {
 			
@@ -267,6 +294,9 @@ Fierm.Pie.prototype.filter = function(filter) {
 					return;
 			this._displayed = true;
 			this._currentEl.setAttributeNS(null, 'display', 'block');
+
+			if(this.allowLabelDisplay && this._labelVisibility)
+				this._label.setAttributeNS(null, 'display', 'block');
 		}
 	}
 }

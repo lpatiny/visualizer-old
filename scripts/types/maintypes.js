@@ -110,6 +110,7 @@ CI.DataType.Structures = {
 									'h': 'number',
 									'info': 'object',
 									'l': 'string',
+									'u': 'string',
 									'n': 'string',
 									'o': 'number',
 									'w': 'number',

@@ -5,6 +5,7 @@ Fierm.SVG = function(width, height, viewWidth, viewHeight) {
 	this._nameSpace = 'http://www.w3.org/2000/svg';
 	this._px = new String('px');
 	this.create(width, height, viewWidth, viewHeight);
+	this.zonesDone = [];
 }
 
 Fierm.SVG.prototype = {};
@@ -24,6 +25,15 @@ Fierm.SVG.prototype.create = function() {
 	this._groupLabels = document.createElementNS(this._nameSpace, 'g');
 	this._svgEl.appendChild(this._groupLabels);
 
+
+	$(this._svgEl).on('mouseover', '.highlightgroup', function() {
+		var id = $(this).data('id');
+		self._els[id].mouseover();
+	}).on('mouseout', '.highlightgroup', function() {
+		var id = $(this).data('id');
+		self._els[id].mouseout();
+	});
+
 	this.deltaZoom(0, 0, 0);
 	this._setEvents();
 }
@@ -32,6 +42,8 @@ Fierm.SVG.prototype.setViewBoxWidth = function(w, h) {
 	this._viewWidth = w;
 	this._viewHeight = h;
 	this._viewBox = [0, 0, this._viewWidth, this._viewHeight];
+
+	this.zones = [];
 }
 
 
@@ -109,7 +121,6 @@ Fierm.SVG.prototype._dragMove = function(event) {
 	var newX = event.pageX, diffX = (newX - this._dragX);
 	var newY = event.pageY, diffY = (newY - this._dragY);
 
-
 	var ratioX = diffX / this._width, ratioY = diffY / this._height;
 	var diffXViewbox = ratioX * this._viewBox[2];
 	var diffYViewbox = ratioY * this._viewBox[3];
@@ -118,6 +129,7 @@ Fierm.SVG.prototype._dragMove = function(event) {
 	this._viewBox[1] -= diffYViewbox;
 	this._dragX = newX, this._dragY = newY;
 	this.setViewBox();
+	this.doZones();
 }
 
 Fierm.SVG.prototype._dragStop = function() {
@@ -133,10 +145,8 @@ Fierm.SVG.prototype.deltaZoom = function(x, y, delta) {
 	if(delta == 0)
 		return;
 	
-	var parent = this._svgEl.parentNode;
-	//parent.removeChild(this._svgEl);
 
-	//console.time('salut');
+	var parent = this._svgEl.parentNode;
 	this._currentDelta += delta;
 	var boxWidthX = this._viewWidth * Math.pow(2, this._currentDelta);
 	var boxWidthY = this._viewHeight * Math.pow(2, this._currentDelta);
@@ -152,10 +162,9 @@ Fierm.SVG.prototype.deltaZoom = function(x, y, delta) {
 	window.clearTimeout(this._timeoutZoom);
 	this._timeoutZoom = window.setTimeout(function() {
 		Fierm.SVGElement.prototype.Springs.resolve();
-	}, 2000);
+	}, 20);
 
 	//parent.appendChild(this._svgEl);
-	console.timeEnd('salut');
 }
 
 Fierm.SVG.prototype.setViewBox = function(x1, y1, x2, y2) {
@@ -164,14 +173,39 @@ Fierm.SVG.prototype.setViewBox = function(x1, y1, x2, y2) {
 	this._svgEl.setAttributeNS(null, 'viewBox', this._viewBox.join(' '));
 }
 
+Fierm.SVG.prototype.doZones = function() {
+
+	var minX = Math.floor(20 * this._viewBox[0] / this._viewWidth) - 1;
+	var minY = Math.floor(20 * this._viewBox[1] / this._viewHeight) - 1;
+	var nbX = Math.ceil(20 * this._viewBox[2] / this._viewWidth) + 1;
+	var nbY = Math.ceil(20 * this._viewBox[3] / this._viewWidth) + 1;
+
+	this._zoneMinX = minX; this._zoneMinY = minY; this._zoneNbX = nbX; this._zoneNbY = nbY;
+
+	for(var i = 0; i <= nbX; i++) {
+		for(var j = 0; j <= nbY; j++) {
+			var index = (i + minX) * 1000 + j + minY;
+			if(this.zonesDone[index])
+				continue;
+			if(this.zones[i + minX] && this.zones[i + minX][j + minY])
+				for(var k = 0; k < this.zones[i + minX][j + minY].length; k++)		
+					this.zones[i + minX][j + minY][k].changeZoom(this._zoom);
+			this.zonesDone[index] = true;
+		}
+	}
+}
+
 Fierm.SVG.prototype.changeZoomElements = function(newZoom) {
 //	console.time('1');
 /*	var parent = this._groupLabels.parentNode;
 	var next = this._groupLabels.nextSibling;
 	parent.removeChild(this._groupLabels);*/
+	this._zoom = newZoom;
+	this.zonesDone = [];
+	this.doZones();
 
-	for(var i in this._els)
-		this._els[i].changeZoom(newZoom);
+
+
 /*
 	if(next)
 		parent.insertBefore(this._groupLabels, nextSibling);
@@ -183,6 +217,19 @@ Fierm.SVG.prototype.changeZoomElements = function(newZoom) {
 
 Fierm.SVG.prototype.add = function(el) {
 	this._els.push(el);
+	var _x = el.getX(), _y = el.getY();
+	
+	var indexX = Math.floor(20 * _x / this._viewWidth);
+	var indexY = Math.floor(20 * _y / this._viewHeight);
+
+	this.zones[indexX] = this.zones[indexX] || [];
+	this.zones[indexX][indexY] = this.zones[indexX][indexY] || [];
+	this.zones[indexX][indexY].push(el);
+
+	el.id = this._els.length - 1;
+	el.zoneIndexX = indexX;
+	el.zoneIndexY = indexY;
+
 	if(!el._nodes)
 		return;
 	for(var i in el._nodes)	
@@ -191,4 +238,18 @@ Fierm.SVG.prototype.add = function(el) {
 	if(el._label)
 		this._groupLabels.appendChild(el._label);
 	el.inDom();
+}
+
+
+Fierm.SVG.prototype.getElementsForSprings = function() {
+	var coords = [];
+	for(var i = 0; i <= this._zoneNbX; i++) {
+		for(var j = 0; j <= this._zoneNbY; j++) {
+			if(this.zones[i + this._zoneMinX] && this.zones[i + this._zoneMinX][j + this._zoneMinY])
+				for(var k = 0; k < this.zones[i + this._zoneMinX][j + this._zoneMinY].length; k++)		
+					this.zones[i + this._zoneMinX][j + this._zoneMinY][k].getCoordsSprings(coords);
+		}
+	}
+
+	return coords;
 }

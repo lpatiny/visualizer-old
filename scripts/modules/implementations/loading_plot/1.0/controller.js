@@ -25,14 +25,33 @@ CI.Module.prototype._types.loading_plot.Controller.prototype = {
 			return;
 	},
 	
+	hover: function(data) {
+
+		var actions;
+		if(!(actions = this.module.definition.dataSend))	
+			return;	
+		for(var i = 0; i < actions.length; i++)
+			if(actions[i].event == "onHover")
+				CI.API.setSharedVarFromJPath(actions[i].name, data, actions[i].jpath);
+	
+
+	},
+
 	configurationSend: {
 
 		events: {
 
+			onHover: {
+				label: 'Hovers an element',
+				description: 'Pass the mouse over a line to select it'
+			}
 		},
 		
 		rels: {
-			
+			'element': {
+				label: 'Element',
+				description: 'Returns the selected row in the list'
+			}
 		}
 		
 	},
