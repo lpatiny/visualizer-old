@@ -178,10 +178,10 @@ Fierm.SVG.prototype.setViewBox = function(x1, y1, x2, y2) {
 
 Fierm.SVG.prototype.doZones = function() {
 
-	var minX = Math.floor(20 * this._viewBox[0] / this._viewWidth) - 1;
-	var minY = Math.floor(20 * this._viewBox[1] / this._viewHeight) - 1;
-	var nbX = Math.ceil(20 * this._viewBox[2] / this._viewWidth) + 1;
-	var nbY = Math.ceil(20 * this._viewBox[3] / this._viewWidth) + 1;
+	var minX = Math.floor(20 * this._viewBox[0] / this._viewWidth) - 2;
+	var minY = Math.floor(20 * this._viewBox[1] / this._viewHeight) - 2;
+	var nbX = Math.ceil(20 * this._viewBox[2] / this._viewWidth) + 2;
+	var nbY = Math.ceil(20 * this._viewBox[3] / this._viewWidth) + 2;
 
 	this._zoneMinX = minX; this._zoneMinY = minY; this._zoneNbX = nbX; this._zoneNbY = nbY;
 

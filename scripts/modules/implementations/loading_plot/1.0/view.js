@@ -111,6 +111,7 @@ CI.Module.prototype._types.loading_plot.View.prototype = {
 							if(layers[i].labelzoomthreshold !== '')
 								el.setLabelDisplayThreshold(layers[i].labelzoomthreshold);
 							el.setLabelStroke(layers[i].blackstroke);
+							el.setLabelScale(layers[i].labelscale);
 
 
 							el.hoverCallback = function() {

@@ -37,11 +37,10 @@ Fierm.SVGElement.prototype.createElement = function(nodeName, properties, doNotI
 }
 
 Fierm.SVGElement.prototype.getCoordsSprings = function(coords) {
-
 	if(!this._forceField)
 		return;
 	if(this.isLabelVisible())
-		coords.push([ this._x, this._y, this._x, this._y, 0, 0, this.getOptimalSpringParameter(), this._label, this._line]);
+		coords.push(this._labelSpringEl || (this._labelSpringEl = [ this._x, this._y, this._x, this._y, 0, 0, this.getOptimalSpringParameter(), this._label, this._line ]));
 }
 
 Fierm.SVGElement.prototype.setLabelDisplayThreshold = function(val) {
@@ -61,6 +60,10 @@ Fierm.SVGElement.prototype.setLabelStroke = function(bln) {
 
 Fierm.SVGElement.prototype.allowLabelDisplay = function(bln) {
 	this.allowLabelDisplay = bln;
+}
+
+Fierm.SVGElement.prototype.setLabelScale = function() {
+	
 }
 
 Fierm.SVGElement.prototype.labelVisibility = function() {
@@ -105,12 +108,10 @@ Fierm.SVGElement.prototype.doDisplayLabel = function(bln) {
 }
 
 Fierm.SVGElement.prototype.forceField = function(bln) {
-
 	this._forceField = bln;
 }
 
 Fierm.SVGElement.prototype.setLabelSize = function(fontsize) {
-	
 	if(this._label)
 		this._label.setAttributeNS(null, 'font-size', fontsize / this.svg._zoom);
 	this._fontsize = fontsize;

@@ -36,7 +36,7 @@ Fierm.SpringLabels.prototype.resolve = function() {
 	while(true) {
 
 		l++;
-		if(l > 1000)
+		if(l > 20)
 			break;
 		allowBreak = true;
 		var totalEnergy = 0;
@@ -54,9 +54,9 @@ Fierm.SpringLabels.prototype.resolve = function() {
 
 			if(dist < coords[i][6]) {
 				if(dist == 0) {
-					var rand = Math.random() - 0.5;
-					coords[i][0] = coords[i][0] + coords[i][6] * rand;
-					coords[i][1] = coords[i][1] + coords[i][6] * rand;
+					
+					coords[i][0] = coords[i][0] + coords[i][6] * (Math.random() - 0.5);
+					coords[i][1] = coords[i][1] + coords[i][6] * (Math.random() - 0.5);
 				} else {
 					coords[i][0] = (coords[i][0] - coords[i][2]) * (coords[i][6] / dist) + coords[i][2];
 					coords[i][1] = (coords[i][1] - coords[i][3]) * (coords[i][6] / dist) + coords[i][3];
@@ -65,7 +65,7 @@ Fierm.SpringLabels.prototype.resolve = function() {
 			} else {
 
 				force[0] -= kattr * Math.pow((dist - coords[i][6]), 3) * distX / dist * 2;
-				force[1] -= kattr * Math.pow((dist - coords[i][6]), 3) * distY / dist * 2;
+				force[1] -= kattr * Math.pow((dist - coords[i][6]), 3) * distY / dist * 5;
 			}
 
 			for(var j = coords.length - 1; j >= 0; j--) {
@@ -81,9 +81,6 @@ Fierm.SpringLabels.prototype.resolve = function() {
 				force[1] -= krep / (Math.pow(dist, 3)) * (coords[j][1] - coords[i][1]) / dist * 5;
 			}
 
-			if(i == 0)
-				console.log(force);
-
 			coords[i][4] = (coords[i][4] + timestep * force[0]) * damping;
 			coords[i][5] = (coords[i][5] + timestep * force[1]) * damping;
 		//	coords[i][7] = dist;
@@ -92,8 +89,11 @@ Fierm.SpringLabels.prototype.resolve = function() {
 
 			totalEnergy += nodeMass * (Math.pow(coords[i][4], 2) + Math.pow(coords[i][5], 2))
 		}
+
 		if(isNaN(totalEnergy))
 			break;
+
+		console.log(totalEnergy / this.svg._zoom * coords.length);
 		if(allowBreak && totalEnergy < 0.000000000001)
 			break;
 	}
@@ -111,14 +111,13 @@ Fierm.SpringLabels.prototype.resolve = function() {
 			coords[i][7].setAttributeNS(null, 'text-anchor', (coords[i][0] < coords[i][2]) ? 'end' : 'start');
 			coords[i][8].setAttributeNS(null, 'display', 'none');
 
-			coords[i][8].setAttribute('x1', coords[i][0]);
 			coords[i][8].setAttribute('display', 'block');
 			coords[i][8].setAttribute('stroke', 'black');
 			coords[i][8].setAttribute('vector-effect', 'non-scaling-stroke');
+			coords[i][8].setAttribute('x1', coords[i][0]);
 			coords[i][8].setAttribute('x2', coords[i][2]);
 			coords[i][8].setAttribute('y1', coords[i][1]);
 			coords[i][8].setAttribute('y2', coords[i][3]);
-
 		}
 /*	
 		if(this.coords[i][7] < 0.004)
