@@ -110,12 +110,14 @@ Fierm.SVGElement.prototype.construct = function(x, y, data) {
 }
 
 Fierm.SVGElement.prototype.mouseover = function() {
+	//this.highlight(true);
 	CI.RepoHighlight.set(this._data._highlight, 1);
 	if(this.hoverCallback)
 		this.hoverCallback.call(this);
 }
 
 Fierm.SVGElement.prototype.mouseout = function() {
+	//this.highlight(false);
 	CI.RepoHighlight.set(this._data._highlight, 0);
 }
 
@@ -142,6 +144,8 @@ Fierm.SVGElement.prototype.setColor = function(color) {
 }
 
 Fierm.SVGElement.prototype.highlight = function(bln) {
+
+	
 	//this._currentEl.setAttributeNS(null, 'class', 'nothighlight');
 	if(bln)
 		this._highlightgroup.setAttributeNS(null, 'transform', 'translate(' + this._x + ', ' + this._y + ') scale(5) translate(' + (-this._x) + ', ' + (-this._y) + ')');

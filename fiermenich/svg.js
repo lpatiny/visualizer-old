@@ -13,7 +13,7 @@ Fierm.SVG.prototype.create = function() {
 	var self = this;
 
 	this._els = [];
-
+	this._viewBox = [];
 	this._svgEl = document.createElementNS(this._nameSpace, 'svg');
 	this._svgEl.setAttributeNS("http://www.w3.org/2000/xmlns/", "xmlns:xlink", "http://www.w3.org/1999/xlink");
 	this._svgEl.setAttribute('draggable', 'true');
@@ -42,8 +42,9 @@ Fierm.SVG.prototype.setViewBoxWidth = function(w, h) {
 	this._viewWidth = w;
 	this._viewHeight = h;
 	this._viewBox = [0, 0, this._viewWidth, this._viewHeight];
-
 	this.zones = [];
+
+	this.initZoom();
 }
 
 
@@ -55,15 +56,19 @@ Fierm.SVG.prototype.setSize = function(width, height) {
 
 	this._svgEl.setAttribute('width', width + this._px);
 	this._svgEl.setAttribute('height', height + this._px);
+
+
+	this.initZoom();
 }
 
 Fierm.SVG.prototype.initZoom = function() {
+	if(!this._viewBox[2])
+		return;
 
-	var ratioX = this._viewWidth / this._width;
-	var ratioY = this._viewHeight / this._height;
-	var ratio;
-	Fierm.initZoom = 1 / ratioX
-	Fierm.zoom = 1 / ratioX;
+	Fierm.initZoom = this._width / this._viewBox[2];
+	Fierm.zoom = this._width / this._viewBox[2];
+	this._zoom = Fierm.zoom;
+	
 }
 
 Fierm.SVG.prototype.bindTo = function(dom) {
