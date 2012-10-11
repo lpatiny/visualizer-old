@@ -14,7 +14,7 @@ Fierm.SVGElement.prototype.construct = function(svg, x, y, data) {
 	this._highlightgroup = this.createElement('g', {class: 'highlightgroup'}, false, true);
 	this._labelVisible = true;
 	this._zoomThreshLabel = 1500;
-
+	this.allowLabelScale = false;
 	CI.RepoHighlight.listen(data._highlight, function(value, keys) {	
 		self.highlight(value);
 	});
@@ -62,8 +62,8 @@ Fierm.SVGElement.prototype.allowLabelDisplay = function(bln) {
 	this.allowLabelDisplay = bln;
 }
 
-Fierm.SVGElement.prototype.setLabelScale = function() {
-	
+Fierm.SVGElement.prototype.setLabelScale = function(bln) {
+	this.allowLabelScale = bln;
 }
 
 Fierm.SVGElement.prototype.labelVisibility = function() {
@@ -81,7 +81,9 @@ Fierm.SVGElement.prototype.labelVisibility = function() {
 				this._labelVisible = true;
 			}
 		}
-		this._label.setAttributeNS(null, 'font-size', this._fontsize / this.svg._zoom);
+
+		
+		this._label.setAttributeNS(null, 'font-size', this._fontsize / ((!this.allowLabelScale) ? this.svg._zoom : this.svg._izoom));
 
 	} else {
 		

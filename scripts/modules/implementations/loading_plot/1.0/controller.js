@@ -185,7 +185,7 @@ CI.Module.prototype._types.loading_plot.Controller.prototype = {
 		var layers = [];
 		for(var i = 0; i < group.length; i++) {
 			var labels = group[i].config[0].labels[0];
-			displayLabels = false, forcefield = false, blackstroke = false;
+			displayLabels = false, forcefield = false, blackstroke = false, scalelabel = false;
 			for(var j = 0; j < labels.length; j++) {
 				if(labels[j] == 'display_labels')
 					displayLabels = true;
