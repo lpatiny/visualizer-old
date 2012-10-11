@@ -53,7 +53,7 @@ Fierm.SpringLabels.prototype.resolve = function() {
 					continue
 				force[0] -= krep / (Math.pow(dist, 3)) * (coords[j][0] - coords[i][0]) / dist * 0.2;
 				force[1] -= krep / (Math.pow(dist, 3)) * (coords[j][1] - coords[i][1]) / dist * 5;
-			}
+			}f
 	
 			var distX = (coords[i][0] - coords[i][2]);
 			var distY = (coords[i][1] - coords[i][3]);

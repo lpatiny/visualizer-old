@@ -378,7 +378,7 @@ CI.ConfigVisualizer = function() {
 
 		var varname = element.getTitle();
 
-		$("<div />").dialog({ modal: true, width: '80%', title: "Edit Shared variables"}).biForm({}, function() {
+		$("<div />").dialog({ modal: true, width: '80%', title: "Edit Shared Variables"}).biForm({}, function() {
 
 			var inst = this;			
 			var section = new BI.Forms.Section('filters', { multiple: false });
