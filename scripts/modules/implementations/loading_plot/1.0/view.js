@@ -106,6 +106,12 @@ CI.Module.prototype._types.loading_plot.View.prototype = {
 							el.allowLabelDisplay(layers[i].displayLabels);
 							if(layers[i].color)
 								el.setColor(layers[i].color);
+
+							if(layers[i].labelsize)
+								el.setLabelSize(layers[i].labelsize);
+							el.forceField(layers[i].forceField);
+							
+
 							el.hoverCallback = function() {
 								self.module.controller.hover(this._data);
 							}
