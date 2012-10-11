@@ -8,10 +8,11 @@ Fierm.SVGElement.prototype.construct = function(svg, x, y, data) {
 	this.svg = svg;
 	this._x = x, this._y = y, this._data = data;
 	this._label, this._line;
+	this._visibility = {filter: true, zoom: false, force: false};
 	this._fontsize = 12;
 	var self = this;
 	this._highlightgroup = this.createElement('g', {class: 'highlightgroup'}, false, true);
-
+	this._labelVisible = true;
 	this._zoomThreshLabel = 1500;
 
 	CI.RepoHighlight.listen(data._highlight, function(value, keys) {	
@@ -39,7 +40,7 @@ Fierm.SVGElement.prototype.getCoordsSprings = function(coords) {
 
 	if(!this._forceField)
 		return;
-	if(this.allowLabelDisplay && this._labelVisibility && this._displayed)
+	if(this.isLabelVisible())
 		coords.push([ this._x, this._y, this._x * 1.001, this._y * 1.001, 0, 0, this.getOptimalSpringParameter(), this._label]);
 }
 
@@ -50,34 +51,54 @@ Fierm.SVGElement.prototype.setLabelDisplayThreshold = function(val) {
 
 Fierm.SVGElement.prototype.setLabelStroke = function(bln) {
 	this._labelStroke = bln;
+
+	if(this._label && this._labelStroke) {
+		this._label.setAttributeNS(null, 'stroke', 'black');
+		this._label.setAttributeNS(null, 'stroke-width', 1 / this.svg._izoom);
+		this._label.setAttributeNS(null, 'vector-effect', 'non-scaling-stroke');
+	}
 }
 
 Fierm.SVGElement.prototype.allowLabelDisplay = function(bln) {
 	this.allowLabelDisplay = bln;
 }
 
-Fierm.SVGElement.prototype.doDisplayLabel = function(bln, zoom) {
+Fierm.SVGElement.prototype.labelVisibility = function() {
 
-	if(bln && this.allowLabelDisplay && this._displayed) {
+	if((this._visibility.filter && this._visibility.zoom) || this._visibility.force) {
 		
-		if(this._line)
-			this._line.setAttributeNS(null, 'display', 'block');
+		if(!this._labelVisible) {
 
-		if(this._label) {
-			this._label.setAttributeNS(null, 'pointer-events', 'none');
-			this._label.setAttributeNS(null, 'display', 'block');
-			this._label.setAttributeNS(null, 'transform', 'translate(' + this._x + ' ' + this._y + ') scale(' + (this.svg._izoom / this.svg._zoom) + ') translate(-' + this._x + ' -' + this._y + ')');
+			if(this._line)
+				this._line.setAttributeNS(null, 'display', 'block');
+
+			if(this._label) {
+				this._label.setAttributeNS(null, 'pointer-events', 'none');
+				this._label.setAttributeNS(null, 'display', 'block');
+			}
+			this._labelVisible = true;
 		}
-		//this._label.setAttributeNS(null, 'font-size', 12 / zoom);
-		this._labelVisibility = true;
+
+		this._label.setAttributeNS(null, 'transform', 'translate(' + this._x + ' ' + this._y + ') scale(' + (this.svg._izoom / this.svg._zoom) + ') translate(-' + this._x + ' -' + this._y + ')');
+
 	} else {
-		
-		if(this._label)
-			this._label.setAttributeNS(null, 'display', 'none');
-		if(this._line)
-			this._line.setAttributeNS(null, 'display', 'none');
-		this._labelVisibility = false;
+		if(this._labelVisible) {
+			if(this._label)
+				this._label.setAttributeNS(null, 'display', 'none');
+			if(this._line)
+				this._line.setAttributeNS(null, 'display', 'none');
+			this._labelVisible = false;
+		}
 	}
+}
+
+Fierm.SVGElement.prototype.isLabelVisible = function() {
+	return this._labelVisible;
+}
+
+Fierm.SVGElement.prototype.doDisplayLabel = function(bln, zoom) {
+	this._visibility.zoom = bln;
+	this.labelVisibility();
 }
 
 Fierm.SVGElement.prototype.forceField = function(bln) {
@@ -86,8 +107,10 @@ Fierm.SVGElement.prototype.forceField = function(bln) {
 }
 
 Fierm.SVGElement.prototype.setLabelSize = function(fontsize) {
+	
 	if(this._label)
 		this._label.setAttributeNS(null, 'font-size', fontsize / this.svg._izoom);
+
 	this._fontsize = fontsize;
 }
 
@@ -137,10 +160,8 @@ Fierm.SVGElement.prototype.doLine = function() {
 }
 
 Fierm.SVGElement.prototype.writeLabel = function() {
-	if(this._data.l) {
+	if(this._data.l)
 		label = this.createLabel(this._x, this._y, this._data.l);
-//		Fierm.SVGElement.prototype.Springs.addElement(this, label, this.doLine());
-	}
 }
 
 Fierm.SVGElement.prototype.setColor = function(color) {
@@ -152,16 +173,16 @@ Fierm.SVGElement.prototype.setColor = function(color) {
 Fierm.SVGElement.prototype.highlight = function(bln) {
 	//this._currentEl.setAttributeNS(null, 'class', 'nothighlight');
 	if(bln) {
-		
 		this._label.setAttributeNS(null, 'font-size', this._fontsize * 2 / this.svg._izoom);
-		this._label.setAttributeNS(null, 'display', 'block');
 		this._highlightgroup.setAttributeNS(null, 'transform', 'translate(' + this._x + ', ' + this._y + ') scale(5) translate(' + (-this._x) + ', ' + (-this._y) + ')');
-		this.doDisplayLabel(true, this.svg._zoom);
+		this._visibility.force = true;
+		this.labelVisibility();
 
 	} else {
 		this._label.setAttributeNS(null, 'font-size', this._fontsize / this.svg._izoom);
 		this._highlightgroup.removeAttributeNS(null, 'transform');
-		this.doDisplayLabel(false, this.svg._zoom);
+		this._visibility.force = false;
+		this.labelVisibility();
 	}
 
 	if(this.implHighlight)
@@ -192,6 +213,8 @@ Fierm.Ellipse.prototype.filter = function(filter) {
 	if(filter[this._data.n] !== undefined) {
 		this._a.setAttributeNS(null, 'display', (filter[this._data.n] ? 'block' : 'none'));
 		this._b.setAttributeNS(null, 'display', (filter[this._data.n] ? 'block' : 'none'));
+		this._visibility.filter = !!filter[this._data.n];
+		this.labelVisibility();
 	}
 }
 
@@ -308,7 +331,7 @@ Fierm.Pie.prototype.changeZoom = function() {
 		this._g.setAttributeNS(null, 'transform', 'translate(' + this._x + ' ' + this._y +') scale(' + this._lastRadius + ')');	
 		this._currentEl = this._g;
 	}
-	
+
 	this.doDisplayLabel(zoom < this._zoomThreshLabel ? false : true, zoom);
 }
 
@@ -332,9 +355,9 @@ Fierm.Pie.prototype.filter = function(filter) {
 			this._currentEl.setAttributeNS(null, 'display', 'none');
 			this._displayed = false;
 
-			if(this.allowLabelDisplay && this._labelVisibility)
-				this._label.setAttributeNS(null, 'display', 'none');
-		
+			this._visibility.filter = false;
+			this.labelVisibility();
+			
 		} else if(!this._displayed && this._failure[i] && inside) {
 			
 			this._failure[i] = false;
@@ -344,8 +367,8 @@ Fierm.Pie.prototype.filter = function(filter) {
 			this._displayed = true;
 			this._currentEl.setAttributeNS(null, 'display', 'block');
 
-			if(this.allowLabelDisplay && this._labelVisibility)
-				this._label.setAttributeNS(null, 'display', 'block');
+			this._visibility.filter = true;
+			this.labelVisibility();
 		}
 	}
 }

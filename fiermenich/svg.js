@@ -170,8 +170,7 @@ Fierm.SVG.prototype.deltaZoom = function(x, y, delta) {
 	window.clearTimeout(this._timeoutZoom);
 	this._timeoutZoom = window.setTimeout(function() {
 		Fierm.SVGElement.prototype.Springs.resolve();
-	}, 20);
-
+	}, 200);
 	//parent.appendChild(this._svgEl);
 }
 

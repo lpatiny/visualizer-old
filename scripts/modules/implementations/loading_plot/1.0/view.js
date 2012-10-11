@@ -75,7 +75,7 @@ CI.Module.prototype._types.loading_plot.View.prototype = {
 			if(this._w && this._h)
 				svg.setSize(this._w, this._h);
 
-			svg.setViewBoxWidth(1, 1);
+			svg.setViewBoxWidth(100, 100);
 			svg.bindTo(this.dom);
 
 			var Springs = new Fierm.SpringLabels(svg);
@@ -110,7 +110,7 @@ CI.Module.prototype._types.loading_plot.View.prototype = {
 							el.forceField(layers[i].forceField);
 							if(layers[i].labelzoomthreshold !== '')
 								el.setLabelDisplayThreshold(layers[i].labelzoomthreshold);
-							el.setLabelStroke(layers[i].label);
+							el.setLabelStroke(layers[i].blackstroke);
 
 
 							el.hoverCallback = function() {
