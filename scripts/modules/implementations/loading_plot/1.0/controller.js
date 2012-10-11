@@ -137,7 +137,7 @@ CI.Module.prototype._types.loading_plot.Controller.prototype = {
 		});
 		field.setTitle(new CI.Title('Labels'))
 		
-		field.implementation.setOptions({'display_labels': 'Display', 'forcefield': 'Activate force field'});
+		field.implementation.setOptions({'display_labels': 'Display', 'forcefield': 'Activate force field', 'blackstroke': 'Add a black stroke around label'});
 
 
 		var field = groupfield.addField({
@@ -155,6 +155,7 @@ CI.Module.prototype._types.loading_plot.Controller.prototype = {
 		field.setTitle(new CI.Title('Zoom for label display'));
 
 
+
 		return true;
 	},
 	
@@ -165,7 +166,7 @@ CI.Module.prototype._types.loading_plot.Controller.prototype = {
 		var titles = [];
 		var layers = [];
 		for(var i = 0; i < cfgLayers.length; i++) {
-			var cfgLocalLayer = { groups: {config: [{ el: [cfgLayers[i].layer], type: [cfgLayers[i].display], labelzoomthreshold: [cfgLayers[i].labelzoomthreshold], labelsize: [cfgLayers[i].labelsize], /*colorjpath: [cfgLayers[i].colorjpath], */color: [cfgLayers[i].color], labels: [[(cfgLayers[i].displayLabels ? 'display_labels' : null), (cfgLayers[i].forceField ? 'forcefield' : null)]] }] } };
+			var cfgLocalLayer = { groups: {config: [{ el: [cfgLayers[i].layer], type: [cfgLayers[i].display], labelzoomthreshold: [cfgLayers[i].labelzoomthreshold], labelsize: [cfgLayers[i].labelsize], /*colorjpath: [cfgLayers[i].colorjpath], */color: [cfgLayers[i].color], labels: [[(cfgLayers[i].displayLabels ? 'display_labels' : null), (cfgLayers[i].forceField ? 'forcefield' : null), (cfgLayers[i].blackstroke ? 'blackstroke' : null)]] }] } };
 			layers.push(cfgLocalLayer)
 		}
 
@@ -184,14 +185,16 @@ CI.Module.prototype._types.loading_plot.Controller.prototype = {
 		var layers = [];
 		for(var i = 0; i < group.length; i++) {
 			var labels = group[i].config[0].labels[0];
-			displayLabels = false, forcefield = false;
+			displayLabels = false, forcefield = false, blackstroke = false;
 			for(var j = 0; j < labels.length; j++) {
 				if(labels[j] == 'display_labels')
 					displayLabels = true;
 				if(labels[j] == 'forcefield')
 					forcefield = true;
+				if(labels[j] == 'blackstroke')
+					blackstroke = true;
 			}
-			layers.push({ layer: group[i].config[0].el[0], labelsize: group[i].config[0].labelsize[0], display: group[i].config[0].type[0], color: group[i].config[0].color[0], /*colorjpath: group[i].config[0].colorjpath[0],*/ displayLabels: displayLabels, forceField: forcefield, labelzoomthreshold: group[i].config[0].labelzoomthreshold[0] });
+			layers.push({ layer: group[i].config[0].el[0], labelsize: group[i].config[0].labelsize[0], display: group[i].config[0].type[0], color: group[i].config[0].color[0], /*colorjpath: group[i].config[0].colorjpath[0],*/ displayLabels: displayLabels, forceField: forcefield, labelzoomthreshold: group[i].config[0].labelzoomthreshold[0], blackstroke: blackstroke });
 		}
 	
 		this.module.getConfiguration().layers = layers;	

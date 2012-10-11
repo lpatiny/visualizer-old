@@ -58,7 +58,7 @@ CI.Module.prototype._types.grid_selector.View.prototype = {
 				for(var j = 0, k = cols.length; j < k; j++) {
 
 					if(i == -1)
-						html += '<th width="' + (cols[j].selectorType == 'checkbox' ? '190' : '') + '" data-colid="' + j + '">' + cols[j].label + '</th>';
+						html += '<th width="' + (cols[j].selectorType == 'checkbox' ? '100' : '') + '" data-colid="' + j + '">' + cols[j].label + '</th>';
 					else {
 						value = undefined;
 						if(this.module.getConfiguration()._data !== undefined && this.module.getConfiguration()._data[cols[j].name] !== undefined && this.module.getConfiguration()._data[cols[j].name][lines[i].name] !== undefined)

@@ -3,6 +3,23 @@ if(typeof Fierm == 'undefined') Fierm = {};
 Fierm.SVGElement = function() {};
 Fierm.SVGElement.prototype = {};
 
+
+Fierm.SVGElement.prototype.construct = function(svg, x, y, data) {
+	this.svg = svg;
+	this._x = x, this._y = y, this._data = data;
+	this._label, this._line;
+	this._fontsize = 12;
+	var self = this;
+	this._highlightgroup = this.createElement('g', {class: 'highlightgroup'}, false, true);
+
+	this._zoomThreshLabel = 1500;
+
+	CI.RepoHighlight.listen(data._highlight, function(value, keys) {	
+		self.highlight(value);
+	});
+}
+
+
 Fierm.SVGElement.prototype.createElement = function(nodeName, properties, doNotInclude, single) {
 	var node = document.createElementNS('http://www.w3.org/2000/svg', nodeName);
 	for(var i in properties)
@@ -18,7 +35,6 @@ Fierm.SVGElement.prototype.createElement = function(nodeName, properties, doNotI
 	return node;
 }
 
-
 Fierm.SVGElement.prototype.getCoordsSprings = function(coords) {
 
 	if(!this._forceField)
@@ -29,7 +45,11 @@ Fierm.SVGElement.prototype.getCoordsSprings = function(coords) {
 
 Fierm.SVGElement.prototype.setLabelDisplayThreshold = function(val) {
 	this._zoomThreshLabel = val;
-	this.changeZoom(Fierm.Zoom);
+	this.changeZoom();
+}
+
+Fierm.SVGElement.prototype.setLabelStroke = function(bln) {
+	this._labelStroke = bln;
 }
 
 Fierm.SVGElement.prototype.allowLabelDisplay = function(bln) {
@@ -46,7 +66,7 @@ Fierm.SVGElement.prototype.doDisplayLabel = function(bln, zoom) {
 		if(this._label) {
 			this._label.setAttributeNS(null, 'pointer-events', 'none');
 			this._label.setAttributeNS(null, 'display', 'block');
-			this._label.setAttributeNS(null, 'transform', 'translate(' + this._x + ' ' + this._y + ') scale(' + (Fierm.initZoom / Fierm.zoom) + ') translate(-' + this._x + ' -' + this._y + ')');
+			this._label.setAttributeNS(null, 'transform', 'translate(' + this._x + ' ' + this._y + ') scale(' + (this.svg._izoom / this.svg._zoom) + ') translate(-' + this._x + ' -' + this._y + ')');
 		}
 		//this._label.setAttributeNS(null, 'font-size', 12 / zoom);
 		this._labelVisibility = true;
@@ -67,8 +87,7 @@ Fierm.SVGElement.prototype.forceField = function(bln) {
 
 Fierm.SVGElement.prototype.setLabelSize = function(fontsize) {
 	if(this._label)
-		this._label.setAttributeNS(null, 'font-size', fontsize / Fierm.initZoom);
-
+		this._label.setAttributeNS(null, 'font-size', fontsize / this.svg._izoom);
 	this._fontsize = fontsize;
 }
 
@@ -77,9 +96,9 @@ Fierm.SVGElement.prototype.createLabel = function(x, y, labelTxt) {
 	label.textContent = labelTxt;
 	label.setAttributeNS(null, 'x', x);
 	label.setAttributeNS(null, 'y', y);
-	label.setAttributeNS(null, 'font-size', this._fontsize / Fierm.initZoom);
+	label.setAttributeNS(null, 'font-size', this._fontsize / this.svg._izoom);
 	label.setAttributeNS(null, 'fill', this._lc || this._data.lc || 'black');
-	label.setAttributeNS(null, 'transform', 'translate(' + this._x + ' ' + this._y + ') scale(' + (Fierm.initZoom / Fierm.zoom) + ') translate(-' + this._x + ' -' + this._y + ')');
+	label.setAttributeNS(null, 'transform', 'translate(' + this._x + ' ' + this._y + ') scale(' + (this.svg._izoom / this.svg._zoom) + ') translate(-' + this._x + ' -' + this._y + ')');
 	//this._nodes.push(label);
 	this._label = label;
 	return label;
@@ -95,21 +114,6 @@ Fierm.SVGElement.prototype.getY = function() {
 
 Fierm.SVGElement.prototype.changeZoom = function() {};
 Fierm.SVGElement.prototype.inDom = function() {};
-
-Fierm.SVGElement.prototype.construct = function(x, y, data) {
-	this._x = x, this._y = y, this._data = data;
-	this._label, this._line;
-	this._fontsize = 12;
-	var self = this;
-	this._highlightgroup = this.createElement('g', {class: 'highlightgroup'}, false, true);
-
-	this._zoomThreshLabel = 1500;
-
-	CI.RepoHighlight.listen(data._highlight, function(value, keys) {	
-		self.highlight(value);
-	});
-
-}
 
 Fierm.SVGElement.prototype.mouseover = function() {
 	//this.highlight(true);
@@ -149,15 +153,15 @@ Fierm.SVGElement.prototype.highlight = function(bln) {
 	//this._currentEl.setAttributeNS(null, 'class', 'nothighlight');
 	if(bln) {
 		
-		this._label.setAttributeNS(null, 'font-size', this._fontsize * 2 / Fierm.initZoom);
+		this._label.setAttributeNS(null, 'font-size', this._fontsize * 2 / this.svg._izoom);
 		this._label.setAttributeNS(null, 'display', 'block');
 		this._highlightgroup.setAttributeNS(null, 'transform', 'translate(' + this._x + ', ' + this._y + ') scale(5) translate(' + (-this._x) + ', ' + (-this._y) + ')');
-		this.doDisplayLabel(true, Fierm.zoom);
+		this.doDisplayLabel(true, this.svg._zoom);
 
 	} else {
-		this._label.setAttributeNS(null, 'font-size', this._fontsize / Fierm.initZoom);
+		this._label.setAttributeNS(null, 'font-size', this._fontsize / this.svg._izoom);
 		this._highlightgroup.removeAttributeNS(null, 'transform');
-		this.doDisplayLabel(false, Fierm.zoom);
+		this.doDisplayLabel(false, this.svg._zoom);
 	}
 
 	if(this.implHighlight)
@@ -166,9 +170,9 @@ Fierm.SVGElement.prototype.highlight = function(bln) {
 
 
 
-Fierm.Ellipse = function(x, y, data) {
+Fierm.Ellipse = function(svg, x, y, data) {
 	
-	this.construct(x,y,data);
+	this.construct(svg,x,y,data);
 	this._displayed = true;
 
 	this.g = this.createElement('g');
@@ -179,7 +183,7 @@ Fierm.Ellipse = function(x, y, data) {
 	this.g.appendChild(this._b);
 
 	this.writeLabel();
-	this.changeZoom(Fierm.initZoom);
+	this.changeZoom();
 	this._data = data;
 }
 
@@ -200,15 +204,12 @@ Fierm.Ellipse.prototype.inDom = function() {
 	this._highlightgroup.setAttributeNS(null, 'data-id', this.id);
 }
 
-Fierm.Ellipse.prototype.changeZoom = function(zoom) {
-	
-	this.doDisplayLabel(zoom < this._zoomThreshLabel ? false : true, zoom);
+Fierm.Ellipse.prototype.changeZoom = function() {
+	this.doDisplayLabel(this.svg._zoom < this._zoomThreshLabel ? false : true, this.svg._zoom);
 }
 
-
-
-Fierm.Pie = function(x, y, data) {
-	this.construct(x,y,data);
+Fierm.Pie = function(svg,x, y, data) {
+	this.construct(svg,x,y,data);
 	this.pieElements = [];
 	this._chart = data.chart;
 	
@@ -220,7 +221,7 @@ Fierm.Pie = function(x, y, data) {
 	this._rzoom0 = 3;
 	this._rthresh = 10;
 	this._rmaxpie = 30;
-	this._circleSlope = (this._rzoom0 - this._rmin) / Fierm.initZoom;
+	this._circleSlope = (this._rzoom0 - this._rmin) / this.svg._izoom;
 	this._zoomThresh = (this._rthresh - this._rzoom0) / this._circleSlope;
 	this._lastAngle = 0;
 
@@ -228,7 +229,7 @@ Fierm.Pie = function(x, y, data) {
 	this._circle = this.createElement('circle', {fill: data.c, stroke: 'black', 'vector-effect': 'non-scaling-stroke', cx: this._x, cy: this._y, r: 10 / 1000});
 
 	this.writeLabel();
-	this.changeZoom(Fierm.initZoom);
+	this.changeZoom(this.svg._izoom);
 }
 
 
@@ -283,8 +284,9 @@ Fierm.Pie.prototype.setCircleVisibility = function(bln) {
 }
 
 
-Fierm.Pie.prototype.changeZoom = function(zoom) {
-	this._zoom = zoom;
+Fierm.Pie.prototype.changeZoom = function() {
+	var zoom = this.svg._zoom;
+
 	if(zoom < this._zoomThresh) {
 		this.setPieVisibility(false);
 		this.setCircleVisibility(true);

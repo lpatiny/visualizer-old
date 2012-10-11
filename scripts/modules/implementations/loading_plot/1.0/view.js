@@ -99,20 +99,19 @@ CI.Module.prototype._types.loading_plot.View.prototype = {
 						var datas = moduleValue.value.series[j].data;
 						for(var k = 0, l = datas.length; k < l; k++) {
 							if(type == 'pie')
-								var el = new Fierm.Pie(datas[k].x, datas[k].y, datas[k]);
+								var el = new Fierm.Pie(svg, datas[k].x, datas[k].y, datas[k]);
 							else if(type == 'ellipse')
-								var el = new Fierm.Ellipse(datas[k].x, datas[k].y, datas[k]);
-
+								var el = new Fierm.Ellipse(svg, datas[k].x, datas[k].y, datas[k]);
 							el.allowLabelDisplay(layers[i].displayLabels);
 							if(layers[i].color)
 								el.setColor(layers[i].color);
-
 							if(layers[i].labelsize)
 								el.setLabelSize(layers[i].labelsize);
 							el.forceField(layers[i].forceField);
-							
 							if(layers[i].labelzoomthreshold !== '')
 								el.setLabelDisplayThreshold(layers[i].labelzoomthreshold);
+							el.setLabelStroke(layers[i].label);
+
 
 							el.hoverCallback = function() {
 								self.module.controller.hover(this._data);

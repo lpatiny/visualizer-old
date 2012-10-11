@@ -65,10 +65,13 @@ Fierm.SVG.prototype.initZoom = function() {
 	if(!this._viewBox[2])
 		return;
 
-	Fierm.initZoom = this._width / this._viewBox[2];
-	Fierm.zoom = this._width / this._viewBox[2];
-	this._zoom = Fierm.zoom;
-	
+	var rX = this._width / this._viewBox[2];
+	var rY = this._height / this._viewBox[3];
+
+	var zoom = Math.min(rY, rX);
+	this._zoom = zoom;
+	this._izoom = zoom;
+	this._zoomMode = zoom == rY ? 'y' : 'x';
 }
 
 Fierm.SVG.prototype.bindTo = function(dom) {
@@ -161,8 +164,8 @@ Fierm.SVG.prototype.deltaZoom = function(x, y, delta) {
 	this._viewBox[3] = boxWidthY;
 	this.setViewBox();
 
-	Fierm.zoom = this._width / this._viewBox[2];
-	this.changeZoomElements(this._width / this._viewBox[2]);
+	this._zoom = (this._zoomMode == 'y') ? this._height / this._viewBox[3] : this._width / this._viewBox[2];
+	this.changeZoomElements(this._zoom);
 
 	window.clearTimeout(this._timeoutZoom);
 	this._timeoutZoom = window.setTimeout(function() {
