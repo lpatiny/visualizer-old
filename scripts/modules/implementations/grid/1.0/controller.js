@@ -164,15 +164,18 @@ CI.Module.prototype._types.grid.Controller.prototype = {
 		}
 
 		return {	
-			gencfg: [{
-				nblines: [nblines],
-				colorjpath: [colorjPath],
-				displaySearch: [[search ? 'allow' : '']]
-			}],
-			cols: [{
-				coltitle: titles,
-				coljpath: jpaths
-			}]
+
+			groups: {
+				gencfg: [{
+					nblines: [nblines],
+					colorjpath: [colorjPath],
+					displaySearch: [[search ? 'allow' : '']]
+				}],
+				cols: [{
+					coltitle: titles,
+					coljpath: jpaths
+				}]
+			}
 		}
 	},
 	
