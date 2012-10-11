@@ -51,7 +51,7 @@ CI.Module.prototype._types.grid_selector.View.prototype = {
 				html += '<tr data-lineid="' + i + '" ' + (i > -1 ? ('style="background-color: ' + (lines[i].color) + '"') : '') + '>';
 
 				if(i == -1) // First line
-					html += '<td></td>';
+					html += '<th></th>';
 				else
 					html += '<td>' + lines[i].label + '</td>';
 				
