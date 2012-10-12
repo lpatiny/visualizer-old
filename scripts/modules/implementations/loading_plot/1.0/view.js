@@ -66,10 +66,10 @@ CI.Module.prototype._types.loading_plot.View.prototype = {
 			if(!moduleValue)
 				return;
 
-			Fierm.initZoom = 8000;
-			Fierm.zoom = Fierm.initZoom;
+			LoadingPlot.initZoom = 8000;
+			LoadingPlot.zoom = LoadingPlot.initZoom;
 
-			var svg = new Fierm.SVG();
+			var svg = new LoadingPlot.SVG();
 			this._svg = svg;
 
 			if(this._w && this._h)
@@ -78,10 +78,10 @@ CI.Module.prototype._types.loading_plot.View.prototype = {
 			svg.setViewBoxWidth(100, 100);
 			svg.bindTo(this.dom);
 
-			var Springs = new Fierm.SpringLabels(svg);
+			var Springs = new LoadingPlot.SpringLabels(svg);
 
 			svg.initZoom();
-			Fierm.SVGElement.prototype.Springs = Springs;
+			LoadingPlot.SVGElement.prototype.Springs = Springs;
 			this._lastValue = moduleValue.value;
 			this._instances = [];
 			if(!moduleValue.value || !moduleValue.value.series)
@@ -99,9 +99,9 @@ CI.Module.prototype._types.loading_plot.View.prototype = {
 						var datas = moduleValue.value.series[j].data;
 						for(var k = 0, l = datas.length; k < l; k++) {
 							if(type == 'pie')
-								var el = new Fierm.Pie(svg, datas[k].x, datas[k].y, datas[k]);
+								var el = new LoadingPlot.Pie(svg, datas[k].x, datas[k].y, datas[k]);
 							else if(type == 'ellipse')
-								var el = new Fierm.Ellipse(svg, datas[k].x, datas[k].y, datas[k]);
+								var el = new LoadingPlot.Ellipse(svg, datas[k].x, datas[k].y, datas[k]);
 							el.allowLabelDisplay(layers[i].displayLabels);
 							if(layers[i].color)
 								el.setColor(layers[i].color);
